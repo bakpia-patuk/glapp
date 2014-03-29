@@ -138,14 +138,14 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
                     width: 220,
                     emptyText: 'Pilih',
                     labelWidth: 50,
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     allowBlank: true,
                     triggerAction: 'all',
 //                    hidden: userCabang == 14 ? false : true,
-//                    valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
+                    valueNotFoundText: 'Tidak ada Data',
+                    store: 'akjurnalumum.CabangStore',
 //                    listeners: {
 //                        select: function () {
 //                            var grid = this.up('grid'),
@@ -188,6 +188,13 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
 //                            store.filter(filterCollection);
 //                        }
 //                    }
+                },
+                {
+                    xtype: 'button',
+                    iconCls: 'icon-btn-search',
+                    ui: 'blue-button',
+                    text: 'Search'
+//                    action: 'juRefresh'
                 },
                 '->',
 //                {

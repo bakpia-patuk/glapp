@@ -9,7 +9,7 @@ Ext.define('GlApp.view.akmstelisa.AkMsTelisaGrid', {
     autoScroll: true,
     title: 'DAFTAR TELISA',
     forceFit: true,
-//    store: 'MasterTelisaStore',
+    store: 'akmstelisa.MasterTelisaStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -31,30 +31,30 @@ Ext.define('GlApp.view.akmstelisa.AkMsTelisaGrid', {
                     width: 220,
                     emptyText: 'Pilih',
                     labelWidth: 60,
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     allowBlank: true,
                     triggerAction: 'all',
 //                    hidden: userCabang === '14' ? false : true,
 //                    valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
-//                    listeners: {
-//                        select: function () {
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [];
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'mt_cabang',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                    store: 'akmstelisa.CabangStore',
+                    listeners: {
+                        select: function () {
+                            var store = this.up('grid').getStore(),
+                                filterCollection = [];
+
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'mt_cabang',
+                                value: this.getValue()
+                            });
+                            filterCollection.push(statusFilter);
+
+
+                            store.clearFilter(true);
+                            store.filter(filterCollection);
+                        }
+                    }
                 },
                 '->',
                 {

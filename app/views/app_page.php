@@ -19,6 +19,7 @@
                     USER_NAME = "<?php echo $logged_user; ?>",
                     USER_CABANG = '<?php echo $logged_user; ?>',
                     CABANG_NAME = "<?php echo $cabang_name; ?>",
+                    CABANG_ID = "<?php echo $cabang_id; ?>",
                     DATE_TODAY = "<?php echo date("l, d F Y"); ?>",
                     TAB_BG = 'background:#3892D3;',
                     FORM_BG = "background:#F8F9F9;",
