@@ -1,0 +1,23 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 16, 2014, 6:24:01 PM
+    Author     : Isht.Ae
+*/
+
+body, html {
+    background: #8FC400 url('../img/app/login_bg.jpg') center 100%;
+}
+
+div.status-error {
+    color: #F00;
+}
+
+//ICON
+
+.icon-login-window {
+    background: url('../img/app/icon/icon_login_window.png') no-repeat;
+}

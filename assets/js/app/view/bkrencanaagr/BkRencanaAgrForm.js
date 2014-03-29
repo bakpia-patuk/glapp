@@ -1,0 +1,554 @@
+/**
+ * @author Isht Ae
+ **/
+Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
+    extend: 'Ext.form.Panel',
+    alias: 'widget.bkrencanaagr.bkrencanaagrform',
+    itemId: 'bkrencanaagrform',
+    //id: 'akunform',
+    border: false,
+    bodyStyle: FORM_BG,
+    bodyPadding: '10 5',
+    buttonAlign: 'right',
+    fieldDefaults: {
+        width: 310,
+        labelAlign: 'right',
+        labelWidth: 100,
+        msgTarget: 'side'
+    },
+    autoScroll: true,
+    initComponent: function() {
+        var me = this;
+
+        Ext.applyIf(me, {
+            tbar: [
+                {
+                    xtype: 'button',
+                    ui: 'blue-button',
+                    text: 'Simpan',
+                    iconCls: 'icon-btn-save',
+//                    action: 'maSave'
+                },
+                '-',
+                {
+                    xtype: 'button',
+                    ui: 'blue-button',
+                    text: 'Baru',
+                    iconCls: 'icon-btn-add',
+//                    action: 'anggaranNew'
+                },
+                '-',
+                {
+                    xtype: 'button',
+                    ui: 'blue-button',
+                    text: 'Hapus',
+                    iconCls: 'icon-btn-delete',
+//                    action: 'anggaranDelete',
+                    disabled: false
+                }
+            ],
+            items: [
+                {
+                    xtype: 'textfield',
+                    name: 'id',
+                    itemId: 'id',
+                    hidden: true,
+                    fieldLabel: 'Id Trx'
+                },
+                {
+                    xtype: 'radiogroup',
+                    fieldLabel: 'Jenis ',
+                    width: 310,
+                    hidden: true,
+                    items: [
+                        {
+                            boxLabel: 'Supplier',
+                            name: 'jenisSup',
+                            inputValue: 0,
+                            width: 70,
+                            listeners: {
+                                change: function(rb, nv, ov, options) {
+                                    if (nv) {
+                                        this.up('form').getForm().findField('namaSup').show();
+
+                                        if (this.up('form').getForm().findField('namaKd')) {
+                                            this.up('form').getForm().findField('namaKd').hide();
+                                        }
+
+                                        this.up('form').getForm().findField('divisi').hide();
+                                        this.up('form').getForm().findField('namaGrk').hide();
+                                        this.up('form').getForm().findField('caraBayar').hide();
+                                        this.up('form').getForm().findField('trx_value').setReadOnly(true);
+                                        this.up('form').getForm().findField('trx_value').hide();
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            boxLabel: 'Non-Supplier',
+                            name: 'jenisSup',
+                            inputValue: 1,
+                            width: 100,
+                            margin: '0 0 0 5',
+                            checked: true,
+                            listeners: {
+                                change: function(rb, nv, ov, options) {
+                                    if (nv) {
+                                        this.up('form').getForm().findField('namaSup').hide();
+
+                                        if (this.up('form').getForm().findField('namaKd')) {
+                                            this.up('form').getForm().findField('namaKd').hide();
+                                        }
+
+                                        this.up('form').getForm().findField('divisi').show();
+                                        this.up('form').getForm().findField('namaGrk').show();
+                                        this.up('form').getForm().findField('caraBayar').show();
+                                        this.up('form').getForm().findField('trx_value').setReadOnly(false);
+                                        this.up('form').getForm().findField('trx_value').show();
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    xtype: 'fieldcontainer',
+//                    fieldLabel: 'Jadwal Pembayaran ',
+                    fieldLabel: '',
+                    labelStyle: 'font-weight:bold;padding-bottom:5px;',
+//                    bodyStyle: 'margin:15px 0px 25px 0px',
+                    labelAlign: 'top',
+                    items: [
+                        {
+                            xtype: 'datefield',
+                            fieldLabel: 'Dari ',
+                            name: 'tglDari',
+                            format: 'd/M/Y',
+                            //value: new Date(),
+                            submitFormat: 'Y-m-d',
+                            readOnly: false,
+                            hidden: false
+                        },
+                        {
+                            xtype: 'datefield',
+                            fieldLabel: 'Sampai ',
+                            name: 'tglSampai',
+                            format: 'd/M/Y',
+                            //value: new Date(),
+                            submitFormat: 'Y-m-d',
+                            readOnly: false,
+                            hidden: false
+                        }
+                    ]
+                },
+                {
+                    xtype: 'combobox',
+                    fieldLabel: 'Nama Supplier ',
+                    name: 'namaSup',
+                    triggerAction: 'all',
+                    hidden: true,
+                    minChars: 2,
+//                    store: 'MasterSupplierStore',
+                    displayField: 'namams',
+                    valueField: 'idms',
+                    emptyText: 'Ketik nama supplier...',
+//                    listeners: {
+//                        select: function(combo, rec, e) {
+//                            var id = this.getValue(),
+//                                    trx_fakturno = this.up('form').getForm().findField('trx_fakturno'),
+//                                    trx_value = this.up('form').getForm().findField('trx_value');
+//
+//                            trx_fakturno.setValue("");
+//                            trx_value.setValue();
+//
+//                            Ext.Ajax.request({
+//                                url: BASE_PATH + 'akun/minta_anggaran_check',
+//                                method: 'POST',
+//                                params: {idSupp: id},
+//                                scope: this,
+//                                callback: function(options, success, response) {
+//                                    var resp = Ext.decode(response.responseText);
+//
+//                                    if (resp.success === 'true') {
+//                                        trx_fakturno.setValue(resp.data);
+//                                        trx_value.setValue(resp.total);
+//                                    } else {
+//                                        Ext.MessageBox.show({
+//                                            title: 'Info',
+//                                            msg: resp.data,
+//                                            buttons: Ext.MessageBox.OK,
+//                                            icon: Ext.MessageBox.WARNING
+//                                        });
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+                },
+                {
+                    xtype: 'combobox',
+                    fieldLabel: 'Divisi ',
+//                    width: 210,
+                    emptyText: 'Pilih',
+                    displayField: 'type',
+                    valueField: 'typeCode',
+                    queryMode: 'local',
+                    name: 'divisi',
+                    forceSelection: true,
+                    hidden: false,
+                    typeAhead: true,
+                    allowBlank: true,
+                    valueNotFoundText: 'Tidak ada Data',
+                    store: new Ext.data.SimpleStore({
+                        id: 0,
+                        fields: [
+                            'typeCode', //numeric value is the key
+                            'type' //the text value is the value
+                        ],
+                        data: [
+                            [0, 'PELAYANAN'],
+                            [1, 'MARKETING'],
+                            [2, 'KEUANGAN'],
+                            [3, 'LAB'],
+                            [4, 'SDM'],
+                            [5, 'IT'],
+                            [6, 'RUMAH TANGGA']
+                        ]
+                    })
+                },
+                {
+                    xtype: 'comboboxedit',
+                    fieldLabel: 'Keperluan ',
+                    name: 'namaGrk',
+                    hidden: false,
+                    triggerAction: 'all',
+                    minChars: 2,
+//                    store: 'GrkStoreBkr',
+                    readOnly: false,
+                    displayField: 'grkName',
+                    valueField: 'id',
+                    emptyText: 'Pilih...',
+//                    listeners: {
+//                        afterrender: function(combo, rec, eOpt) {
+//                            combo.getStore().clearFilter(true);
+//                            combo.getStore().filter('form_id', 'mintabayar');
+//                        },
+//                        select: function(combo, rec, eOpt) {
+//                            var store = this.up('form').getForm().findField('namaKd').getStore();
+//                            this.up('form').getForm().findField('namaKd').show();
+//                            this.up('form').getForm().findField('namaKd').setReadOnly(false);
+//                            this.up('form').getForm().findField('namaKd').reset();
+//                            store.clearFilter(true);
+//                            store.filter('kp_id', combo.getValue());
+//                            store.load();
+//                        }
+//                    },
+//                    onTrigger2Click: function() {
+//                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
+//                            border: true,
+//                            region: 'center'
+//                        }),
+//                        mbkDtGrid = new Ext.widget('shared.gkmasterdetailgrid', {
+//                            region: 'east',
+//                            border: true,
+//                            width: 290,
+//                            split: true
+//                        }),
+//                        store = mbkGrid.getStore();
+//                        var win = new Ext.widget('shared.newwindow', {
+//                            title: 'DAFTAR KEPERLUAN',
+//                            width: 700,
+//                            height: 300,
+//                            border: false,
+//                            layout: 'border',
+//                            items: [
+//                                mbkGrid, mbkDtGrid
+//                            ],
+//                            buttons: [
+//                                {
+//                                    text: 'Simpan',
+//                                    itemId: 'dtKeperluanSave'
+//                                }
+//                            ]
+//                        });
+//
+//                        var store = mbkGrid.getStore();
+//
+//
+//                        store.clearFilter(true);
+//                        store.filter('form_id', 'mintabayar');
+//                        mbkGrid.down('#keperluanForm').setValue('mintabayar');
+//                        win.show();
+//                    }
+                },
+                {
+                    xtype: 'combobox',
+                    fieldLabel: 'Dtl. Keperluan ',
+                    name: 'namaKd',
+                    hidden: true,
+                    triggerAction: 'all',
+                    minChars: 2,
+//                    store: 'DetailKpStore',
+                    readOnly: true,
+                    displayField: 'namaAkun',
+                    valueField: 'id',
+                    emptyText: 'Pilih...',
+//                    listeners: {
+//                        select: function() {
+//                            var val = this.getValue(),
+//                                    form = this.up('form');
+//                            if (val === 980 || val === 981 || val === 982) {
+//                                this.up('form').getForm().findField('noDetilKpr').show();
+//                                var jenis = this.getValue(),
+//                                        jenis_val = jenis === 980 ? 1 : (jenis === 981 ? 2 : 3),
+//                                        store = this.up('form').getForm().findField('noDetilKpr').getStore(),
+//                                        filterCollection = [];
+//
+//                                var statusFilter = new Ext.util.Filter({
+//                                    property: 'mt_cabang',
+//                                    value: userCabang
+//                                });
+//                                filterCollection.push(statusFilter);
+//
+//                                var statusFilter = new Ext.util.Filter({
+//                                    property: 'mt_jenis',
+//                                    value: jenis_val
+//                                });
+//                                filterCollection.push(statusFilter);
+//
+//                                store.clearFilter(true);
+//                                store.filter(filterCollection);
+//                                form.down('#pemeriksaan').disable();
+//                                form.down('#pemeriksaan').hide();
+//
+//                                form.down('#namapasien').disable();
+//                                form.down('#namapasien').hide();
+//
+//                                form.down('#rujukan').disable();
+//                                form.down('#rujukan').hide();
+//
+//                            } else if (val === 877) {
+//                                form.down('#pemeriksaan').enable();
+//                                form.down('#pemeriksaan').show();
+//
+//                                form.down('#namapasien').enable();
+//                                form.down('#namapasien').show();
+//
+//                                form.down('#rujukan').enable();
+//                                form.down('#rujukan').show();
+//                            } else {
+//                                form.down('#pemeriksaan').disable();
+//                                form.down('#pemeriksaan').hide();
+//
+//                                form.down('#namapasien').disable();
+//                                form.down('#namapasien').hide();
+//
+//                                form.down('#rujukan').disable();
+//                                form.down('#rujukan').hide();
+//
+//                                this.up('form').getForm().findField('noDetilKpr').hide();
+//
+//                            }
+//                        }
+//                    }
+                },
+                {
+                    xtype: 'combobox',
+                    fieldLabel: 'No Dtl. Keperluan ',
+                    name: 'noDetilKpr',
+                    hidden: true,
+                    hideTrigger: false,
+                    triggerAction: 'all',
+                    queryMode: 'remote',
+                    minChars: 2,
+//                    store: 'MasterTelisaStore',
+                    readOnly: false,
+                    displayField: 'mt_namarek',
+                    valueField: 'id',
+                    emptyText: 'Pilih No',
+                    matchFieldWidth: false,
+                    listConfig: {
+                        itemTpl: '<b>{mt_nama}</b> / <span style="color:blue">{mt_rek}</span>',
+                        minWidth: 185
+                    }
+                },
+                {
+                    xtype: 'textareafield',
+                    fieldLabel: 'Keterangan ',
+                    name: 'keterangan',
+                    height: 50,
+                    hidden: false
+                },
+                {
+                    xtype: 'triggerfield',
+                    fieldLabel: 'Nomor Faktur ',
+                    name: 'trx_fakturno',
+                    id: 'maFakNo',
+                    triggerCls: 'x-form-search-trigger',
+//                    onTriggerClick: function() {
+//                        var suppName = this.up('form').getForm().findField('namaSup').getValue();
+//                        if (suppName === null) {
+//                            Ext.MessageBox.alert('Info', 'Pilih dahulu supplier');
+//                            return;
+//                        }
+//                        this.setValue('');
+//                        this.up('form').getForm().findField('trx_value').setValue(0);
+//                        Ext.widget('fakturwindow').show();
+//                    },
+                    allowBlank: true,
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Id Faktur',
+                    name: 'idFaktur',
+                    id: 'maFakId',
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'pemeriksaan',
+                    itemId: 'pemeriksaan',
+                    fieldLabel: 'Nama Pmriksaan ',
+                    hidden: true,
+                    disabled: true,
+                    allowBlank: false
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'namaPasien',
+                    itemId: 'namapasien',
+                    fieldLabel: 'Nama Pasien ',
+                    hidden: true,
+                    disabled: true,
+                    allowBlank: false
+                },
+                {
+                    xtype: 'textfield',
+                    name: 'rujukan',
+                    itemId: 'rujukan',
+                    fieldLabel: 'Di Rujuk Ke ',
+                    hidden: true,
+                    disabled: true,
+                    allowBlank: false
+                },
+                Ext.create('Ext.ux.form.NumericField', {
+                    fieldLabel: 'Nom. Perkiraan ',
+                    name: 'trx_value',
+                    id: 'maFakTotal',
+                    decimalPrecision: 2,
+                    decimalSeparator: ',',
+                    alwaysDisplayDecimals: true,
+                    allowNegative: false,
+                    minValue: 0, //prevents negative numbers
+                    // Remove spinner buttons, and arrow key and mouse wheel listeners
+                    hideTrigger: true,
+                    keyNavEnabled: false,
+                    mouseWheelEnabled: false,
+                    allowBlank: false,
+                    emptyText: 'nominal',
+                    readOnly: false,
+                    hidden: false
+                }),
+                {
+                    xtype: 'combobox',
+                    fieldLabel: 'Cara Bayar ',
+//                    width: 210,
+                    emptyText: 'Pilih',
+                    displayField: 'type',
+                    valueField: 'typeCode',
+                    queryMode: 'local',
+                    name: 'caraBayar',
+                    forceSelection: true,
+                    hidden: false,
+                    typeAhead: true,
+                    allowBlank: true,
+                    valueNotFoundText: 'Tidak ada Data',
+                    store: new Ext.data.SimpleStore({
+                        id: 0,
+                        fields: [
+                            'typeCode', //numeric value is the key
+                            'type' //the text value is the value
+                        ],
+                        data: [
+                            [0, 'BG'],
+                            [1, 'Tunai'],
+                            [2, 'Transfer']
+                        ]
+                    }),
+//                    listeners: {
+//                        change: function() {
+//                            if (this.getValue() === 2) {
+//                                this.up('form').getForm().findField('rekNo').show();
+//                                this.up('form').getForm().findField('rekBank').show();
+//                                this.up('form').getForm().findField('atasNama').show();
+//
+//                                this.up('form').getForm().findField('bgNo').hide();
+//                                this.up('form').getForm().findField('bgEd').hide();
+//                            } else if (this.getValue() === 0) {
+//                                this.up('form').getForm().findField('rekNo').hide();
+//                                this.up('form').getForm().findField('rekBank').hide();
+//                                this.up('form').getForm().findField('atasNama').hide();
+//
+//                                this.up('form').getForm().findField('bgNo').show();
+//                                this.up('form').getForm().findField('bgEd').show();
+//                            } else {
+//                                this.up('form').getForm().findField('rekNo').hide();
+//                                this.up('form').getForm().findField('rekBank').hide();
+//                                this.up('form').getForm().findField('atasNama').hide();
+//
+//                                this.up('form').getForm().findField('bgNo').hide();
+//                                this.up('form').getForm().findField('bgEd').hide();
+//                            }
+//                        }
+//                    }
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'No BG ',
+                    name: 'bgNo',
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Nama Bank ',
+                    name: 'rekBank',
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'No Rekening ',
+                    name: 'rekNo',
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Atas Nama ',
+                    name: 'atasNama',
+                    hidden: true
+                },
+                {
+                    xtype: 'datefield',
+                    fieldLabel: 'Jatuh Tempo ',
+                    name: 'bgEd',
+                    format: 'd/M/Y',
+                    //value: new Date(),
+                    submitFormat: 'Y-m-d',
+                    readOnly: false,
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'apprStatus ',
+                    name: 'apprStatus',
+                    itemId: 'apprStatus',
+                    hidden: true
+                }
+            ]
+        });
+        me.callParent(arguments);
+    }
+});
+
+/* End of file reservasiForm.js */
+/* Location: ./assets/js/app/view/reservasi/reservasiForm.js */
