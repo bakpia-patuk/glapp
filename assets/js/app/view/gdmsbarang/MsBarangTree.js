@@ -113,30 +113,16 @@ Ext.define('GlApp.view.gdmsbarang.MsBarangTree', {
                 },
                 {
                     xtype: 'treecolumn',
-                    width: 175,
+                    width: 100,
                     text: 'KODE BARANG',
                     sortable: false,
                     dataIndex: 'mi_kode'
                 },
                 {
                     text: 'NAMA BARANG',
-                    width: 200,
+                    width: 250,
                     dataIndex: 'mi_name',
-                    renderer: function(value, meta, record) {
-//                        if (record.get('mi_child_stat') === 1) {
-//                            return value.toUpperCase().capitalize();
-//                        }
-//                        else {
-//                            return "<b>" + value.toUpperCase().capitalize() + "</b>";
-//                        }
-                    }
-                },
-                {
-                    text: 'STOCK',
-                    width: 40,
-                    align: 'center',
-                    hidden: true,
-                    dataIndex: 'lastStock'
+                    renderer: 'uppercase'
                 }
             ]
         });

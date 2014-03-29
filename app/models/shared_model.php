@@ -16,4 +16,13 @@ class Shared_model extends MY_Model {
     public function barang_cabang($params, $opt) {
         
     }
+
+    public function barang_add($input) {
+        
+    }
+
+    public function barang_edit($input) {
+        
+    }
+
 }

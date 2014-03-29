@@ -65,7 +65,8 @@ class Shared extends Auth_Controller {
         }
 
         $tablename = 'dt_item';
-        $opt['sortBy'] = 'id';
+        $params[] = array('field' => 'mi_child_stat', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $opt['sortBy'] = 'mi_kode';
         $opt['sortDirection'] = 'ASC';
 
         $result = $this->Shared_model->gets($params, $opt, $tablename);
@@ -98,9 +99,7 @@ class Shared extends Auth_Controller {
                 }
                 $no++;
             }
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Barang Tree'));
-        } else {
-            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+            echo json_encode($result);
         }
     }
 
@@ -140,7 +139,25 @@ class Shared extends Auth_Controller {
     }
 
     public function add_barang() {
-        
+        $input = $this->input->post(NULL, TRUE);
+
+        if ($input['id'] == 0) {
+            $process = $this->Shared_model->barang_add($input);
+        } else {
+            $process = $this->Shared_model->barang_edit($input);
+        }
+
+        if ($data == 'jurnal_group') {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak bisa mengganti Jurnal Group', 'title' => 'Info'));
+        } else if ($data) {
+            if ($data == 'headChild') {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak bisa mengganti type Header ke type Detail', 'title' => 'Info'));
+            } else {
+                echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => $data, 'title' => 'Info'));
+            }
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'Database Error'));
+        }
     }
 
     public function del_barang() {
@@ -148,7 +165,6 @@ class Shared extends Auth_Controller {
     }
 
     //LIST, ADD, EDIT, DELETE BARANG END
-
     //LIST, ADD, EDIT, DELETE MERK START
     public function list_merk() {
         $records = $this->input->get('filter');
@@ -211,8 +227,8 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
         }
     }
-    //LIST, ADD, EDIT, DELETE MERK END
 
+    //LIST, ADD, EDIT, DELETE MERK END
     //LIST CABANG START
     public function list_cabang() {
         $records = $this->input->get('filter');

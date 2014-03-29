@@ -224,7 +224,7 @@ Ext.define('GlApp.view.gdmsbarang.MsBarangForm', {
                     displayField: 'mi_name',
                     valueField: 'id',
                     queryMode: 'remote',
-                    allowBlank: false,
+                    allowBlank: true,
                     hidden: false,
                     matchFieldWidth: false,
                     listConfig: {

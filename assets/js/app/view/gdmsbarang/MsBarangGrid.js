@@ -10,6 +10,7 @@ Ext.define('GlApp.view.gdmsbarang.MsBarangGrid', {
     autoScroll: true,
     forceFit: true,
     columnLines: true,
+    plugins: 'bufferedrenderer',
     flex: 1,
 
     initComponent: function () {
@@ -108,12 +109,13 @@ Ext.define('GlApp.view.gdmsbarang.MsBarangGrid', {
                 
             ],
             columns: [
+                Ext.create('Ext.grid.RowNumberer', {width: 40}),
                 {
                     dataIndex: 'id',
                     hidden: true
                 },
                 {
-                    width: 120,
+                    width: 80,
                     text: 'KODE BARANG',
                     sortable: false,
                     dataIndex: 'mi_kode'
@@ -122,14 +124,7 @@ Ext.define('GlApp.view.gdmsbarang.MsBarangGrid', {
                     text: 'NAMA BARANG',
                     width: 200,
                     dataIndex: 'mi_name',
-                    renderer: function (value, meta, record) {
-//                        if (record.get('mi_child_stat') === 1) {
-//                            return value.toUpperCase().capitalize();
-//                        }
-//                        else {
-//                            return "<b>" + value.toUpperCase().capitalize() + "</b>";
-//                        }
-                    }
+                    renderer: 'uppercase'
                 },
                 {
                     text: 'STOCK',

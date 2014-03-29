@@ -1,4 +1,4 @@
-var BarangModel = Ext.define('GlApp.model.BarangModel', {
+var BarangModelTree = Ext.define('GlApp.model.BarangModel', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id', type: 'int'},
@@ -32,10 +32,10 @@ var BarangModel = Ext.define('GlApp.model.BarangModel', {
 
 Ext.define('GlApp.store.gdmsbarang.BarangTreeStore', {
     extend: 'Ext.data.TreeStore',
-    model: BarangModel,
+    model: BarangModelTree,
     root: {
         text: 'root',
-        id: '0',
+        id: 0,
         expanded: true
     },
     proxy: {
