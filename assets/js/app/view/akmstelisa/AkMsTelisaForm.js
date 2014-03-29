@@ -25,21 +25,21 @@ Ext.define('GlApp.view.akmstelisa.AkMsTelisaForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'mtSave'
+                    action: 'mtSave'
                 },
                 {
                     xtype: 'button',
                     ui: 'blue-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
-//                    action: 'mtNew'
+                    action: 'mtNew'
                 },
                 {
                     xtype: 'button',
                     ui: 'blue-button',
                     text: 'Hapus',
                     iconCls: 'icon-btn-delete',
-//                    action: 'mtDelete'
+                    action: 'mtDelete'
                 }
             ],
             items: [
@@ -54,7 +54,7 @@ Ext.define('GlApp.view.akmstelisa.AkMsTelisaForm', {
                     xtype: 'combobox',
                     emptyText: 'Pilih Cabang',
                     fieldLabel: 'Cabang ',
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     name: 'mt_cabang',
@@ -62,7 +62,7 @@ Ext.define('GlApp.view.akmstelisa.AkMsTelisaForm', {
                     triggerAction: 'all',
                     valueNotFoundText: 'Tidak ada Data',
                     forceSelection: true,
-//                    store: 'CabangStore',
+                    store: 'akmstelisa.CabangStore',
 //                    hidden: userCabang === "14" ? false : true,
 //                    listeners: {
 //                        afterrender: function() {
@@ -78,7 +78,7 @@ Ext.define('GlApp.view.akmstelisa.AkMsTelisaForm', {
                     fieldLabel: 'Jenis Biaya ',
                     name: 'mt_jenis',
                     triggerAction: 'all',
-//                    store: 'TelisaJenisStore',
+                    store: 'akmstelisa.TelisaJenisStore',
                     displayField: 'mtj_name',
                     valueField: 'id',
                     minChars: 2,
@@ -109,24 +109,24 @@ Ext.define('GlApp.view.akmstelisa.AkMsTelisaForm', {
 //                        grid.getStore().load();
 //                        win.show();
 //                    },
-//                    listeners: {
-//                        select: function() {
-//                            var val = this.getValue();
-//                            if(val === 4) {
-//                                this.up('form').getForm().findField('mt_surat').enable();
-//                                this.up('form').getForm().findField('mt_surat').show();
-//
-//                                this.up('form').getForm().findField('mt_rek').disable();
-//                                this.up('form').getForm().findField('mt_rek').hide();
-//                            } else {
-//                                this.up('form').getForm().findField('mt_surat').disable();
-//                                this.up('form').getForm().findField('mt_surat').hide();
-//
-//                                this.up('form').getForm().findField('mt_rek').enable();
-//                                this.up('form').getForm().findField('mt_rek').show();
-//                            }
-//                        }
-//                    }
+                    listeners: {
+                        select: function() {
+                            var val = this.getValue();
+                            if(val === 4) {
+                                this.up('form').getForm().findField('mt_surat').enable();
+                                this.up('form').getForm().findField('mt_surat').show();
+
+                                this.up('form').getForm().findField('mt_rek').disable();
+                                this.up('form').getForm().findField('mt_rek').hide();
+                            } else {
+                                this.up('form').getForm().findField('mt_surat').disable();
+                                this.up('form').getForm().findField('mt_surat').hide();
+
+                                this.up('form').getForm().findField('mt_rek').enable();
+                                this.up('form').getForm().findField('mt_rek').show();
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'textfield',

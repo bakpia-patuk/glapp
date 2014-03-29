@@ -28,6 +28,7 @@ class Apps extends Auth_Controller {
         $data['icon_css'] = "main_icon";
         $data['logged_user'] = strtoupper($this->the_user->first_name . ' ' . $this->the_user->last_name);
         $data['cabang_name'] = $cabang == 1 ? $detail_cabang : 'CABANG ' . $detail_cabang->cabang_city . ', ' . $detail_cabang->cabang_alias;
+        $data['cabang_id'] = $cabang;
         $this->load->view('app_page', $data);
     }
 

@@ -259,7 +259,105 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
+    
+    
+    
+    //LIST JENIS TELISA
+    public function list_telisajenis() {
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
 
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+//        if ($query) {
+//            if ($query != "") {
+//                $params[] = array('field' => 'cabang_alias', 'param' => 'like', 'operator' => '', 'value' => $query);
+//                $params[] = array('field' => 'cabang_city', 'param' => 'or_like', 'operator' => '', 'value' => $query);
+//            }
+//        }
+
+        $tablename = 'dt_telisajenis';
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, $tablename);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Cabang'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+
+    
+    //MASTER TELISA
+    
+    public function add_mstelisa() {
+        $input = $this->input->post(NULL, TRUE);
+
+        if ($input['id'] != 0) {
+            $input['mt_nama'] = strtoupper($input['mt_nama']);
+            $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+            if (!$this->Shared_model->update($input, $opt, NULL, 'ms_telisa')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
+            } else {
+                echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Update Success'));
+            }
+        } else {
+            unset($input['id']);
+            $input['mt_nama'] = strtoupper($input['mt_nama']);
+            if (!$this->Shared_model->insert($input, 'ms_telisa')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
+            } else {
+                echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Success'));
+            }
+        }
+    }
+    
+    public function list_mstelisa() {
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+//        if ($query) {
+//            if ($query != "") {
+//                $params[] = array('field' => 'cabang_alias', 'param' => 'like', 'operator' => '', 'value' => $query);
+//                $params[] = array('field' => 'cabang_city', 'param' => 'or_like', 'operator' => '', 'value' => $query);
+//            }
+//        }
+
+        $tablename = 'ms_telisa';
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, $tablename);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Cabang'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+    
+    public function del_telisa() {
+        $input = $this->input->post(NULL, TRUE);
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+
+        if ($this->Shared_model->delete($params, NULL, 'ms_telisa')) {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Delete Success'));
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
+        }
+    }
 }
 
 /* End of file welcome.php */

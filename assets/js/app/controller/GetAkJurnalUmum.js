@@ -7,6 +7,7 @@ Ext.define('GlApp.controller.GetAkJurnalUmum', {
     models: [
     ],
     stores: [
+        'akjurnalumum.CabangStore'
     ],
     views: [
         'akjurnalumum.GetAkJurnalUmum',
