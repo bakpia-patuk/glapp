@@ -260,8 +260,6 @@ class Shared extends Auth_Controller {
         }
     }
     
-    
-    
     //LIST JENIS TELISA
     public function list_telisajenis() {
         $records = $this->input->get('filter');

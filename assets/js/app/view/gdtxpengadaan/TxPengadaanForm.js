@@ -22,51 +22,52 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
         var form = me;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    text: 'SIMPAN',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-save',
-                    action: 'suppSave'
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'BARU',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-add',
-                    action: 'suppNew'
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'HAPUS',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-delete',
-                    action: 'suppDelete'
-                }
-            ],
+//            tbar: [
+//                {
+//                    xtype: 'button',
+//                    text: 'SIMPAN',
+//                    ui: 'blue-button',
+//                    iconCls: 'icon-btn-save',
+//                    action: 'suppSave'
+//                },
+//                {
+//                    xtype: 'button',
+//                    disabled: false,
+//                    text: 'BARU',
+//                    ui: 'blue-button',
+//                    iconCls: 'icon-btn-add',
+//                    action: 'suppNew'
+//                },
+//                {
+//                    xtype: 'button',
+//                    disabled: false,
+//                    text: 'HAPUS',
+//                    ui: 'blue-button',
+//                    iconCls: 'icon-btn-delete',
+//                    action: 'suppDelete'
+//                }
+//            ],
             items: [
                 {
-                    xtype: 'textfield',
+                    xtype: 'numberfield',
                     fieldLabel: 'Id ',
                     hidden: true,
                     fieldCls: 'x-item-readonly',
-                    name: 'idPengadaan'
+                    value: 0,
+                    name: 'id'
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Pengadaan ',
                     readOnly: true,
-                    name: 'noPeng',
+                    name: 'no_pengadaan',
                     fieldCls: 'x-item-readonly',
                     allowBlank: false
                 },
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Tanggal ',
-                    name: 'tglTransaksi',
+                    name: 'tgl_trx',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     value: new Date(),
@@ -228,7 +229,7 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                         {
                             xtype: 'button',
                             iconCls: 'icon-btn-add',
-                            ui: 'blue-button',
+                            ui: 'orange-button',
                             itemId: 'pengNewItem',
                             disabled: true,
                             text: 'Tambah',

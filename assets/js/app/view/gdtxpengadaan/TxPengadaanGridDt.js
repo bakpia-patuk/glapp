@@ -8,7 +8,7 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGridDt', {
     border: false,
 //    store: 'ItemStore',
     autoScroll: true,
-    forceFit: false,
+    forceFit: true,
     columnLines: true,
 
     initComponent: function () {
@@ -22,10 +22,12 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGridDt', {
             },
             tbar: [
                 {
-                    text: 'DELETE'
+                    text: 'DELETE',
+                    ui: 'orange-button'
                 },
                 {
-                    text: 'REFRESH'
+                    text: 'REFRESH',
+                    ui: 'orange-button'
                 }
                 
             ],
@@ -70,6 +72,7 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGridDt', {
                 {
                     xtype: 'gridcolumn',
                     width: 250,
+                    hidden: true,
                     text: 'KETERANGAN',
                     dataIndex: 'faxms'
                 }

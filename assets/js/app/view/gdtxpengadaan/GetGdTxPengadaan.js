@@ -17,6 +17,72 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
         var me = this;
 
         Ext.applyIf(me, {
+            tbar: [
+                {
+                    text: 'ADD_NEW',
+                    ui: 'orange-button'
+                },
+                '-',
+                {
+                    text: 'SAVE',
+                    ui: 'orange-button'
+                },
+                '-',
+                {
+                    text: 'DELETE',
+                    ui: 'orange-button'
+                },
+                '-',
+                {
+                    text: 'APP_CABANG',
+                    ui: 'orange-button'
+                },
+                '-',
+                {
+                    text: 'APP_PUSAT',
+                    ui: 'orange-button'
+                },
+                '->',
+                {
+                    xtype: 'datefield',
+                    fieldLabel: 'Filter ',
+                    labelWidth: 40,
+                    labelAlign: 'right',
+                    emptyText: 'Tgl. Awal',
+                    format: 'd/M/Y',
+                    submitFormat: 'Y-m-d',
+                    value: new Date()
+                },
+                {
+                    xtype: 'datefield',
+                    fieldLabel: ' s.d ',
+                    labelWidth: 30,
+                    labelAlign: 'right',
+                    emptyText: 'Tgl. Akhir',
+                    format: 'd/M/Y',
+                    submitFormat: 'Y-m-d',
+                    value: new Date()
+                },
+                {
+                    xtype: 'combobox',
+                    emptyText: 'Cabang',
+                    allowBlank: false
+                },
+                {
+                    text: 'SEARCH',
+                    ui: 'orange-button'
+                },
+                '-',
+                {
+                    text: 'ALL',
+                    ui: 'orange-button'
+                },
+                '-',
+                {
+                    text: 'REFRESH',
+                    ui: 'orange-button'
+                }
+            ],
             items: [
                 {
                     region: 'center',
@@ -24,7 +90,7 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                     layout: 'border',
                     defaults: {
                         border: true,
-                        ui: 'blue-panel',
+                        ui: 'orange-panel',
                         split: true
                     },
                     items: [
@@ -46,19 +112,15 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                 },
                 {
                     region: 'west',
-                    ui: 'blue-panel',
+                    ui: 'orange-panel',
                     width: 325,
                     minWidth: 325,
                     maxWidth: 325,
                     title: 'FORM DETAIL PENGADAAN',
                     border: true,
                     collapsible: true,
-                    layout: 'fit',
-                    items: [
-                        {
-                            xtype: 'gdtxpengadaan.txpengadaanform'
-                        }
-                    ]
+                    layout: 'auto',
+                    xtype: 'gdtxpengadaan.txpengadaanform'
                 }
             ]
         });
