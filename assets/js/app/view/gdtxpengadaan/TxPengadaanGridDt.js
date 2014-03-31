@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGridDt', {
     alias: 'widget.gdtxpengadaan.txpengadaangriddt',
     itemId: 'txpengadaangriddt',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxpengadaan.PengDetailStore',
     autoScroll: true,
     forceFit: true,
     columnLines: true,
@@ -23,11 +23,8 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGridDt', {
             tbar: [
                 {
                     text: 'DELETE',
-                    ui: 'orange-button'
-                },
-                {
-                    text: 'REFRESH',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    itemId: 'deleteItemPeng'
                 }
                 
             ],
@@ -37,44 +34,47 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGridDt', {
                     xtype: 'gridcolumn',
                     width: 200,
                     text: 'NAMA BARANG',
-                    dataIndex: 'namams'
+                    renderer: 'uppercase',
+                    dataIndex: 'barang_name'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'datecolumn',
                     width: 100,
                     text: 'UNTUK TGL.',
-                    dataIndex: 'alamatms'
+                    dataIndex: 'tgl_butuh',
+                    format: 'd/M/Y'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
                     text: 'MERK',
-                    dataIndex: 'namakotams'
+                    renderer: 'uppercase',
+                    dataIndex: 'merk_name'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
                     text: 'NO KATALOG',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'peng_katalog'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
                     text: 'KEMASAN',
-                    dataIndex: 'tlp2ms'
+                    dataIndex: 'peng_kemasan'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
                     text: 'QTY PESANAN',
-                    dataIndex: 'hpms'
+                    dataIndex: 'peng_qty'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 250,
                     hidden: true,
                     text: 'KETERANGAN',
-                    dataIndex: 'faxms'
+                    dataIndex: 'barang_desc'
                 }
             ]
         });

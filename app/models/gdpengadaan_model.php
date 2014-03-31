@@ -31,4 +31,13 @@ class Gdpengadaan_model extends MY_Model {
         return $data;
     }
 
+    public function approve_peng($param, $id) {
+        $data = array($param => 1);
+        
+        $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $this->Gdpengadaan_model->update($data, $params1, NULL, 'trx_pengadaan');
+        
+        return TRUE;
+    }
+
 }

@@ -5,7 +5,6 @@
 Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.gdtxpengadaan.getgdtxpengadaan',
-    itemId: 'getgdtxpengadaan',
     bodyPadding: '2 0 0 0',
     border: false,
     layout: 'border',
@@ -33,19 +32,19 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                 {
                     text: 'DELETE',
                     ui: 'orange-button',
-                    action: 'pengDelete'
+                    itemId: 'pengDelete'
                 },
                 '-',
                 {
                     text: 'APP_CABANG',
                     ui: 'orange-button',
-                    action: 'pengAppCb'
+                    itemId: 'pengAppCb'
                 },
                 '-',
                 {
                     text: 'APP_PUSAT',
                     ui: 'orange-button',
-                    action: 'pengAppPs'
+                    itemId: 'pengAppPs'
                 },
                 '->',
                 {
@@ -56,6 +55,7 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                     emptyText: 'Tgl. Awal',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
+                    itemId: 'pengTgl1',
                     value: new Date()
                 },
                 {
@@ -66,29 +66,41 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                     emptyText: 'Tgl. Akhir',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
+                    itemId: 'pengTgl2',
                     value: new Date()
                 },
                 {
                     xtype: 'combobox',
                     emptyText: 'Cabang',
-                    allowBlank: false
+                    width: 150,
+                    itemId: 'pengCabang',
+                    triggerAction: 'all',
+                    hideTrigger: false,
+                    mode: 'remote',
+                    minChars: 2,
+                    store: 'gdtxpengadaan.CabangStore',
+                    displayField: 'cabang_alias',
+                    valueField: 'id',
+                    matchFieldWidth: false,
+                    value: parseInt(CABANG_ID)
                 },
                 {
                     text: 'SEARCH',
                     ui: 'orange-button',
-                    action: ''
+                    itemId: 'searchPeng'
                 },
                 '-',
                 {
                     text: 'ALL',
                     ui: 'orange-button',
-                    action: ''
+                    disabled: CABANG_ID ===  1 ? false : true,
+                    itemId: 'allPeng'
                 },
                 '-',
                 {
                     text: 'REFRESH',
                     ui: 'orange-button',
-                    action: ''
+                    itemId: 'refreshPeng'
                 }
             ],
             items: [

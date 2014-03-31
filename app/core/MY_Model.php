@@ -248,7 +248,7 @@ class MY_Model extends CI_Model {
             $generate = strtoupper($user_detail->first_name . ' ' . $user_detail->last_name) . ' ' . $action . ' data in ' . $form_id;
         }
         $data = array(
-            'date' => now(),
+            'date' => mdate("%Y-%m-%d %H:%i:%s", time()),
             'activity' => $generate,
             'user_id' => $user,
             'cabang_id' => $cabang

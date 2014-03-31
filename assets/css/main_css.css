@@ -61,3 +61,37 @@ div.cabang-display {
     height: 85px;
     background: #f2f2f2;
 }
+
+/*PENGADAAN COLOR*/
+
+.x-grid-row.peng-null .x-grid-cell {
+    background-color: #FF0000;
+    color: #FFF;
+}
+
+.x-grid-row.peng-div .x-grid-cell {
+    background-color: #0000FF;
+    color: #FFF;
+}
+
+.x-grid-row.peng-pusat .x-grid-cell {
+    background-color: #CE7F00;
+    color: #FFF;
+}
+
+.x-grid-row.peng-pobag .x-grid-cell {
+    background-color: #48FF00;
+    color: #000;
+}
+
+.x-grid-row.peng-poall .x-grid-cell {
+    background-color: #FEFEFE;
+    color: #000;
+}
+
+.x-grid-row.peng-grey .x-grid-cell {
+    background-color: grey;
+    color: #FFF;
+}
+
+
