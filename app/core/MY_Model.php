@@ -5,7 +5,7 @@ if (!defined('BASEPATH')) {
 }
 
 class MY_Model extends CI_Model {
-
+    public $cms_db;
     public $table;
     public $params = array();
     public $options = array();
@@ -256,6 +256,88 @@ class MY_Model extends CI_Model {
 
         $this->insert($data, 'sv_logging');
         return TRUE;
+    }
+
+    //Outgoing
+    public function get_outgoing($params = NULL, $options = NULL, $tablename = "") {
+        if ($tablename == "") {
+            $tablename = $this->table;
+        }
+
+        // Add where clauses to query
+        if ($params != NULL) {
+            foreach ($params as $data) {
+                if (isset($options['third'])) {
+                    $this->cms_db->$data['param']($data['field'] . $data['operator'], $data['value'], $options['third']);
+                } else {
+                    $this->cms_db->$data['param']($data['field'] . $data['operator'], $data['value']);
+                }
+            }
+        }
+
+        // If limit / offset are declared (usually for pagination) then we need to take them into account
+        if (isset($options['limit']) && isset($options['offset'])) {
+            $this->cms_db->limit($options['limit'], $options['offset']);
+        } else if (isset($options['limit'])) {
+            $this->cms_db->limit($options['limit']);
+        }
+
+        // sort
+        if (isset($options['sortBy'])) {
+            $this->cms_db->order_by($options['sortBy'], $options['sortDirection']);
+        }
+
+        // group
+        if (isset($options['groupBy'])) {
+            $this->cms_db->group_by($options['groupBy']);
+        }
+
+        $query = $this->cms_db->get($tablename);
+        if ($query->num_rows() == 0) {
+            return false;
+        }
+
+        return $query->row();
+    }
+    public function get_outgoing($params = NULL, $options = NULL, $tablename = "") {
+        if ($tablename == "") {
+            $tablename = $this->table;
+        }
+
+        // Add where clauses to query
+        if ($params != NULL) {
+            foreach ($params as $data) {
+                if (isset($options['third'])) {
+                    $this->cms_db->$data['param']($data['field'] . $data['operator'], $data['value'], $options['third']);
+                } else {
+                    $this->cms_db->$data['param']($data['field'] . $data['operator'], $data['value']);
+                }
+            }
+        }
+
+        // If limit / offset are declared (usually for pagination) then we need to take them into account
+        if (isset($options['limit']) && isset($options['offset'])) {
+            $this->cms_db->limit($options['limit'], $options['offset']);
+        } else if (isset($options['limit'])) {
+            $this->cms_db->limit($options['limit']);
+        }
+
+        // sort
+        if (isset($options['sortBy'])) {
+            $this->cms_db->order_by($options['sortBy'], $options['sortDirection']);
+        }
+
+        // group
+        if (isset($options['groupBy'])) {
+            $this->cms_db->group_by($options['groupBy']);
+        }
+
+        $query = $this->cms_db->get($tablename);
+        if ($query->num_rows() == 0) {
+            return false;
+        }
+
+        return $query->row();
     }
 
 }

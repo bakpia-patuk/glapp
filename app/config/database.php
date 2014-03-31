@@ -19,6 +19,22 @@ $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
 
+$db['outgoing']['hostname'] = 'localhost';
+$db['outgoing']['username'] = 'outgoing';
+$db['outgoing']['password'] = '1';
+$db['outgoing']['database'] = 'outgoing';
+$db['outgoing']['dbdriver'] = 'mysql';
+$db['outgoing']['dbprefix'] = '';
+$db['outgoing']['pconnect'] = TRUE;
+$db['outgoing']['db_debug'] = TRUE;
+$db['outgoing']['cache_on'] = FALSE;
+$db['outgoing']['cachedir'] = '';
+$db['outgoing']['char_set'] = 'utf8';
+$db['outgoing']['dbcollat'] = 'utf8_general_ci';
+$db['outgoing']['swap_pre'] = '';
+$db['outgoing']['autoinit'] = TRUE;
+$db['outgoing']['stricton'] = FALSE;
+
 
 /* End of file database.php */
 /* Location: ./application/config/database.php */
