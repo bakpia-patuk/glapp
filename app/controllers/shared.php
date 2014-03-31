@@ -126,13 +126,14 @@ class Shared extends Auth_Controller {
             }
         }
 
-        $opt['sortBy'] = 'id';
+        $params[] = array('field' => 'mi_child_stat', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $opt['sortBy'] = 'no';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Shared_model->barang_cabang($params, $opt);
+        $result = $this->Shared_model->get_barang_cabang($params, $opt);
 
         if ($result != NULL) {
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Barang'));
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Barang Cabang'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }

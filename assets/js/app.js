@@ -12,7 +12,7 @@ Ext.application({
     controllers: ['App'],
     launch: function() {
         var me = this;
-        
+        Ext.Ajax.timeout = 600000;
         Ext.util.History.init(function() {
             var hash = document.location.hash;
             me.getAppController().fireEvent('tokenchange', hash.replace('#', ''));
