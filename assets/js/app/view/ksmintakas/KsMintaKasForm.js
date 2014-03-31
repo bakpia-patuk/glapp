@@ -20,22 +20,6 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
         var me = this;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    ui: 'blue-button',
-                    text: 'Simpan',
-                    iconCls: 'icon-btn-save',
-//                    action: 'mbSave'
-                },
-                {
-                    xtype: 'button',
-                    ui: 'blue-button',
-                    text: 'Baru',
-                    iconCls: 'icon-btn-add',
-//                    action: 'mbNew'
-                }
-            ],
             items: [
                 {
                     xtype: 'textfield',
@@ -53,7 +37,7 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 },
                 {
                     xtype: 'datefield',
-                    name: 'tglTrx',
+                    name: 'tgl_trx',
                     fieldLabel: 'Tanggal ',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
@@ -67,7 +51,7 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                     displayField: 'type',
                     valueField: 'typeCode',
                     queryMode: 'local',
-                    name: 'divisi',
+                    name: 'trx_divisi',
                     forceSelection: true,
                     hidden: false,
                     typeAhead: true,
@@ -93,30 +77,30 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 {
                     xtype: 'comboboxedit',
                     fieldLabel: 'Keperluan ',
-                    name: 'namaGrk',
+                    name: 'mk_keperluan',
                     hidden: false,
                     triggerAction: 'all',
                     minChars: 2,
-//                    store: 'GrkStoreBkr',
+                    store: 'ksmintakas.GrkBkStore',
                     readOnly: false,
-                    displayField: 'grkName',
+                    displayField: 'grk_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
-//                    listeners: {
-//                        afterrender: function(combo, rec, eOpt) {
-//                            combo.getStore().clearFilter(true);
-//                            combo.getStore().filter('form_id', 'mintakasdiv');
-//                        },
+                    listeners: {
+                        afterrender: function(combo, rec, eOpt) {
+                            combo.getStore().clearFilter(true);
+                            combo.getStore().filter('form_id', 'mintakasdiv');
+                        },
 //                        select: function(combo, rec, eOpt) {
-//                            var store = this.up('form').getForm().findField('namaKd').getStore();
-//                            this.up('form').getForm().findField('namaKd').show();
-//                            this.up('form').getForm().findField('namaKd').setReadOnly(false);
-//                            this.up('form').getForm().findField('namaKd').reset();
+//                            var store = this.up('form').getForm().findField('mk_detail').getStore();
+//                            this.up('form').getForm().findField('mk_detail').show();
+//                            this.up('form').getForm().findField('mk_detail').setReadOnly(false);
+//                            this.up('form').getForm().findField('mk_detail').reset();
 //                            store.clearFilter(true);
 //                            store.filter('kp_id', combo.getValue());
 //                            store.load();
 //                        }
-//                    },
+                    },
 //                    onTrigger2Click: function() {
 //                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
 //                            border: true,
@@ -158,7 +142,7 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Detail Keperluan ',
-                    name: 'namaKd',
+                    name: 'mk_detail',
                     hidden: true,
                     hideTrigger: false,
                     triggerAction: 'all',
@@ -198,33 +182,33 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
 //
 //                                store.clearFilter(true);
 //                                store.filter(filterCollection);
-//                                form.down('#pemeriksaan').disable();
-//                                form.down('#pemeriksaan').hide();
+//                                form.down('#mkr_pemeriksaan').disable();
+//                                form.down('#mkr_pemeriksaan').hide();
 //
-//                                form.down('#namapasien').disable();
-//                                form.down('#namapasien').hide();
+//                                form.down('#mkr_namapasien').disable();
+//                                form.down('#mkr_namapasien').hide();
 //
-//                                form.down('#rujukan').disable();
-//                                form.down('#rujukan').hide();
+//                                form.down('#mkr_rujukanke').disable();
+//                                form.down('#mkr_rujukanke').hide();
 //                                
 //                            } else if (val === 877) {
-//                                form.down('#pemeriksaan').enable();
-//                                form.down('#pemeriksaan').show();
+//                                form.down('#mkr_pemeriksaan').enable();
+//                                form.down('#mkr_pemeriksaan').show();
 //
-//                                form.down('#namapasien').enable();
-//                                form.down('#namapasien').show();
+//                                form.down('#mkr_namapasien').enable();
+//                                form.down('#mkr_namapasien').show();
 //
-//                                form.down('#rujukan').enable();
-//                                form.down('#rujukan').show();
+//                                form.down('#mkr_rujukanke').enable();
+//                                form.down('#mkr_rujukanke').show();
 //                            } else {
-//                                form.down('#pemeriksaan').disable();
-//                                form.down('#pemeriksaan').hide();
+//                                form.down('#mkr_pemeriksaan').disable();
+//                                form.down('#mkr_pemeriksaan').hide();
 //
-//                                form.down('#namapasien').disable();
-//                                form.down('#namapasien').hide();
+//                                form.down('#mkr_namapasien').disable();
+//                                form.down('#mkr_namapasien').hide();
 //
-//                                form.down('#rujukan').disable();
-//                                form.down('#rujukan').hide();
+//                                form.down('#mkr_rujukanke').disable();
+//                                form.down('#mkr_rujukanke').hide();
 //                                
 //                                this.up('form').getForm().findField('noDetilKpr').hide();
 //
@@ -235,15 +219,15 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'No Dtl. Keperluan ',
-                    name: 'noDetilKpr',
+                    name: 'mk_detailext',
                     hidden: true,
                     hideTrigger: false,
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'MasterTelisaStore',
+                    store: 'ksmintakas.MasterTelisaStore',
                     readOnly: false,
-                    displayField: 'mt_namarek',
+                    displayField: 'mt_rek',
                     valueField: 'id',
                     emptyText: 'Pilih No',
                     matchFieldWidth: false,
@@ -254,8 +238,8 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'pemeriksaan',
-                    itemId: 'pemeriksaan',
+                    name: 'mkr_pemeriksaan',
+                    itemId: 'mkr_pemeriksaan',
                     fieldLabel: 'Nama Pmriksaan ',
                     hidden: true,
                     disabled: true,
@@ -263,8 +247,8 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'namaPasien',
-                    itemId: 'namapasien',
+                    name: 'mkr_namapasien',
+                    itemId: 'mkr_namapasien',
                     fieldLabel: 'Nama Pasien ',
                     hidden: true,
                     disabled: true,
@@ -272,8 +256,8 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'rujukan',
-                    itemId: 'rujukan',
+                    name: 'mkr_rujukanke',
+                    itemId: 'mkr_rujukanke',
                     fieldLabel: 'Di Rujuk Ke ',
                     hidden: true,
                     disabled: true,
@@ -281,7 +265,7 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     fieldLabel: 'Nominal ',
-                    name: 'trxValue',
+                    name: 'trx_value',
                     decimalPrecision: 2,
                     decimalSeparator: ',',
                     alwaysDisplayDecimals: true,
@@ -296,7 +280,7 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                 }),
                 {
                     xtype: 'textfield',
-                    name: 'namaPenerima',
+                    name: 'trx_penerima',
                     fieldLabel: 'Penerima ',
                     allowBlank: false
                 }
