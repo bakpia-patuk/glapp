@@ -22,56 +22,6 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGrid', {
                 emptyText: 'Tidak ada data Pengadaan',
                 deferEmptyText: false
             },
-//            tbar: [
-//                {
-//                    xtype: 'datefield',
-//                    fieldLabel: 'Filter ',
-//                    labelWidth: 40,
-//                    labelAlign: 'right',
-//                    emptyText: 'Tgl. Awal',
-//                    displayField: 'type',
-//                    valueField: 'typeCode',
-//                    queryMode: 'local',
-//                    forceSelection: true,
-//                    typeAhead: true,
-//                    valueNotFoundText: 'Tidak ada Data'
-//                },
-//                {
-//                    xtype: 'datefield',
-//                    fieldLabel: ' s.d ',
-//                    labelWidth: 30,
-//                    labelAlign: 'right',
-//                    emptyText: 'Tgl. Akhir',
-//                    displayField: 'type',
-//                    valueField: 'typeCode',
-//                    queryMode: 'local',
-//                    forceSelection: true,
-//                    typeAhead: true,
-//                    valueNotFoundText: 'Tidak ada Data'
-//                },
-//                {
-//                    xtype: 'combobox',
-//                    emptyText: 'Cabang',
-//                    allowBlank: false
-//                },
-//                {
-//                    text: 'SEARCH'
-//                },
-//                '->',
-//                {
-//                    text: 'APP_CABANG'
-//                },
-//                {
-//                    text: 'APP_PUSAT'
-//                },
-//                {
-//                    text: 'REFRESH'
-//                },
-//                {
-//                    text: 'ALL'
-//                }
-//                
-//            ],
             columns: [
                 {
                     xtype: 'gridcolumn',

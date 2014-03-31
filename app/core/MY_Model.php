@@ -240,4 +240,22 @@ class MY_Model extends CI_Model {
         }
     }
 
+    public function generate_user_log($user, $cabang, $action, $form_id) {
+        $user_detail = $this->get_detail_like('id', $user, 'users');
+        if ($action == 'LOGIN' || $action == 'LOGOUT') {
+            $generate = strtoupper($user_detail->first_name . ' ' . $user_detail->last_name) . ' has been ' . $action;
+        } else {
+            $generate = strtoupper($user_detail->first_name . ' ' . $user_detail->last_name) . ' ' . $action . ' data in ' . $form_id;
+        }
+        $data = array(
+            'date' => now(),
+            'activity' => $generate,
+            'user_id' => $user,
+            'cabang_id' => $cabang
+        );
+
+        $this->insert($data, 'sv_logging');
+        return TRUE;
+    }
+
 }

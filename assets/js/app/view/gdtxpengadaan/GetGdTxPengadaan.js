@@ -20,27 +20,32 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
             tbar: [
                 {
                     text: 'ADD_NEW',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    itemId: 'pengNew'
                 },
                 '-',
                 {
                     text: 'SAVE',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    itemId: 'pengSave'
                 },
                 '-',
                 {
                     text: 'DELETE',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    action: 'pengDelete'
                 },
                 '-',
                 {
                     text: 'APP_CABANG',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    action: 'pengAppCb'
                 },
                 '-',
                 {
                     text: 'APP_PUSAT',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    action: 'pengAppPs'
                 },
                 '->',
                 {
@@ -70,17 +75,20 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                 },
                 {
                     text: 'SEARCH',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    action: ''
                 },
                 '-',
                 {
                     text: 'ALL',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    action: ''
                 },
                 '-',
                 {
                     text: 'REFRESH',
-                    ui: 'orange-button'
+                    ui: 'orange-button',
+                    action: ''
                 }
             ],
             items: [

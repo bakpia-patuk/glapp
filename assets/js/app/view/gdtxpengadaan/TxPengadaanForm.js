@@ -22,47 +22,24 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
         var form = me;
 
         Ext.applyIf(me, {
-//            tbar: [
-//                {
-//                    xtype: 'button',
-//                    text: 'SIMPAN',
-//                    ui: 'blue-button',
-//                    iconCls: 'icon-btn-save',
-//                    action: 'suppSave'
-//                },
-//                {
-//                    xtype: 'button',
-//                    disabled: false,
-//                    text: 'BARU',
-//                    ui: 'blue-button',
-//                    iconCls: 'icon-btn-add',
-//                    action: 'suppNew'
-//                },
-//                {
-//                    xtype: 'button',
-//                    disabled: false,
-//                    text: 'HAPUS',
-//                    ui: 'blue-button',
-//                    iconCls: 'icon-btn-delete',
-//                    action: 'suppDelete'
-//                }
-//            ],
             items: [
                 {
                     xtype: 'numberfield',
                     fieldLabel: 'Id ',
+                    name: 'id',
+                    itemId: 'id',
                     hidden: true,
-                    fieldCls: 'x-item-readonly',
-                    value: 0,
-                    name: 'id'
+                    readOnly: true,
+                    value: 0
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Pengadaan ',
                     readOnly: true,
                     name: 'no_pengadaan',
+                    itemId: 'no_pengadaan',
                     fieldCls: 'x-item-readonly',
-                    allowBlank: false
+                    allowBlank: true
                 },
                 {
                     xtype: 'datefield',
@@ -76,14 +53,15 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Barang ',
-                    name: 'pengBarang',
+                    name: 'barang_id',
+                    itemId: 'barang_id',
                     allowBlank: true,
                     triggerAction: 'query',
                     hideTrigger: true,
                     mode: 'remote',
                     minChars: 2,
-//                    store: 'ItemStore',
-                    displayField: 'itemName',
+                    store: 'gdtxpengadaan.BarangStore',
+                    displayField: 'mi_name',
                     valueField: 'id',
                     forceSelection: true,
                     valueNotFoundText: 'Tidak ada barang',
@@ -94,25 +72,17 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                         minWidth: 185
                     },
                     listeners: {
-                        afterrender: function(cmb, rec, opt) {
-//                            cmb.getStore().clearFilter(true);
-//                            cmb.getStore().filter('mi_child_stat', 1);
-                        },
                         select: function(cmb, rec, opt) {
-                            var pengGolongan = this.up('form').getForm().findField('golName');
-                            var pengMerk = this.up('form').getForm().findField('pengMerk');
-                            var pengKatalog = this.up('form').getForm().findField('pengKatalog');
-                            var pengKemasan = this.up('form').getForm().findField('pengKemasan'),
-                                    store = pengKemasan.getStore();
+                            var store = form.down('#peng_kemasan').getStore();
 
                             var val = cmb.getValue(),
                                     data = cmb.findRecordByValue(val);
 
-                            pengGolongan.setValue(data.get('itemParentName'));
-                            pengMerk.setValue(data.get('itemMerkName'));
-                            pengKatalog.setValue(data.get('itemCatalog'));
+                            form.down('#barang_gol').setValue(data.get('mi_parent_name'));
+                            form.down('#barang_merk').setValue(data.get('mi_merk_name'));
+                            form.down('#barang_katalog').setValue(data.get('mi_katalog'));
 
-                            pengKemasan.clearValue();
+                            form.down('#peng_kemasan').clearValue();
                             var filterCollection = [];
 
                             var statusFilter = new Ext.util.Filter({
@@ -129,22 +99,14 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-
-                            this.up('form').down('#pengNewItem').enable();
-
-                            this.up('form').getForm().findField('golName').show();
-                            this.up('form').getForm().findField('pengMerk').show();
-                            this.up('form').getForm().findField('pengKatalog').show();
-                            this.up('form').getForm().findField('pengKemasan').show();
-                            this.up('form').getForm().findField('qtyBarang').show();
-                            this.up('form').getForm().findField('tglKebutuhan').show();
                         }
                     }
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Golongan ',
-                    name: 'golName',
+                    name: 'barang_gol',
+                    itemId: 'barang_gol',
                     hidden: false,
                     readOnly: true,
                     fieldCls: 'x-item-readonly'
@@ -152,7 +114,8 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Merk ',
-                    name: 'pengMerk',
+                    name: 'barang_merk',
+                    itemId: 'barang_merk',
                     hidden: false,
                     readOnly: true,
                     fieldCls: 'x-item-readonly'
@@ -160,7 +123,8 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Katalog ',
-                    name: 'pengKatalog',
+                    name: 'barang_katalog',
+                    itemId: 'barang_katalog',
                     hidden: false,
                     readOnly: true,
                     fieldCls: 'x-item-readonly'
@@ -173,19 +137,28 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                         {
                             xtype: 'numberfield',
                             width: 160,
-                            name: 'qtyBarang',
+                            name: 'peng_qty',
+                            itemId: 'peng_qty',
                             hidden: false,
                             fieldLabel: 'Qty ',
                             allowNegative: false,
-                            minValue: 0,
+                            minValue: 1,
                             hideTrigger: true,
                             keyNavEnabled: false,
                             mouseWheelEnabled: false,
-                            allowBlank: true
+                            allowBlank: true,
+                            listeners: {
+                                blur: function() {
+                                    if(this.getValue() > 0) {
+                                        form.down('#pengNewItem').enable();
+                                    }
+                                }
+                            }
                         },
                         {
                             xtype: 'combobox',
-                            name: 'pengKemasan',
+                            name: 'peng_kemasan',
+                            itemId: 'peng_kemasan',
                             hidden: false,
                             margin: '0 0 0 5',
                             width: 135,
@@ -207,10 +180,11 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Tgl Kebutuhan ',
-                    name: 'tglKebutuhan',
-                    hidden: true,
+                    name: 'tgl_butuh',
+                    hidden: false,
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
+                    value: new Date(),
                     allowBlank: true
                 },
                 {
@@ -270,16 +244,16 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
 //                                    text: '<img src='+ BASE_PATH +'assets/img/ket_warna/0000FF.PNG'+'>',
                                     width: 100,
                                     padding: '0 0 0 80',
-                                    margin: '2 0 0 0',
+                                    margin: '2 0 0 0'
                                 },
                                 {
                                     xtype: 'tbtext',
                                     text: ':',
-                                    width: 5,
+                                    width: 5
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    text: 'keterangan',
+                                    text: 'keterangan'
                                 }
                             ]
                         },
@@ -293,16 +267,16 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
 //                                    text: '<img src='+ BASE_PATH +'assets/img/ket_warna/48ff00.PNG'+'>',
                                     width: 100,
                                     padding: '0 0 0 80',
-                                    margin: '2 0 0 0',
+                                    margin: '2 0 0 0'
                                 },
                                 {
                                     xtype: 'tbtext',
                                     text: ':',
-                                    width: 5,
+                                    width: 5
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    text: 'keterangan',
+                                    text: 'keterangan'
                                 }
                             ]
                         },
@@ -316,16 +290,16 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
 //                                    text: '<img src='+ BASE_PATH +'assets/img/ket_warna/808080.PNG'+'>',
                                     width: 100,
                                     padding: '0 0 0 80',
-                                    margin: '2 0 0 0',
+                                    margin: '2 0 0 0'
                                 },
                                 {
                                     xtype: 'tbtext',
                                     text: ':',
-                                    width: 5,
+                                    width: 5
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    text: 'keterangan',
+                                    text: 'keterangan'
                                 }
                             ]
                         },
@@ -339,16 +313,16 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
 //                                    text: '<img src='+ BASE_PATH +'assets/img/ket_warna/be03c1.PNG'+'>',
                                     width: 100,
                                     padding: '0 0 0 80',
-                                    margin: '2 0 0 0',
+                                    margin: '2 0 0 0'
                                 },
                                 {
                                     xtype: 'tbtext',
                                     text: ':',
-                                    width: 5,
+                                    width: 5
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    text: 'keterangan',
+                                    text: 'keterangan'
                                 }
                             ]
                         },
@@ -362,16 +336,16 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
 //                                    text: '<img src='+ BASE_PATH +'assets/img/ket_warna/ce7f00.PNG'+'>',
                                     width: 100,
                                     padding: '0 0 0 80',
-                                    margin: '2 0 0 0',
+                                    margin: '2 0 0 0'
                                 },
                                 {
                                     xtype: 'tbtext',
                                     text: ':',
-                                    width: 5,
+                                    width: 5
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    text: 'keterangan',
+                                    text: 'keterangan'
                                 }
                             ]
                         },
@@ -385,16 +359,16 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
 //                                    text: '<img src='+ BASE_PATH +'assets/img/ket_warna/ff0000.PNG'+'>',
                                     width: 100,
                                     padding: '0 0 0 80',
-                                    margin: '2 0 0 0',
+                                    margin: '2 0 0 0'
                                 },
                                 {
                                     xtype: 'tbtext',
                                     text: ':',
-                                    width: 5,
+                                    width: 5
                                 },
                                 {
                                     xtype: 'tbtext',
-                                    text: 'keterangan',
+                                    text: 'keterangan'
                                 }
                             ]
                         }
@@ -403,6 +377,11 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
             ]
         });
         me.callParent(arguments);
+    },
+    listeners: {
+        afterrender: function() {
+            this.saved = true;
+        }
     }
 });
 

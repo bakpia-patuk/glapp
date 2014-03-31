@@ -7,13 +7,15 @@ Ext.define('GlApp.controller.Base', {
     init: function() {
         this.listen({
             globals: {
-                logo: 'assets/img/app/logo_header.png',
-                maskingBody: new Ext.LoadMask(Ext.getBody(), {msg:"Memproses Data. Mohon Menunggu."})
+                logo: 'assets/img/app/logo_header.png'
             }
         });
     },
-    saveData: function(url, param, id) {
-        GlApp.globals.maskingBody.show();
+    ajaxReq: function(url, param, id) {
+        var maskingBody = new Ext.LoadMask(Ext.getBody(), {msg: "Memproses Data. Mohon Menunggu."});
+        
+        maskingBody.show();
+        
         Ext.Ajax.request({
             url: BASE_PATH + url,
             method: 'POST',
@@ -23,10 +25,10 @@ Ext.define('GlApp.controller.Base', {
                 var resp = Ext.decode(response.responseText);
 
                 if (resp.success === 'true') {
-                    GlApp.globals.maskingBody.destroy();
+                    maskingBody.destroy();
                     this.onSuccess(resp, id);
                 } else {
-                    GlApp.globals.maskingBody.destroy();
+                    maskingBody.destroy();
                     this.onFailure(resp, id);
                 }
             }
