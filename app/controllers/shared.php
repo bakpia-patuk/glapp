@@ -357,6 +357,68 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
         }
     }
+    
+    
+    //GROUP KEPERLUAN
+    
+    public function list_group_keperluan() {
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        if ($query) {
+            if ($query != "") {
+                $params[] = array('field' => 'grk_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+            }
+        }
+
+        $tablename = 'ms_group_keperluan';
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, $tablename);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Cabang'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+    
+    //KEPERLUAN AKUN
+    public function list_detailkp() {
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+//        if ($query) {
+//            if ($query != "") {
+//                $params[] = array('field' => 'grk_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+//            }
+//        }
+
+        $tablename = 'master_keperluan_akun';
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, $tablename);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Cabang'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
 }
 
 /* End of file welcome.php */
