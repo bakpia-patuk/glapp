@@ -22,39 +22,6 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
         var form = me;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    text: 'SIMPAN',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-save',
-                    action: 'suppSave'
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'BARU',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-add',
-                    action: 'suppNew'
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'CETAK PO',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-delete',
-                    action: 'suppDelete'
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'KIRIM PDF',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-delete',
-                    action: 'suppDelete'
-                }
-            ],
             items: [
                 {
                     xtype: 'textfield',

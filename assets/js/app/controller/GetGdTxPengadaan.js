@@ -235,7 +235,7 @@ Ext.define('GlApp.controller.GetGdTxPengadaan', {
         store.clearFilter(true);
         store.filter(filterCollection);
         store.sort('cabang_id', 'ASC');
-        
+
         grid2.getStore().removeAll();
     },
     clearAllGrid: function(btn) {
@@ -264,7 +264,7 @@ Ext.define('GlApp.controller.GetGdTxPengadaan', {
         store.clearFilter(true);
         store.filter(filterCollection);
         store.sort('cabang_id', 'ASC');
-        
+
         grid2.getStore().removeAll();
     },
     onSuccess: function(resp, idForm) {
@@ -281,6 +281,8 @@ Ext.define('GlApp.controller.GetGdTxPengadaan', {
             grid1.getStore().load();
             grid2.getStore().removeAll();
         } else if (idForm === 2) {
+            var store = grid2.getStore();
+
             Ext.MessageBox.show({
                 title: resp.title,
                 msg: resp.msg,
@@ -294,6 +296,9 @@ Ext.define('GlApp.controller.GetGdTxPengadaan', {
 
             form.down('#id').setValue(resp.data.id);
             form.down('#no_pengadaan').setValue(resp.data.no_peng);
+
+            store.clearFilter(true);
+            store.filter('pengadaan_id', resp.data.id);
         } else {
             Ext.MessageBox.show({
                 title: resp.title,

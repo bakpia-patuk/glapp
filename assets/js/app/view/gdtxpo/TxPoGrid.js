@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
     alias: 'widget.gdtxpo.txpogrid',
     itemId: 'txpogrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxpo.PoPengStore',
     autoScroll: true,
     forceFit: false,
     columnLines: true,
@@ -22,46 +22,6 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                 emptyText: 'Tidak ada data Pengadaan',
                 deferEmptyText: false
             },
-            tbar: [
-                {
-                    xtype: 'datefield',
-                    fieldLabel: 'Filter ',
-                    labelWidth: 40,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Awal',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'datefield',
-                    fieldLabel: ' s.d ',
-                    labelWidth: 30,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Akhir',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'combobox',
-                    emptyText: 'Cabang',
-                    allowBlank: false
-                },
-                {
-                    text: 'SEARCH'
-                },
-                '->',
-                {
-                    text: 'REFRESH'
-                }
-            ],
             features: [
                 {
                     startCollapsed: false,
@@ -78,55 +38,56 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                     xtype: 'gridcolumn',
                     width: 200,
                     text: 'NAMA BARANG',
-                    dataIndex: 'namams'
+                    renderer: 'uppercase',
+                    dataIndex: 'barang_name'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 150,
                     text: 'MERK',
-                    dataIndex: 'alamatms'
+                    dataIndex: 'po_merk_name'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
                     text: 'NO KATALOG',
-                    dataIndex: 'namakotams'
+                    dataIndex: 'po_katalog'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 100,
                     text: 'QTY',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'po_qty'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 150,
                     text: 'HARGA',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'po_harga'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 100,
                     text: 'DISC (%)',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'po_disc'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 100,
                     text: 'PPN (%)',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'po_ppn'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 150,
                     text: 'NETTO',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'po_netto'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 200,
                     text: 'KETERANGAN',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'barang_desc'
                 }
             ]
         });

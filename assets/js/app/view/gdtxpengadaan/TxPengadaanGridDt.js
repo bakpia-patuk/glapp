@@ -32,47 +32,48 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGridDt', {
                 Ext.create('Ext.grid.RowNumberer'),
                 {
                     xtype: 'gridcolumn',
-                    width: 200,
+                    width: 250,
                     text: 'NAMA BARANG',
                     renderer: 'uppercase',
                     dataIndex: 'barang_name'
                 },
                 {
                     xtype: 'datecolumn',
-                    width: 100,
+                    width: 80,
                     text: 'UNTUK TGL.',
                     dataIndex: 'tgl_butuh',
                     format: 'd/M/Y'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
+                    width: 80,
                     text: 'MERK',
                     renderer: 'uppercase',
                     dataIndex: 'merk_name'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
+                    width: 80,
                     text: 'NO KATALOG',
                     dataIndex: 'peng_katalog'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
+                    width: 70,
                     text: 'KEMASAN',
                     dataIndex: 'peng_kemasan'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'QTY PESANAN',
+                    width: 60,
+                    text: 'QTY',
+                    align: 'center',
                     dataIndex: 'peng_qty'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 250,
-                    hidden: true,
+                    width: 200,
+                    hidden: false,
                     text: 'KETERANGAN',
                     dataIndex: 'barang_desc'
                 }

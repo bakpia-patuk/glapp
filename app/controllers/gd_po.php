@@ -17,9 +17,11 @@ class Gd_po extends Auth_Controller {
     }
 
     public function reset() {
+        
     }
 
     public function insert_item() {
+        
     }
 
     private function __init_peng($insert) {
@@ -160,13 +162,13 @@ class Gd_po extends Auth_Controller {
     public function approve_cabang() {
         $id = rtrim($this->input->post('id'), '-');
         $data = explode('-', $id);
-        
-        if(!$this->__check_usergr()) {
+
+        if (!$this->__check_usergr()) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak mempunyai hak untuk approval'));
             return;
         }
 
-        foreach($data as $row) {
+        foreach ($data as $row) {
             $this->Gdpengadaan_model->approve_peng('peng_statusdiv', $row);
         }
 
@@ -177,13 +179,13 @@ class Gd_po extends Auth_Controller {
     public function approve_pusat() {
         $id = rtrim($this->input->post('id'), '-');
         $data = explode('-', $id);
-        
-        if(!$this->__check_usergr()) {
+
+        if (!$this->__check_usergr()) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak mempunyai hak untuk approval'));
             return;
         }
 
-        foreach($data as $row) {
+        foreach ($data as $row) {
             $this->Gdpengadaan_model->approve_peng('peng_statuspst', $row);
         }
 
@@ -194,31 +196,24 @@ class Gd_po extends Auth_Controller {
     public function list_pengadaan_all() {
         $records = $this->input->get('filter');
         $params = array();
-
+        
         if ($records) {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
         } else {
-            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d 00:00:00", now()));
-            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d 23:59:59", now()));
-            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
+            $params[] = array('field' => 'trx_pengadaan.cabang_id', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
         }
 
-        $tablename = 'trx_po';
-        $opt['sortBy'] = 'id';
+        $params[] = array('field' => 'trx_pengadaan.peng_statusdiv', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $params[] = array('field' => 'trx_pengadaan.peng_statuspst', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $params[] = array('field' => 'trx_pengadaan.po_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
+
+        $opt['sortBy'] = 'trx_pengadaan.id';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Gdpengadaan_model->gets($params, $opt, $tablename);
-        $no = 0;
+        $result = $this->Gdpo_model->get_peng_list($params, $opt);
 
         if ($result != NULL) {
-            foreach ($result as $row) {
-                $result[$no]->tgl_trx = explode(' ', $row->tgl_trx)[0];
-                $result[$no]->cabang_name = $this->Gdpengadaan_model->get_detail('id', $row->cabang_id, 'dt_cabang')->cabang_alias;
-                $result[$no]->divisi_name = $this->Gdpengadaan_model->get_detail('id', $row->divisi, 'dt_divisi')->divisi_name;
-                $result[$no]->peng_class_row = $this->__return_csspeng($row->id);
-                $no++;
-            }
             echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
@@ -287,24 +282,24 @@ class Gd_po extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
-    
+
     private function __return_csspeng($id) {
         $peng_detail = $this->Gdpengadaan_model->get_detail('id', $id, 'trx_pengadaan');
-        
-        if($peng_detail->peng_type == 0) {
+
+        if ($peng_detail->peng_type == 0) {
             $po_status = $peng_detail->po_status;
             $peng_statusdiv = $peng_detail->peng_statusdiv;
             $peng_statuspst = $peng_detail->peng_statuspst;
-            
-            if($po_status == 0 && $peng_statusdiv == 0 && $peng_statuspst == 0) {
+
+            if ($po_status == 0 && $peng_statusdiv == 0 && $peng_statuspst == 0) {
                 return 'peng-null';
-            } else if($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 0) {
+            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 0) {
                 return 'peng-div';
-            } else if($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
+            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
                 return 'peng-pusat';
-            } else if($po_status == 2 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
+            } else if ($po_status == 2 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
                 return 'peng-pobag';
-            } else if($po_status == 1 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
+            } else if ($po_status == 1 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
                 return 'peng-poall';
             } else {
                 return 'peng-grey';

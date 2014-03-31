@@ -112,7 +112,7 @@ class Gd_pengadaan extends Auth_Controller {
             'po_ppn' => $item->mi_ppn,
             'po_status' => 0,
             'po_id' => 0,
-            'barang_desc' => ""
+            'barang_desc' => $insert['barang_desc']
         );
 
         if ($this->Gdpengadaan_model->insert($data, 'trx_pengadaan_detail')) {

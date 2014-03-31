@@ -5,8 +5,6 @@
 Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.gdtxpo.getgdtxpo',
-    itemId: 'getgdtxpo',
-    bodyPadding: '2 0 0 0',
     border: false,
     layout: 'fit',
     initComponent: function() {
@@ -18,7 +16,7 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                     xtype: 'tabpanel',
                     deferredRender: false,
                     plain: true,
-                    ui: 'blue-tab',
+                    ui: 'orange-tab',
                     border: false,
                     itemId: 'poTab',
                     items: [
@@ -26,13 +24,90 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                             xtype: 'panel',
                             title: 'PEMBUATAN PO',
                             layout: 'border',
+                            itemId: 'popanelform',
                             border: false,
                             bodyPadding: '2 0 0 0',
                             defaults: {
                                 border: true,
-                                ui: 'blue-panel',
+                                ui: 'orange-panel',
                                 split: true
                             },
+                            tbar: [
+                                {
+                                    xtype: 'button',
+                                    text: 'ADD_NEW',
+                                    ui: 'orange-button',
+                                    itemId: 'poNew'
+                                },
+                                '-',
+                                {
+                                    xtype: 'button',
+                                    text: 'SAVE',
+                                    ui: 'orange-button',
+                                    itemId: 'poSave'
+                                },
+                                '-',
+                                {
+                                    xtype: 'button',
+                                    text: 'PRINT_PO',
+                                    ui: 'orange-button',
+                                    itemId: 'poPrint'
+                                },
+                                '-',
+                                {
+                                    xtype: 'button',
+                                    text: 'SENT_PDF',
+                                    ui: 'orange-button',
+                                    itemId: 'poPdf'
+                                },
+                                '->',
+                                {
+                                    xtype: 'datefield',
+                                    fieldLabel: 'Filter ',
+                                    labelWidth: 40,
+                                    labelAlign: 'right',
+                                    emptyText: 'Tgl. Awal',
+                                    format: 'd/M/Y',
+                                    submitFormat: 'Y-m-d',
+                                    itemId: 'poTgl1',
+                                    value: new Date()
+                                },
+                                {
+                                    xtype: 'datefield',
+                                    fieldLabel: ' s.d ',
+                                    labelWidth: 30,
+                                    labelAlign: 'right',
+                                    emptyText: 'Tgl. Akhir',
+                                    format: 'd/M/Y',
+                                    submitFormat: 'Y-m-d',
+                                    itemId: 'poTgl2',
+                                    value: new Date()
+                                },
+                                {
+                                    xtype: 'combobox',
+                                    emptyText: 'Cabang',
+                                    width: 150,
+                                    itemId: 'poCabang',
+                                    triggerAction: 'all',
+                                    hideTrigger: false,
+                                    mode: 'remote',
+                                    minChars: 2,
+                                    store: 'gdtxpo.CabangStore',
+                                    displayField: 'cabang_alias',
+                                    valueField: 'id'
+                                },
+                                {
+                                    text: 'SEARCH',
+                                    ui: 'orange-button',
+                                    action: 'searchPo'
+                                },
+                                '-',
+                                {
+                                    text: 'REFRESH',
+                                    ui: 'orange-button',
+                                    action: 'refreshPo'
+                                }
+                            ],
                             items: [
                                 {
                                     region: 'west',
