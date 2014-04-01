@@ -188,6 +188,13 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                     allowBlank: true
                 },
                 {
+                    xtype: 'textareafield',
+                    height: 40,
+                    fieldLabel: 'Keterangan ',
+                    disable: true,
+                    name: 'barang_desc'
+                },
+                {
                     xtype: 'fieldcontainer',
                     width: 300,
                     layout: 'hbox',
@@ -223,12 +230,11 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                 },
                 {
                     xtype: 'fieldset',
-                    margin: '40 0 0 0',
-//                    padding: '10 5',
                     width: 300,
                     title: 'Keterangan Warna',
                     itemId: 'rekapAnggaran',
                     layout: 'anchor',
+                    hidden: true,
                     fieldDefaults: {
                         anchor: '100%'
                     },

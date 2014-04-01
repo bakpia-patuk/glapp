@@ -5,7 +5,6 @@
  *
  * @author Isht.Ae
  */
-
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
@@ -28,7 +27,7 @@ class Auth_Controller extends MY_Controller {
 
     public function generate_db_query($param) {
         $record = array();
-        
+
         foreach ($param as $key) {
             $field = $this->__property_reader($key['property']);
             $param = $this->__param_reader($key['property']);
@@ -37,7 +36,7 @@ class Auth_Controller extends MY_Controller {
 
             $record[] = array('field' => $field, 'param' => $param, 'operator' => $op, 'value' => $val);
         }
-        
+
         return $record;
     }
 
@@ -64,7 +63,7 @@ class Auth_Controller extends MY_Controller {
             return FALSE;
         }
     }
-    
+
     private function __param_reader($record) {
         if (isset($record)) {
             $parse = substr($record, -3);
@@ -94,7 +93,7 @@ class Auth_Controller extends MY_Controller {
             return FALSE;
         }
     }
-    
+
     private function __operator_reader($record) {
         if (isset($record)) {
             $parse = substr($record, -2);
@@ -125,4 +124,8 @@ class Auth_Controller extends MY_Controller {
         }
     }
     
+    public function __check_usergr() {
+        return TRUE;
+    }
+
 }

@@ -6,46 +6,61 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGrid', {
     alias: 'widget.gdtxpengadaan.txpengadaangrid',
     itemId: 'txpengadaangrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxpengadaan.PengStore',
     autoScroll: true,
     forceFit: true,
     columnLines: true,
     selModel: Ext.create('Ext.selection.CheckboxModel', {
     }),
-
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
             viewConfig: {
                 autoScroll: true,
                 emptyText: 'Tidak ada data Pengadaan',
-                deferEmptyText: false
+                deferEmptyText: false,
+                stripeRows: false,
+                trackOver: false,
+                getRowClass: function(record, rowIndex, rowParams, store) {
+                    return record.get('peng_class_row');
+                }
             },
+            bbar: [
+                {
+                    xtype:'tbtext',
+                    text: '<b>LEGEND : </b>'
+                },
+                '->',
+                {
+                    text: '&nbsp;'
+                }
+            ],
             columns: [
                 {
                     xtype: 'gridcolumn',
                     width: 120,
                     text: 'NO PENGADAAN',
-                    dataIndex: 'namams'
+                    dataIndex: 'no_pengadaan'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'datecolumn',
                     width: 100,
                     text: 'TGL. PENGADAAN',
-                    dataIndex: 'alamatms'
+                    dataIndex: 'tgl_trx',
+                    format: 'd/M/Y'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 150,
                     text: 'CABANG',
-                    dataIndex: 'namakotams'
+                    dataIndex: 'cabang_name'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 150,
                     text: 'DIVISI',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'divisi_name'
                 }
             ]
         });
