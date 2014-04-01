@@ -26,6 +26,16 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGrid', {
                     return record.get('peng_class_row');
                 }
             },
+            bbar: [
+                {
+                    xtype:'tbtext',
+                    text: '<b>LEGEND : </b>'
+                },
+                '->',
+                {
+                    text: '&nbsp;'
+                }
+            ],
             columns: [
                 {
                     xtype: 'gridcolumn',

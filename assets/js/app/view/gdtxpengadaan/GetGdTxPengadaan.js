@@ -81,7 +81,6 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                     store: 'gdtxpengadaan.CabangStore',
                     displayField: 'cabang_alias',
                     valueField: 'id',
-                    matchFieldWidth: false,
                     value: parseInt(CABANG_ID)
                 },
                 {
@@ -124,9 +123,9 @@ Ext.define('GlApp.view.gdtxpengadaan.GetGdTxPengadaan', {
                             region: 'south',
                             title: 'DETAIL PENGADAAN',
                             collapsible: true,
-                            height: 250,
-                            minHeight: 250,
-                            maxHeight: 250
+                            height: 220,
+                            minHeight: 220,
+                            maxHeight: 220
                         }
                     ]
                 },

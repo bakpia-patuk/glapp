@@ -1,67 +1,32 @@
 /**
  * @author Isht Ae
  **/
+var editorCell = new Ext.grid.plugin.CellEditing({
+    clicksToEdit: 2
+});
+
+
 Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.gdtxpo.txpogrid',
     itemId: 'txpogrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxpo.PoPengStore',
     autoScroll: true,
     forceFit: false,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
-    }),
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
+            plugins: [editorCell],
             viewConfig: {
                 autoScroll: true,
                 emptyText: 'Tidak ada data Pengadaan',
-                deferEmptyText: false
+                deferEmptyText: false,
+                stripeRows: false
             },
-            tbar: [
-                {
-                    xtype: 'datefield',
-                    fieldLabel: 'Filter ',
-                    labelWidth: 40,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Awal',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'datefield',
-                    fieldLabel: ' s.d ',
-                    labelWidth: 30,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Akhir',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'combobox',
-                    emptyText: 'Cabang',
-                    allowBlank: false
-                },
-                {
-                    text: 'SEARCH'
-                },
-                '->',
-                {
-                    text: 'REFRESH'
-                }
-            ],
             features: [
                 {
                     startCollapsed: false,
@@ -69,68 +34,84 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                     ftype: 'grouping',
                     groupHeaderTpl: 'No Pengadaan : {name}',
                     hideGroupedHeader: false,
-                    //remoteRoot: 'summaryData',
                     enableGroupingMenu: true
                 }
             ],
             columns: [
                 {
+                    xtype: 'checkcolumn',
+                    flex: 0.25,
+                    align: 'center',
+                    dataIndex: 'po_status',
+                    itemId: 'setPo'
+                },
+                {
                     xtype: 'gridcolumn',
-                    width: 200,
+                    width: 250,
                     text: 'NAMA BARANG',
-                    dataIndex: 'namams'
+                    renderer: 'uppercase',
+                    dataIndex: 'barang_name'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 150,
                     text: 'MERK',
-                    dataIndex: 'alamatms'
+                    dataIndex: 'po_merk_name'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
                     text: 'NO KATALOG',
-                    dataIndex: 'namakotams'
+                    dataIndex: 'po_katalog'
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 100,
+                    xtype: 'numbercolumn',
+                    width: 50,
                     text: 'QTY',
-                    dataIndex: 'tlpms'
+                    format:'000',
+                    align: 'center',
+                    dataIndex: 'po_qty',
+                    editor: {
+                        allowBlank: false,
+                        hideTrigger: true
+                    }
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 150,
                     text: 'HARGA',
-                    dataIndex: 'tlpms'
+                    align: 'right',
+                    dataIndex: 'po_harga'
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 100,
+                    xtype: 'numbercolumn',
+                    width: 50,
                     text: 'DISC (%)',
-                    dataIndex: 'tlpms'
+                    align: 'center',
+                    dataIndex: 'po_disc'
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 100,
+                    xtype: 'numbercolumn',
+                    width: 50,
                     text: 'PPN (%)',
-                    dataIndex: 'tlpms'
+                    align: 'center',
+                    dataIndex: 'po_ppn'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 150,
                     text: 'NETTO',
-                    dataIndex: 'tlpms'
+                    align: 'right',
+                    dataIndex: 'po_netto'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 200,
                     text: 'KETERANGAN',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'barang_desc'
                 }
             ]
         });
-
         me.callParent(arguments);
     }
 });

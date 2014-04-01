@@ -7,6 +7,8 @@ Ext.define('GlApp.controller.GetGdTxPo', {
     models: [
     ],
     stores: [
+        'gdtxpo.CabangStore',
+        'gdtxpo.PoPengStore'
     ],
     views: [
         'gdtxpo.GetGdTxPo',
@@ -16,22 +18,26 @@ Ext.define('GlApp.controller.GetGdTxPo', {
         'gdtxpo.TxPoListGridDt'
     ],
     refs: [
-        {ref: 'SupplierForm', selector: '#mssupplierform'},
-        {ref: 'SupplierGrid', selector: '#mssuppliergrid'}
+        {ref: 'PoPanel', selector: '#popanelform'},
+        {ref: 'PoForm', selector: '#txpoform'},
+        {ref: 'PoPengGrid', selector: '#txpogrid'}
     ],
     init: function() {
         this.listen({
             controller: {
             },
             component: {
-                '#mssupplierform button[action=suppSave]': {
-                    click: this.showLimitForm
+                '#popanelform button[action=searchPo]': {
+                    click: this.showListPeng
                 },
-                '#mssupplierform button[action=suppNew]': {
-                    click: this.showKemasan
+                '#popanelform button[action=refreshPo]': {
+                    click: this.reloadListPeng
                 },
-                '#mssupplierform button[action=suppDelete]': {
-                    click: this.showSatuan
+                '#txpogrid': {
+                    edit: this.editPoPengadaan
+                },
+                '#setPo': {
+                    checkchange: this.setItemPo
                 }
             },
             global: {
@@ -40,14 +46,152 @@ Ext.define('GlApp.controller.GetGdTxPo', {
             }
         });
     },
-    showLimitForm: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbaranglimitwin');
+    showListPeng: function(btn) {
+        var panel = this.getPoPanel(),
+                tgl1 = panel.down('#poTgl1').getValue(),
+                tgl2 = panel.down('#poTgl2').getValue(),
+                cabang = panel.down('#poCabang').getValue(),
+                grid1 = this.getPoPengGrid(),
+                store = grid1.getStore(),
+                filterCollection = [];
+
+        if (cabang !== null) {
+            var statusFilter = new Ext.util.Filter({
+                property: 'trx_pengadaan.tgl_trx',
+                value: Ext.Date.format(tgl1 === null ? new Date() : tgl1, 'Y-m-d 00:00:00') + 'GT'
+            });
+            filterCollection.push(statusFilter);
+
+            var statusFilter = new Ext.util.Filter({
+                property: 'trx_pengadaan.tgl_trx',
+                value: Ext.Date.format(tgl2 === null ? new Date() : tgl2, 'Y-m-d 23:59:59') + 'LT'
+            });
+            filterCollection.push(statusFilter);
+
+            var statusFilter = new Ext.util.Filter({
+                property: 'trx_pengadaan.cabang_id',
+                value: cabang
+            });
+            filterCollection.push(statusFilter);
+
+            grid1.getSelectionModel().clearSelections();
+
+            store.clearFilter(true);
+            store.filter(filterCollection);
+            store.group('no_pengadaan');
+        } else {
+            Ext.Msg.alert('Warning', 'Pilih Cabang terlebih dahulu');
+        }
     },
-    showKemasan: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbarangkemasanwin');
+    reloadListPeng: function(btn) {
+        var panel = this.getPoPanel(),
+                cabang = panel.down('#poCabang').getValue(),
+                grid1 = this.getPoPengGrid(),
+                store = grid1.getStore();
+
+        if (cabang !== null) {
+            store.load();
+        }
     },
-    showSatuan: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbarangsatuanwin');
+    editPoPengadaan: function(editor, e, eOpt) {
+        var form = this.getPoForm();
+
+        if (form.down('#id').getValue() !== 0) {
+            if (e.record.dirty) {
+                Ext.Ajax.request({
+                    url: BASE_PATH + 'gd_po/edit_peng_po',
+                    method: 'POST',
+                    params: e.record.data,
+                    scope: this,
+                    callback: function(options, success, response) {
+                        var resp = Ext.decode(response.responseText);
+
+                        if (resp.success === 'true') {
+                            e.grid.getStore().load();
+                            e.record.commit();
+
+                        }
+                    }
+                });
+            }
+        }
+    },
+    setItemPo: function(column, recordIndex, checked) {
+        var form = this.getPoForm(),
+                grid = this.getPoPengGrid(),
+                poPanel = this.getPoPoPanel(),
+                store = grid.getStore(),
+                idPo = form.down('#id').getValue(),
+                poCabang = poPanel.down('#poCabang').getValue(),
+                idPeng = store.getAt(recordIndex).get('id'),
+                url, params;
+
+        params = {
+            id: idPo,
+            id_peng: idPeng,
+            cabang: poCabang
+        };
+
+        if (checked) {
+            url = 'gd_po/set_itempo';
+        } else {
+            url = 'gd_po/unset_itempo';
+        }
+
+        this.ajaxReq(url, params,  1);
+    },
+    onSuccess: function(resp, idForm) {
+        var form = this.getPoForm(),
+                poPanel = this.getPoPoPanel(),
+                gridPeng = this.getPoPengGrid();
+
+        if (idForm === 1) {
+            poPanel.down('#searchPo').disable();
+            poPanel.down('#poCabang').setReadOnly(true);
+            form.saved = false;
+
+            gridPeng.getStore().load();
+        } else if (idForm === 2) {
+            var store = grid2.getStore();
+
+            Ext.MessageBox.show({
+                title: resp.title,
+                msg: resp.msg,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.INFO
+            });
+
+            form.getForm().reset();
+            form.down('#pengNewItem').disable();
+            form.saved = false;
+
+            form.down('#id').setValue(resp.data.id);
+            form.down('#no_pengadaan').setValue(resp.data.no_peng);
+
+            store.clearFilter(true);
+            store.filter('pengadaan_id', resp.data.id);
+        } else {
+            Ext.MessageBox.show({
+                title: resp.title,
+                msg: resp.msg,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.INFO
+            });
+
+            form.getForm().reset();
+            form.down('#pengNewItem').disable();
+            form.saved = true;
+
+            grid2.getStore().removeAll();
+        }
+    },
+    onFailure: function(resp, idForm) {
+        Ext.MessageBox.show({
+            title: resp.title,
+            msg: resp.msg,
+            buttons: Ext.MessageBox.OK,
+            icon: Ext.MessageBox.ERROR
+        });
     }
 });
 
