@@ -21,41 +21,6 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
         var me = this;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    text: 'Simpan',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-save',
-//                    action: 'kkSave',
-                    id: 'kkSave'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Cetak',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-print',
-//                    action: 'kkSavePrint',
-                    id: 'kkSavePrint'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Baru',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-add',
-//                    action: 'kkNew',
-                    id: 'kkNew'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Hapus',
-                    ui: 'blue-button',
-                    hidden: true,
-                    iconCls: 'icon-btn-delete',
-//                    action: 'kkDelete',
-                    id: 'kkDelete'
-                }
-            ],
             items: [
                 {
                     xtype: 'textfield',

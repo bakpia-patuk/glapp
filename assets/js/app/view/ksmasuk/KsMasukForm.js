@@ -21,37 +21,11 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
         var me = this;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    text: 'Simpan',
-                    iconCls: 'icon-btn-save',
-//                    action: 'kmSave'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Cetak',
-                    iconCls: 'icon-btn-print',
-//                    action: 'kmSavePrint'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Baru',
-                    iconCls: 'icon-btn-add',
-//                    action: 'kmNew'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Hapus',
-                    iconCls: 'icon-btn-delete',
-//                    action: 'kmDelete'
-                }
-            ],
             items: [
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Form ID ',
-                    name: 'formId',
+                    name: 'kas_type',
                     value: 'kasmasuk',
                     hidden: true,
                     allowBlank: false,
@@ -66,7 +40,7 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Tanggal ',
-                    name: 'tglTransaksi',
+                    name: 'kas_tgltrx',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     value: new Date(),
@@ -75,23 +49,23 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                 {
                     xtype: 'comboboxedit',
                     fieldLabel: 'Keperluan ',
-                    name: 'namaGrk',
+                    name: 'kas_grpkeperluan',
                     hidden: false,
                     allowBlank: false,
                     triggerAction: 'all',
                     minChars: 2,
-//                    store: 'GrkStoreBmk',
+                    store: 'ksmasuk.GrkBmStore',
                     readOnly: false,
-                    displayField: 'grkName',
+                    displayField: 'grk_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
-//                    listeners: {
-//                        afterrender: function(combo, rec, eOpt) {
-//                            var store = combo.getStore();
-//
-//                            store.clearFilter(true);
-//                            store.filter("form_id", "kasmasuk");
-//                        },
+                    listeners: {
+                        afterrender: function(combo, rec, eOpt) {
+                            var store = combo.getStore();
+
+                            store.clearFilter(true);
+                            store.filter("form_id", "kasmasuk");
+                        },
 //                        select: function(combo, rec, eOpt) {
 //                            var store = this.up('form').getForm().findField('namaKd').getStore();
 //                            this.up('form').getForm().findField('namaKd').show();
@@ -101,7 +75,7 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
 //                            store.filter('kp_id', combo.getValue());
 //                            store.load();
 //                        }
-//                    },
+                    },
 //                    onTrigger2Click: function() {
 //                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
 //                            border: true,
@@ -143,7 +117,7 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Detail Keperluan ',
-                    name: 'namaKd',
+                    name: 'kas_dtlkeperluan',
                     readOnly: true,
                     triggerAction: 'all',
                     minChars: 2,
@@ -185,13 +159,13 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'No Dtl. Keperluan ',
-                    name: 'noDetilKpr',
+                    name: 'kas_dtlkeperluanext',
                     hidden: true,
                     hideTrigger: false,
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'MasterTelisaStore',
+                    store: 'ksmasuk.MasterTelisaStore',
                     readOnly: false,
                     displayField: 'mt_namarek',
                     valueField: 'id',
@@ -214,7 +188,7 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     fieldLabel: 'Nominal ',
-                    name: 'jumlahTrx',
+                    name: 'kas_jumlah',
                     decimalPrecision: 2,
                     decimalSeparator: ',',
                     alwaysDisplayDecimals: true,
@@ -232,7 +206,7 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Petugas ',
                     name: 'petugas',
-//                    value: petugas ,
+                    value: USER_NAME ,
                     hidden: false,
                     readOnly: true,
                     fieldCls: 'x-item-readonly'
@@ -240,7 +214,7 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Penyetor ',
-                    name: 'penerimaBg',
+                    name: 'kas_namabayar',
                     readOnly: false,
                     hidden: false,
                     allowBlank: false
