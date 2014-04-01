@@ -174,6 +174,8 @@ Ext.define('GlApp.controller.GetGdTxPo', {
             form.down('#id').setValue(resp.data.id);
             form.down('#po_cabang_name').setValue(poPanel.down('#poCabang').getRawValue());
             form.down('#po_no').setValue(resp.data.po_no);
+            form.down('#po_value').setValue(resp.data.po_value);
+            
             form.saved = false;
 
             gridPeng.getStore().load();

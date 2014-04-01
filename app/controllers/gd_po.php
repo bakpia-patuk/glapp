@@ -64,9 +64,13 @@ class Gd_po extends Auth_Controller {
         }
 
         $rtn = $this->Gdpo_model->get_detail('id', $insert['id'], 'trx_po');
-        $rtn[0]->total_po = $this->Gdpo_model->total_po($insert['id']);
+        $return = array(
+            'id' => $rtn->id,
+            'po_no' => $rtn->po_no,
+            'po_value' => $this->Gdpo_model->total_po($insert['id'])
+        );
 
-        echo json_encode(array('success' => 'true', 'data' => $rtn, 'title' => 'Info', 'msg' => 'Insert Po Success'));
+        echo json_encode(array('success' => 'true', 'data' => $return, 'title' => 'Info', 'msg' => 'Insert Po Success'));
     }
 
     private function __init_po($insert) {
