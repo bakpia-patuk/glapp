@@ -24,13 +24,13 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
         Ext.applyIf(me, {
             items: [
                 {
-                    xtype: 'numberfield',
+                    xtype: 'textfield',
                     fieldLabel: 'Id ',
                     name: 'id',
                     itemId: 'id',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
-                    hidden: false,
+                    hidden: true,
                     value: 0
                 },
                 {

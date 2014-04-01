@@ -148,7 +148,7 @@ Ext.define('GlApp.controller.GetGdTxPo', {
         if (idForm === 1) {
             poPanel.down('#searchPo').disable();
             poPanel.down('#poCabang').setReadOnly(true);
-            form.down('#id').setValue(parseInt(resp.data.id));
+            form.down('#id').setValue(resp.data.id);
             form.down('#po_cabang_name').setValue(poPanel.down('#poCabang').getRawValue());
             form.down('#po_no').setValue(resp.data.po_no);
             form.saved = false;

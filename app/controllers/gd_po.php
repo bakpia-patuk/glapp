@@ -25,10 +25,10 @@ class Gd_po extends Auth_Controller {
         
         if ($insert['id'] == 0) {
             $insert['id'] = $this->__init_po($insert);
-            if ($insert['id'] == NULL) {
-                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => $this->catch_db_err()));
-                return;
-            }
+//            if ($insert['id'] == FALSE) {
+//                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => $this->catch_db_err()));
+//                return;
+//            }
         }
 
         $data = array(
@@ -63,7 +63,7 @@ class Gd_po extends Auth_Controller {
         if ($this->Gdpo_model->insert($data, 'trx_po')) {
             return $last_no . '.' . $this->user->cabang_id;
         } else {
-            return NULL;
+            return FALSE;
         }
     }
 

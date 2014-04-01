@@ -366,7 +366,7 @@ CREATE TABLE `trx_pengadaan_detail` (
   `po_disc` float DEFAULT NULL,
   `po_ppn` float DEFAULT NULL,
   `po_status` tinyint(4) DEFAULT NULL,
-  `po_id` int(11) DEFAULT NULL,
+  `po_id` varchar(100) DEFAULT NULL,
   `barang_desc` longtext,
   `simpan_status` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -387,14 +387,14 @@ CREATE TABLE `trx_pengadaan_detail` (
 
 /*Data for the table `trx_pengadaan_detail` */
 
-insert  into `trx_pengadaan_detail`(`no`,`id`,`cabang_id`,`divisi`,`pengadaan_id`,`tgl_butuh`,`barang_gol`,`barang_id`,`peng_merk`,`peng_katalog`,`peng_kemasan`,`peng_qty`,`peng_harga`,`peng_disc`,`peng_ppn`,`qty_po`,`po_merk`,`po_katalog`,`po_kemasan`,`po_qty`,`po_harga`,`po_disc`,`po_ppn`,`po_status`,`po_id`,`barang_desc`,`simpan_status`) values (10,'1.1',1,1,'1.1','2014-03-31','54','56.1',1,'0',0,10,0,0,0,10,1,'0',0,0,0,0,0,0,0,'',1),(12,'11.1',1,1,'15.1','2014-04-01','1007','1030.1',1,'0',0,10,0,0,0,0,1,'0',0,10,0,0,0,0,0,'OKE',1),(13,'13.1',1,1,'15.1','2014-04-01','11','24.1',1,'0',0,15,0,0,0,0,1,'0',0,15,0,0,0,0,0,'',1),(14,'14.1',1,1,'17.1','2014-04-01','209','211.1',1,'1.2702E+11',0,20,2376000,0,1,0,1,'1.2702E+11',0,20,2376000,0,1,0,0,'',1),(15,'15.1',1,1,'17.1','2014-04-01','252','253.1',1,'0',0,1,0,0,0,0,1,'0',0,1,0,0,0,0,0,'',1);
+insert  into `trx_pengadaan_detail`(`no`,`id`,`cabang_id`,`divisi`,`pengadaan_id`,`tgl_butuh`,`barang_gol`,`barang_id`,`peng_merk`,`peng_katalog`,`peng_kemasan`,`peng_qty`,`peng_harga`,`peng_disc`,`peng_ppn`,`qty_po`,`po_merk`,`po_katalog`,`po_kemasan`,`po_qty`,`po_harga`,`po_disc`,`po_ppn`,`po_status`,`po_id`,`barang_desc`,`simpan_status`) values (10,'1.1',1,1,'1.1','2014-03-31','54','56.1',1,'0',0,10,0,0,0,10,1,'0',0,0,0,0,0,0,'0','',1),(12,'11.1',1,1,'15.1','2014-04-01','1007','1030.1',1,'0',0,10,0,0,0,0,1,'0',0,10,0,0,0,0,'0','OKE',1),(13,'13.1',1,1,'15.1','2014-04-01','11','24.1',1,'0',0,15,0,0,0,0,1,'0',0,15,0,0,0,0,'0','',1),(14,'14.1',1,1,'17.1','2014-04-01','209','211.1',1,'1.2702E+11',0,20,2376000,0,1,0,1,'1.2702E+11',0,20,2376000,0,1,0,'0','',1),(15,'15.1',1,1,'17.1','2014-04-01','252','253.1',1,'0',0,1,0,0,0,0,1,'0',0,1,0,0,0,0,'0','',1);
 
 /*Table structure for table `trx_po` */
 
 DROP TABLE IF EXISTS `trx_po`;
 
 CREATE TABLE `trx_po` (
-  `no` int(11) DEFAULT NULL,
+  `no` int(11) NOT NULL AUTO_INCREMENT,
   `id` varchar(100) NOT NULL,
   `trx_date` datetime NOT NULL,
   `po_no` varchar(100) NOT NULL,
@@ -419,7 +419,7 @@ CREATE TABLE `trx_po` (
   KEY `FK_PO_SUPPID` (`po_suppid`),
   CONSTRAINT `FK_PO_CABANGID` FOREIGN KEY (`po_cabangid`) REFERENCES `dt_cabang` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION,
   CONSTRAINT `FK_PO_SUPPID` FOREIGN KEY (`po_suppid`) REFERENCES `dt_supplier` (`id`) ON DELETE SET NULL ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `trx_po` */
 
@@ -430,7 +430,7 @@ DROP TABLE IF EXISTS `trx_po_detail`;
 CREATE TABLE `trx_po_detail` (
   `no` int(11) NOT NULL AUTO_INCREMENT,
   `id` varchar(100) NOT NULL,
-  `po_id` int(11) NOT NULL,
+  `po_id` varchar(100) NOT NULL,
   `po_no` varchar(100) NOT NULL,
   `po_ed` date NOT NULL,
   `po_cabang_id` int(11) DEFAULT NULL,
@@ -455,7 +455,7 @@ CREATE TABLE `trx_po_detail` (
   PRIMARY KEY (`id`),
   KEY `AK_IDENTIFIER_2` (`no`),
   KEY `FK_POD_POID` (`po_id`),
-  CONSTRAINT `FK_POD_POID` FOREIGN KEY (`po_id`) REFERENCES `trx_po` (`no`) ON DELETE CASCADE ON UPDATE NO ACTION
+  CONSTRAINT `PENG_POID` FOREIGN KEY (`po_id`) REFERENCES `trx_po` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `trx_po_detail` */
