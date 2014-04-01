@@ -20,11 +20,23 @@ class Gd_po extends Auth_Controller {
         
     }
 
-    public function insert_item() {
-        
+    public function set_itempo() {
+        $insert = $this->insert->post(NULL, TRUE);
+        if ($insert['id'] == 0) {
+            $insert['id'] = $this->__init_po($insert);
+            if ($insert['id'] == NULL) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => $this->catch_db_err()));
+                return;
+            }
+        }
+        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Pengadaan Success'));
     }
 
-    private function __init_peng($insert) {
+    public function unset_itempo() {
+        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Pengadaan Success'));
+    }
+
+    private function __init_po($insert) {
         $last_no = $this->Gdpengadaan_model->get_last('trx_pengadaan');
         $detail_cabang = $this->Gdpengadaan_model->get_detail('id', $this->user->cabang_id, 'dt_cabang');
 
@@ -196,7 +208,7 @@ class Gd_po extends Auth_Controller {
     public function list_pengadaan_all() {
         $records = $this->input->get('filter');
         $params = array();
-        
+
         if ($records) {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);

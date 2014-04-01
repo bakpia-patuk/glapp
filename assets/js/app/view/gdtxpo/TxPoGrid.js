@@ -1,6 +1,11 @@
 /**
  * @author Isht Ae
  **/
+var editorCell = new Ext.grid.plugin.CellEditing({
+    clicksToEdit: 2
+});
+
+
 Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.gdtxpo.txpogrid',
@@ -10,17 +15,17 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
     autoScroll: true,
     forceFit: false,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
-    }),
 
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
+            plugins: [editorCell],
             viewConfig: {
                 autoScroll: true,
                 emptyText: 'Tidak ada data Pengadaan',
-                deferEmptyText: false
+                deferEmptyText: false,
+                stripeRows: false
             },
             features: [
                 {
@@ -29,14 +34,20 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                     ftype: 'grouping',
                     groupHeaderTpl: 'No Pengadaan : {name}',
                     hideGroupedHeader: false,
-                    //remoteRoot: 'summaryData',
                     enableGroupingMenu: true
                 }
             ],
             columns: [
                 {
+                    xtype: 'checkcolumn',
+                    flex: 0.25,
+                    align: 'center',
+                    dataIndex: 'po_status',
+                    itemId: 'setPo'
+                },
+                {
                     xtype: 'gridcolumn',
-                    width: 200,
+                    width: 250,
                     text: 'NAMA BARANG',
                     renderer: 'uppercase',
                     dataIndex: 'barang_name'
@@ -55,32 +66,42 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                 },
                 {
                     xtype: 'numbercolumn',
-                    width: 100,
+                    width: 50,
                     text: 'QTY',
-                    dataIndex: 'po_qty'
+                    format:'000',
+                    align: 'center',
+                    dataIndex: 'po_qty',
+                    editor: {
+                        allowBlank: false,
+                        hideTrigger: true
+                    }
                 },
                 {
                     xtype: 'numbercolumn',
                     width: 150,
                     text: 'HARGA',
+                    align: 'right',
                     dataIndex: 'po_harga'
                 },
                 {
                     xtype: 'numbercolumn',
-                    width: 100,
+                    width: 50,
                     text: 'DISC (%)',
+                    align: 'center',
                     dataIndex: 'po_disc'
                 },
                 {
                     xtype: 'numbercolumn',
-                    width: 100,
+                    width: 50,
                     text: 'PPN (%)',
+                    align: 'center',
                     dataIndex: 'po_ppn'
                 },
                 {
                     xtype: 'numbercolumn',
                     width: 150,
                     text: 'NETTO',
+                    align: 'right',
                     dataIndex: 'po_netto'
                 },
                 {
@@ -91,7 +112,6 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                 }
             ]
         });
-
         me.callParent(arguments);
     }
 });

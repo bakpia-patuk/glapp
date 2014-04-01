@@ -99,7 +99,8 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                 {
                                     text: 'SEARCH',
                                     ui: 'orange-button',
-                                    action: 'searchPo'
+                                    action: 'searchPo',
+                                    itemId: 'searchPo'
                                 },
                                 '-',
                                 {

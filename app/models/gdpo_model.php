@@ -34,7 +34,9 @@ class Gdpo_model extends MY_Model {
                     'po_disc' => $row->po_disc,
                     'po_ppn' => $row->po_ppn,
                     'po_netto' => $this->__calc_netto($row->po_qty, $row->po_harga, $row->po_disc, $row->po_ppn),
-                    'barang_desc' => $row->barang_desc
+                    'barang_desc' => $row->barang_desc,
+                    'po_status' => $row->po_status,
+                    'po_class_row' => 'peng_po'
                 );
             }
         }
@@ -44,7 +46,7 @@ class Gdpo_model extends MY_Model {
 
     private function __po_cabang($params, $options) {
         $this->db->select('trx_pengadaan_detail.no AS no, trx_pengadaan_detail.id AS id, pengadaan_id, no_pengadaan, barang_id, po_merk, po_katalog, po_kemasan, po_qty, po_harga,'
-                . ' po_disc, po_ppn, barang_desc');
+                . ' po_disc, po_ppn, trx_pengadaan_detail.po_status AS po_status, barang_desc');
         $this->db->from('trx_pengadaan');
         $this->db->join('trx_pengadaan_detail', 'trx_pengadaan.id = trx_pengadaan_detail.pengadaan_id');
         if ($params != NULL) {

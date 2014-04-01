@@ -33,8 +33,11 @@ Ext.define('GlApp.controller.GetGdTxPo', {
                 '#popanelform button[action=refreshPo]': {
                     click: this.reloadListPeng
                 },
-                '#popanelform button[action=suppDelete]': {
-                    action: this.showSatuan
+                '#txpogrid': {
+                    edit: this.editPoPengadaan
+                },
+                '#setPo': {
+                    checkchange: this.setItemPo
                 }
             },
             global: {
@@ -90,8 +93,105 @@ Ext.define('GlApp.controller.GetGdTxPo', {
             store.load();
         }
     },
-    showSatuan: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbarangsatuanwin');
+    editPoPengadaan: function(editor, e, eOpt) {
+        var form = this.getPoForm();
+
+        if (form.down('#id').getValue() !== 0) {
+            if (e.record.dirty) {
+                Ext.Ajax.request({
+                    url: BASE_PATH + 'gd_po/edit_peng_po',
+                    method: 'POST',
+                    params: e.record.data,
+                    scope: this,
+                    callback: function(options, success, response) {
+                        var resp = Ext.decode(response.responseText);
+
+                        if (resp.success === 'true') {
+                            e.grid.getStore().load();
+                            e.record.commit();
+
+                        }
+                    }
+                });
+            }
+        }
+    },
+    setItemPo: function(column, recordIndex, checked) {
+        var form = this.getPoForm(),
+                grid = this.getPoPengGrid(),
+                poPanel = this.getPoPoPanel(),
+                store = grid.getStore(),
+                idPo = form.down('#id').getValue(),
+                poCabang = poPanel.down('#poCabang').getValue(),
+                idPeng = store.getAt(recordIndex).get('id'),
+                url, params;
+
+        params = {
+            id: idPo,
+            id_peng: idPeng,
+            cabang: poCabang
+        };
+
+        if (checked) {
+            url = 'gd_po/set_itempo';
+        } else {
+            url = 'gd_po/unset_itempo';
+        }
+
+        this.ajaxReq(url, params,  1);
+    },
+    onSuccess: function(resp, idForm) {
+        var form = this.getPoForm(),
+                poPanel = this.getPoPoPanel(),
+                gridPeng = this.getPoPengGrid();
+
+        if (idForm === 1) {
+            poPanel.down('#searchPo').disable();
+            poPanel.down('#poCabang').setReadOnly(true);
+            form.saved = false;
+
+            gridPeng.getStore().load();
+        } else if (idForm === 2) {
+            var store = grid2.getStore();
+
+            Ext.MessageBox.show({
+                title: resp.title,
+                msg: resp.msg,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.INFO
+            });
+
+            form.getForm().reset();
+            form.down('#pengNewItem').disable();
+            form.saved = false;
+
+            form.down('#id').setValue(resp.data.id);
+            form.down('#no_pengadaan').setValue(resp.data.no_peng);
+
+            store.clearFilter(true);
+            store.filter('pengadaan_id', resp.data.id);
+        } else {
+            Ext.MessageBox.show({
+                title: resp.title,
+                msg: resp.msg,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.INFO
+            });
+
+            form.getForm().reset();
+            form.down('#pengNewItem').disable();
+            form.saved = true;
+
+            grid2.getStore().removeAll();
+        }
+    },
+    onFailure: function(resp, idForm) {
+        Ext.MessageBox.show({
+            title: resp.title,
+            msg: resp.msg,
+            buttons: Ext.MessageBox.OK,
+            icon: Ext.MessageBox.ERROR
+        });
     }
 });
 

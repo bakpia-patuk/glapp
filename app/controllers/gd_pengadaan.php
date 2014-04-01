@@ -25,35 +25,34 @@ class Gd_pengadaan extends Auth_Controller {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
                 return;
             }
+
             //Sinkronisasi
-            $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-                
-            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+            $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
             $no = 0;
-            
-            if($data_trx_harian){
-                
-                    $no = $data_trx_harian->no;
-                
+
+            if ($data_trx_harian) {
+                $no = $data_trx_harian->no;
             }
-           
-            $no+=1;
-            $id = $no.'.'.$this->user->cabang_id;
+
+            $no += 1;
+            $id = $no . '.' . $this->user->cabang_id;
             $data2 = array();
-            $data2['id']=$id;
-            $data2['jumlah']=1;
+            $data2['id'] = $id;
+            $data2['jumlah'] = 1;
             $data2['tujuan'] = 1;
             $data2['id_cabang'] = $this->user->cabang_id;
-            
+
             $this->Gdpengadaan_model->insert_outgoing($data2, 'head');
 
             $data2 = array();
-            $data2['data']='{}';
-            $data2['head_id ']=$id;
-            $data2['primary_key']=$insert['id'];
-            $data2['table_name']='trx_pengadaan';
-            $data2['nama_column']='id';
-            $data2['hapus']=1;
+            $data2['data'] = '{}';
+            $data2['head_id '] = $id;
+            $data2['primary_key'] = $insert['id'];
+            $data2['table_name'] = 'trx_pengadaan';
+            $data2['nama_column'] = 'id';
+            $data2['hapus'] = 1;
 
             $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
             //////////////////////////////////////////////////////////////////////////////
@@ -113,33 +112,32 @@ class Gd_pengadaan extends Auth_Controller {
         if ($this->Gdpengadaan_model->insert($data, 'trx_pengadaan')) {
 
             //Sinkronisasi
-            $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-                
-            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+            $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
             $no = 0;
-            
-            if($data_trx_harian){
-                
-                    $no = $data_trx_harian->no;
-                
+
+            if ($data_trx_harian) {
+
+                $no = $data_trx_harian->no;
             }
             $data_param = $data;
             $data_json = json_encode($data);
             $no+=1;
-            $id = $no.'.'.$this->user->cabang_id;
+            $id = $no . '.' . $this->user->cabang_id;
             $data = array();
-            $data['id']=$id;
-            $data['jumlah']=1;
+            $data['id'] = $id;
+            $data['jumlah'] = 1;
             $data['tujuan'] = 1;
             $data['id_cabang'] = $this->user->cabang_id;
-            
+
             $this->Gdpengadaan_model->insert_outgoing($data, 'head');
 
             $data = array();
-            $data['data']=$data_json;
-            $data['head_id ']=$id;
-            $data['primary_key']=$data_param['id'];
-            $data['table_name']='trx_pengadaan';
+            $data['data'] = $data_json;
+            $data['head_id '] = $id;
+            $data['primary_key'] = $data_param['id'];
+            $data['table_name'] = 'trx_pengadaan';
 
             $this->Gdpengadaan_model->insert_outgoing($data, 'detail');
 
@@ -184,33 +182,32 @@ class Gd_pengadaan extends Auth_Controller {
 
         if ($this->Gdpengadaan_model->insert($data, 'trx_pengadaan_detail')) {
             //Sinkronisasi
-            $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-                
-            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+            $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
             $no = 0;
-            
-            if($data_trx_harian){
-                
-                    $no = $data_trx_harian->no;
-                
+
+            if ($data_trx_harian) {
+
+                $no = $data_trx_harian->no;
             }
             $data_param = $data;
             $data_json = json_encode($data);
             $no+=1;
-            $id = $no.'.'.$this->user->cabang_id;
+            $id = $no . '.' . $this->user->cabang_id;
             $data = array();
-            $data['id']=$id;
-            $data['jumlah']=1;
+            $data['id'] = $id;
+            $data['jumlah'] = 1;
             $data['tujuan'] = 1;
             $data['id_cabang'] = $this->user->cabang_id;
-            
+
             $this->Gdpengadaan_model->insert_outgoing($data, 'head');
 
             $data = array();
-            $data['data']=$data_json;
-            $data['head_id ']=$id;
-            $data['primary_key']=$data_param['id'];
-            $data['table_name']='trx_pengadaan_detail';
+            $data['data'] = $data_json;
+            $data['head_id '] = $id;
+            $data['primary_key'] = $data_param['id'];
+            $data['table_name'] = 'trx_pengadaan_detail';
 
             $this->Gdpengadaan_model->insert_outgoing($data, 'detail');
 
@@ -243,7 +240,7 @@ class Gd_pengadaan extends Auth_Controller {
         $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $params2[] = array('field' => 'pengadaan_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         if (!$this->Gdpengadaan_model->update($data, $params1, NULL, 'trx_pengadaan')) {
-            
+
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
             return;
         }
@@ -253,70 +250,68 @@ class Gd_pengadaan extends Auth_Controller {
         }
 
         //Sinkronisasi
-        $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-            
-        $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+        $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+        $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
         $no = 0;
-        
-        if($data_trx_harian){
-            
-                $no = $data_trx_harian->no;
-            
+
+        if ($data_trx_harian) {
+
+            $no = $data_trx_harian->no;
         }
         $data_param = $data;
         $data_json = json_encode($data);
         $no+=1;
-        $id = $no.'.'.$this->user->cabang_id;
+        $id = $no . '.' . $this->user->cabang_id;
         $data2 = array();
-        $data2['id']=$id;
-        $data2['jumlah']=1;
+        $data2['id'] = $id;
+        $data2['jumlah'] = 1;
         $data2['tujuan'] = 1;
         $data2['id_cabang'] = $this->user->cabang_id;
-        
+
         $this->Gdpengadaan_model->insert_outgoing($data2, 'head');
 
         $data2 = array();
-        $data2['data']=$data_json;
-        $data2['head_id ']=$id;
-        $data2['primary_key']=$insert['id'];
-        $data2['table_name']='trx_pengadaan';
+        $data2['data'] = $data_json;
+        $data2['head_id '] = $id;
+        $data2['primary_key'] = $insert['id'];
+        $data2['table_name'] = 'trx_pengadaan';
 
         $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
         /////////////////////////////////////////////////////////////////////
         //Sinkronisasi
-        $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-            
-        $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+        $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+        $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
         $no = 0;
-        
-        if($data_trx_harian){
-            
-                $no = $data_trx_harian->no;
-            
+
+        if ($data_trx_harian) {
+
+            $no = $data_trx_harian->no;
         }
         $data_param = $data;
         $data_json = json_encode($data);
         $no+=1;
-        $id = $no.'.'.$this->user->cabang_id;
+        $id = $no . '.' . $this->user->cabang_id;
         $data2 = array();
-        $data2['id']=$id;
-        $data2['jumlah']=1;
+        $data2['id'] = $id;
+        $data2['jumlah'] = 1;
         $data2['tujuan'] = 1;
         $data2['id_cabang'] = $this->user->cabang_id;
-        
+
         $this->Gdpengadaan_model->insert_outgoing($data2, 'head');
 
         $data2 = array();
-        $data2['data']=$data_json;
-        $data2['nama_column']='pengadaan_id';
-        $data2['head_id ']=$id;
-        $data2['primary_key']=$insert['id'];
-        $data2['table_name']='trx_pengadaan_detail';
+        $data2['data'] = $data_json;
+        $data2['nama_column'] = 'pengadaan_id';
+        $data2['head_id '] = $id;
+        $data2['primary_key'] = $insert['id'];
+        $data2['table_name'] = 'trx_pengadaan_detail';
 
         $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
 
         /////////////////////////////////////////////////////////////////////////
-        
+
         $this->Gdpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_PENGADAAN');
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Pengadaan Success'));
     }
@@ -336,37 +331,37 @@ class Gd_pengadaan extends Auth_Controller {
                 return;
             }
             //Sinkronisasi
-            $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-                
-            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+            $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
             $no = 0;
-            
-            if($data_trx_harian){
-                
-                    $no = $data_trx_harian->no;
-                
+
+            if ($data_trx_harian) {
+
+                $no = $data_trx_harian->no;
             }
-           
+
             $no+=1;
-            $id = $no.'.'.$this->user->cabang_id;
+            $id = $no . '.' . $this->user->cabang_id;
             $data2 = array();
-            $data2['id']=$id;
-            $data2['jumlah']=1;
+            $data2['id'] = $id;
+            $data2['jumlah'] = 1;
             $data2['tujuan'] = 1;
             $data2['id_cabang'] = $this->user->cabang_id;
-            
+
             $this->Gdpengadaan_model->insert_outgoing($data2, 'head');
 
             $data2 = array();
-            $data2['data']='{}';;
-            $data2['head_id ']=$id;
-            $data2['primary_key']=$insert['id'];
-            $data2['table_name']='trx_pengadaan';
-            $data2['nama_column']='id';
-            $data2['hapus']=1;
+            $data2['data'] = '{}';
+            ;
+            $data2['head_id '] = $id;
+            $data2['primary_key'] = $insert['id'];
+            $data2['table_name'] = 'trx_pengadaan';
+            $data2['nama_column'] = 'id';
+            $data2['hapus'] = 1;
 
             $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
-            
+
             //////////////////////////////////////////////////////////////////////////////
         }
 
@@ -389,35 +384,35 @@ class Gd_pengadaan extends Auth_Controller {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
                 return;
             }
+
             //Sinkronisasi
-            $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-                
-            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+            $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+            $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
             $no = 0;
-            
-            if($data_trx_harian){
-                
-                    $no = $data_trx_harian->no;
-                
+
+            if ($data_trx_harian) {
+
+                $no = $data_trx_harian->no;
             }
-           
+
             $no+=1;
-            $id = $no.'.'.$this->user->cabang_id;
+            $id = $no . '.' . $this->user->cabang_id;
             $data2 = array();
-            $data2['id']=$id;
-            $data2['jumlah']=1;
+            $data2['id'] = $id;
+            $data2['jumlah'] = 1;
             $data2['tujuan'] = 1;
             $data2['id_cabang'] = $this->user->cabang_id;
-            
+
             $this->Gdpengadaan_model->insert_outgoing($data2, 'head');
 
             $data2 = array();
-            $data2['data']='{}';
-            $data2['head_id ']=$id;
-            $data2['primary_key']=$insert['id'];
-            $data2['table_name']='trx_pengadaan_detail';
-            $data2['nama_column']='id';
-            $data2['hapus']=1;
+            $data2['data'] = '{}';
+            $data2['head_id '] = $id;
+            $data2['primary_key'] = $insert['id'];
+            $data2['table_name'] = 'trx_pengadaan_detail';
+            $data2['nama_column'] = 'id';
+            $data2['hapus'] = 1;
 
             $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
             //////////////////////////////////////////////////////////////////////////////
@@ -430,49 +425,44 @@ class Gd_pengadaan extends Auth_Controller {
     public function approve_cabang() {
         $id = rtrim($this->input->post('id'), '-');
         $data = explode('-', $id);
-        
-        if(!$this->__check_usergr()) {
+
+        if (!$this->__check_usergr()) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak mempunyai hak untuk approval'));
             return;
         }
-        $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-            
-        $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+        $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+        $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
         $no = 0;
-        
-        if($data_trx_harian){
-            
-                $no = $data_trx_harian->no;
-            
+
+        if ($data_trx_harian) {
+
+            $no = $data_trx_harian->no;
         }
         $jumlah = 0;
         $data_param = array('peng_statusdiv' => 1);
         $data_json = json_encode($data_param);
         $no+=1;
-        $id = $no.'.'.$this->user->cabang_id;
-        
-        foreach($data as $row) {
+        $id = $no . '.' . $this->user->cabang_id;
+
+        foreach ($data as $row) {
             $this->Gdpengadaan_model->approve_peng('peng_statusdiv', $row);
-            $data2[] = array('data' => $data_json ,'head_id' =>$id,'primary_key'=>$row, 'table_name'=>'trx_pengadaan');
+            $data2[] = array('data' => $data_json, 'head_id' => $id, 'primary_key' => $row, 'table_name' => 'trx_pengadaan');
             $jumlah++;
-            
         }
         //Sinkronisasi
 
-        
         $data_head = array();
-        $data_head['id']=$id;
-        $data_head['jumlah']=$jumlah;
+        $data_head['id'] = $id;
+        $data_head['jumlah'] = $jumlah;
         $data_head['tujuan'] = 1;
         $data_head['id_cabang'] = $this->user->cabang_id;
-        
+
         $this->Gdpengadaan_model->insert_outgoing($data_head, 'head');
 
         foreach ($data2 as $key) {
-             $this->Gdpengadaan_model->insert_outgoing($key, 'detail');
+            $this->Gdpengadaan_model->insert_outgoing($key, 'detail');
         }
-
-       
 
         /////////////////////////////////////////////////////////////////////////
         $this->Gdpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_CB', 'TRX_PENGADAAN');
@@ -482,55 +472,52 @@ class Gd_pengadaan extends Auth_Controller {
     public function approve_pusat() {
         $id = rtrim($this->input->post('id'), '-');
         $data = explode('-', $id);
-        
-        if(!$this->__check_usergr()) {
+
+        if (!$this->__check_usergr()) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak mempunyai hak untuk approval'));
             return;
         }
 
-       
 
-        foreach($data as $row) {
+
+        foreach ($data as $row) {
 
             $this->Gdpengadaan_model->approve_peng('peng_statuspst', $row);
             $cabang_id = $this->Gdpengadaan_model->get_detail('id', $row, 'trx_pengadaan')->cabang_id;
-            if($cabang_id){
+            if ($cabang_id) {
                 //Sinkronisasi
-                $options = array('sortBy' => 'no','sortDirection' => 'DESC');
-            
-                $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL,$options,'head');
+                $options = array('sortBy' => 'no', 'sortDirection' => 'DESC');
+
+                $data_trx_harian = $this->Gdpengadaan_model->get_outgoing(NULL, $options, 'head');
                 $no = 0;
-                
-                if($data_trx_harian){
-                    
-                        $no = $data_trx_harian->no;
-                    
+
+                if ($data_trx_harian) {
+
+                    $no = $data_trx_harian->no;
                 }
                 $data_param = array('peng_statuspst' => 1);
                 $data_json = json_encode($data_param);
                 $no+=1;
-                $id = $no.'.'.$this->user->cabang_id;
+                $id = $no . '.' . $this->user->cabang_id;
                 $data2 = array();
-                $data2['id']=$id;
-                $data2['jumlah']=1;
+                $data2['id'] = $id;
+                $data2['jumlah'] = 1;
                 $data2['tujuan'] = $cabang_id;
                 $data2['id_cabang'] = $this->user->cabang_id;
-                
+
                 $this->Gdpengadaan_model->insert_outgoing($data2, 'head');
 
                 $data2 = array();
-                $data2['data']=$data_json;
-               
-                $data2['head_id ']=$id;
-                $data2['primary_key']=$row;
-                $data2['table_name']='trx_pengadaan';
+                $data2['data'] = $data_json;
+
+                $data2['head_id '] = $id;
+                $data2['primary_key'] = $row;
+                $data2['table_name'] = 'trx_pengadaan';
 
                 $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
 
                 /////////////////////////////////////////////////////////////////////////
             }
-            
-            
         }
 
 
@@ -600,24 +587,24 @@ class Gd_pengadaan extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
-    
+
     private function __return_csspeng($id) {
         $peng_detail = $this->Gdpengadaan_model->get_detail('id', $id, 'trx_pengadaan');
-        
-        if($peng_detail->peng_type == 0) {
+
+        if ($peng_detail->peng_type == 0) {
             $po_status = $peng_detail->po_status;
             $peng_statusdiv = $peng_detail->peng_statusdiv;
             $peng_statuspst = $peng_detail->peng_statuspst;
-            
-            if($po_status == 0 && $peng_statusdiv == 0 && $peng_statuspst == 0) {
+
+            if ($po_status == 0 && $peng_statusdiv == 0 && $peng_statuspst == 0) {
                 return 'peng-null';
-            } else if($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 0) {
+            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 0) {
                 return 'peng-div';
-            } else if($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
+            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
                 return 'peng-pusat';
-            } else if($po_status == 2 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
+            } else if ($po_status == 2 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
                 return 'peng-pobag';
-            } else if($po_status == 1 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
+            } else if ($po_status == 1 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
                 return 'peng-poall';
             } else {
                 return 'peng-grey';

@@ -24,25 +24,20 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
         Ext.applyIf(me, {
             items: [
                 {
-                    xtype: 'textfield',
+                    xtype: 'numberfield',
                     fieldLabel: 'Id ',
-                    name: 'idPo',
-                    id: 'idPoField',
+                    name: 'id',
+                    itemId: 'id',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
                     hidden: true,
-                    listeners: {
-                        change: function(field) {
-                            var form = field.up('form');
-                            form.saved = false;
-                        }
-                    }
+                    value: 0
                 },
                 {
                     xtype: 'textfield',
-                    fieldLabel: 'Id Detail',
-                    name: 'idDetailPo',
-                    id: 'idDetailPoField',
+                    fieldLabel: 'Id Peng Detail',
+                    name: 'id_peng',
+                    itemId: 'id_peng',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
                     hidden: true
@@ -58,33 +53,17 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Tanggal ',
-                    name: 'tglTransaksi',
+                    name: 'trx_date',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     value: new Date(),
                     allowBlank: false
                 },
                 {
-                    xtype: 'combobox',
+                    xtype: 'textfield',
                     fieldLabel: 'Cabang ',
-//                    hidden: userCabang === '14' ? false : true,
-//                    disabled: userCabang === '14' ? false : true,
-                    name: 'poCabang',
-                    id: 'poCabang',
-                    triggerAction: 'query',
-                    //triggerCls: 'x-form-search-trigger',
-                    hideTrigger: true,
-                    queryMode: 'remote',
-                    minChars: 3,
-//                    store: 'CabangStore',
-                    displayField: 'cabangName',
-                    valueField: 'id',
-                    emptyText: 'ketik nama cabang',
-                    matchFieldWidth: false,
-                    listConfig: {
-                        minWidth: 185
-                    },
-                    allowBlank: false
+                    name: 'po_cabang_name',
+                    itemId: 'po_cabang_name'
                 },
                 {
                     xtype: 'combobox',
@@ -95,8 +74,8 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                     queryMode: 'local',
                     name: 'divisi',
                     forceSelection: true,
-//                    hidden: userCabang === '14' ? true : false,
-//                    disabled: userCabang === '14' ? true : false,
+                    hidden: true,
+                    disabled: true,
                     typeAhead: true,
                     allowBlank: true,
                     valueNotFoundText: 'Tidak ada Data',
@@ -120,7 +99,8 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No. PO ',
-                    name: 'noPo',
+                    name: 'po_no',
+                    itemId: 'po_no',
                     emptyText: 'auto generate',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
@@ -129,7 +109,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                 {
                     xtype: 'datefield',
                     fieldLabel: 'E.D. PO ',
-                    name: 'tglTempo',
+                    name: 'po_ed',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     allowBlank: false,
@@ -138,7 +118,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Supplier ',
-                    name: 'poSup',
+                    name: 'po_suppid',
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
@@ -211,14 +191,14 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Email supp',
-                    name: 'emailSupp',
+                    name: 'po_supp_email',
                     allowBlank: true,
                     hidden: true
                 },
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Tanggal Kirim ',
-                    name: 'tglKirim',
+                    name: 'po_datekirim',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     allowBlank: true,
@@ -226,8 +206,8 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     fieldLabel: 'Nilai Transaksi ',
-                    name: 'jumlahTrx',
-                    id: 'jumlahTrxPoForm',
+                    name: 'po_value',
+                    itemId: 'po_value',
                     flex: 1,
                     decimalPrecision: 2,
                     decimalSeparator: ',',
@@ -249,7 +229,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                     displayField: 'type',
                     valueField: 'typeCode',
                     queryMode: 'local',
-                    name: 'wbNonAktiva',
+                    name: 'po_isangsuran',
                     forceSelection: true,
                     hidden: false,
                     typeAhead: true,
