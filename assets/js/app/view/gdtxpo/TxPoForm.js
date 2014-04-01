@@ -30,7 +30,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                     itemId: 'id',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
-                    hidden: true,
+                    hidden: false,
                     value: 0
                 },
                 {

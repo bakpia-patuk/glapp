@@ -20,8 +20,9 @@ class Gd_po extends Auth_Controller {
         
     }
 
-    public function set_itempo() {
-        $insert = $this->insert->post(NULL, TRUE);
+    public function set_status($type) {
+        $insert = $this->input->post(NULL, TRUE);
+        
         if ($insert['id'] == 0) {
             $insert['id'] = $this->__init_po($insert);
             if ($insert['id'] == NULL) {
@@ -29,180 +30,41 @@ class Gd_po extends Auth_Controller {
                 return;
             }
         }
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Pengadaan Success'));
-    }
 
-    public function unset_itempo() {
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Pengadaan Success'));
+        $data = array(
+            'po_id' => $type == 1 ? $insert['id'] : 0,
+            'po_status' => $type == 1 ? 1 : 0
+        );
+
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id_peng']);
+        if (!$this->Gdpo_model->update($data, $params, NULL, 'trx_pengadaan_detail')) {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+        
+        $rtn = $this->Gdpo_model->get_detail('id', $insert['id'], 'trx_po');
+
+        echo json_encode(array('success' => 'true', 'data' => $rtn, 'title' => 'Info', 'msg' => 'Insert Po Success'));
     }
 
     private function __init_po($insert) {
-        $last_no = $this->Gdpengadaan_model->get_last('trx_pengadaan');
-        $detail_cabang = $this->Gdpengadaan_model->get_detail('id', $this->user->cabang_id, 'dt_cabang');
+        $last_no = $this->Gdpo_model->get_last('trx_po');
+        $detail_cabang = $this->Gdpo_model->get_detail('id', $this->user->cabang_id, 'dt_cabang');
 
         $data = array(
             'id' => $last_no . '.' . $this->user->cabang_id,
-            'tgl_trx' => mdate('%Y-%m-%d %H:%i:%s', strtotime($insert['tgl_butuh'])),
-            'no_pengadaan' => sprintf('%06d', $last_no) . '/' . $detail_cabang->cabang_code . '/' . mdate('%Y%m%d', now()),
-            'tgl_butuh' => mdate('%Y-%m-%d', strtotime($insert['tgl_butuh'])),
-            'cabang_id' => $this->user->cabang_id,
-            'divisi' => $this->user->divisi_id,
-            'keterangan' => '',
-            'petugas_id' => $this->user->id
+            'trx_date' => mdate('%Y-%m-%d %H:%i:%s', now()),
+            'po_no' => sprintf('%06d', $last_no) . '/' . $detail_cabang->cabang_code . '/' . mdate('%Y%m%d', now()),
+            'po_cabangid' => $insert['cabang'],
+            'po_usercreate' => $this->user->id,
+            'po_simpanstatus' => 0
         );
 
-        if ($this->Gdpengadaan_model->insert($data, 'trx_pengadaan')) {
+        if ($this->Gdpo_model->insert($data, 'trx_po')) {
             return $last_no . '.' . $this->user->cabang_id;
         } else {
             return NULL;
         }
-    }
-
-    private function __set_item($insert) {
-        $last_no = $this->Gdpengadaan_model->get_last('trx_pengadaan_detail');
-        $item = $this->Gdpengadaan_model->get_item_detail($insert['barang_id']);
-        $data = array(
-            'id' => $last_no . '.' . $this->user->cabang_id,
-            'cabang_id' => $this->user->cabang_id,
-            'divisi' => $this->user->divisi_id,
-            'pengadaan_id' => $insert['id'],
-            'tgl_butuh' => mdate('%Y-%m-%d', strtotime($insert['tgl_butuh'])),
-            'barang_gol' => $item->mi_parent_id,
-            'barang_id' => $insert['barang_id'],
-            'peng_merk' => $item->mi_merk,
-            'peng_katalog' => $item->mi_katalog,
-            'peng_kemasan' => $insert['peng_kemasan'],
-            'peng_qty' => $insert['peng_qty'],
-            'peng_harga' => $item->mi_item_price,
-            'peng_disc' => $item->mi_diskon,
-            'peng_ppn' => $item->mi_ppn,
-            'qty_po' => 0,
-            'po_merk' => $item->mi_merk,
-            'po_katalog' => $item->mi_katalog,
-            'po_kemasan' => $insert['peng_kemasan'],
-            'po_qty' => $insert['peng_qty'],
-            'po_harga' => $item->mi_item_price,
-            'po_disc' => $item->mi_diskon,
-            'po_ppn' => $item->mi_ppn,
-            'po_status' => 0,
-            'po_id' => 0,
-            'barang_desc' => ""
-        );
-
-        if ($this->Gdpengadaan_model->insert($data, 'trx_pengadaan_detail')) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-
-    private function __cek_approval_add($id) {
-        $detail = $this->Gdpengadaan_model->get_detail('id', $id, 'trx_pengadaan');
-
-        if ($detail->peng_statusdiv == 1) {
-            return FALSE;
-        }
-
-        return TRUE;
-    }
-
-    public function save() {
-        $insert = $this->input->post(NULL, TRUE);
-
-        if ($insert['id'] == 0) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum melakukan transaksi'));
-            return;
-        }
-
-        $data = array('simpan_status' => 1);
-        $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-        $params2[] = array('field' => 'pengadaan_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-        if (!$this->Gdpengadaan_model->update($data, $params1, NULL, 'trx_pengadaan')) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
-            return;
-        }
-        if (!$this->Gdpengadaan_model->update($data, $params2, NULL, 'trx_pengadaan_detail')) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
-            return;
-        }
-
-        $this->Gdpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_PENGADAAN');
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Pengadaan Success'));
-    }
-
-    public function delete() {
-        $insert = $this->input->post(NULL, TRUE);
-
-        if (!$this->__cek_approval_add($insert['id'])) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak bisa menghapus pengadaan yang sudah di approve'));
-            return;
-        }
-
-        if ($insert['id'] != 0) {
-            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-            if (!$this->Gdpengadaan_model->delete($params, NULL, 'trx_pengadaan')) {
-                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
-                return;
-            }
-        }
-
-        $this->Gdpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'DELETE PENGADAAN', 'TRX_PENGADAAN');
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Delete Success'));
-    }
-
-    public function delete_item() {
-        $insert = $this->input->post(NULL, TRUE);
-
-        $peng_id = $this->Gdpengadaan_model->get_detail('id', $insert['id'], 'trx_pengadaan_detail')->pengadaan_id;
-        if (!$this->__cek_approval_add($peng_id)) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak bisa menghapus item pengadaan yang sudah di approve'));
-            return;
-        }
-
-        if ($insert['id'] != 0) {
-            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-            if (!$this->Gdpengadaan_model->delete($params, NULL, 'trx_pengadaan_detail')) {
-                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
-                return;
-            }
-        }
-
-        $this->Gdpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'DELETE ITEM PENGADAAN', 'TRX_PENGADAAN');
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Delete Success'));
-    }
-
-    public function approve_cabang() {
-        $id = rtrim($this->input->post('id'), '-');
-        $data = explode('-', $id);
-
-        if (!$this->__check_usergr()) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak mempunyai hak untuk approval'));
-            return;
-        }
-
-        foreach ($data as $row) {
-            $this->Gdpengadaan_model->approve_peng('peng_statusdiv', $row);
-        }
-
-        $this->Gdpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_CB', 'TRX_PENGADAAN');
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Approve Pengadaan Success'));
-    }
-
-    public function approve_pusat() {
-        $id = rtrim($this->input->post('id'), '-');
-        $data = explode('-', $id);
-
-        if (!$this->__check_usergr()) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Anda tidak mempunyai hak untuk approval'));
-            return;
-        }
-
-        foreach ($data as $row) {
-            $this->Gdpengadaan_model->approve_peng('peng_statuspst', $row);
-        }
-
-        $this->Gdpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_PST', 'TRX_PENGADAAN');
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Approve Pengadaan Success'));
     }
 
     public function list_pengadaan_all() {

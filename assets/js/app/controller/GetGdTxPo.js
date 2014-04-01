@@ -119,7 +119,7 @@ Ext.define('GlApp.controller.GetGdTxPo', {
     setItemPo: function(column, recordIndex, checked) {
         var form = this.getPoForm(),
                 grid = this.getPoPengGrid(),
-                poPanel = this.getPoPoPanel(),
+                poPanel = this.getPoPanel(),
                 store = grid.getStore(),
                 idPo = form.down('#id').getValue(),
                 poCabang = poPanel.down('#poCabang').getValue(),
@@ -133,21 +133,24 @@ Ext.define('GlApp.controller.GetGdTxPo', {
         };
 
         if (checked) {
-            url = 'gd_po/set_itempo';
+            url = 'gd_po/set_status/1';
         } else {
-            url = 'gd_po/unset_itempo';
+            url = 'gd_po/set_status/0';
         }
 
         this.ajaxReq(url, params,  1);
     },
     onSuccess: function(resp, idForm) {
         var form = this.getPoForm(),
-                poPanel = this.getPoPoPanel(),
+                poPanel = this.getPoPanel(),
                 gridPeng = this.getPoPengGrid();
 
         if (idForm === 1) {
             poPanel.down('#searchPo').disable();
             poPanel.down('#poCabang').setReadOnly(true);
+            form.down('#id').setValue(parseInt(resp.data.id));
+            form.down('#po_cabang_name').setValue(poPanel.down('#poCabang').getRawValue());
+            form.down('#po_no').setValue(resp.data.po_no);
             form.saved = false;
 
             gridPeng.getStore().load();

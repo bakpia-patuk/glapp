@@ -80,6 +80,7 @@ class Gdpo_model extends MY_Model {
         }
     }
     
+    
     private function __calc_netto($qty, $harga, $disc, $ppn) {
         return 0;
     }
