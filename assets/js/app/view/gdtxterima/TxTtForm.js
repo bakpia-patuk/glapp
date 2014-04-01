@@ -28,7 +28,9 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                     text: 'SIMPAN',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-save',
-                    action: 'suppSave'
+                                    handler: function() {
+										Ext.Msg.alert('Error', 'Syncronize Connection Error');
+									}
                 },
                 {
                     xtype: 'button',
@@ -36,7 +38,9 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                     text: 'BARU',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-add',
-                    action: 'suppNew'
+                                    handler: function() {
+										Ext.Msg.alert('Error', 'Syncronize Connection Error');
+									}
                 },
                 {
                     xtype: 'button',
@@ -44,7 +48,9 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                     text: 'CETAK TT',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-delete',
-                    action: 'suppDelete'
+                                    handler: function() {
+										Ext.Msg.alert('Error', 'Syncronize Connection Error');
+									}
                 },
                 {
                     xtype: 'button',
@@ -52,7 +58,9 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                     text: 'KIRIM PDF',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-delete',
-                    action: 'suppDelete'
+                                    handler: function() {
+										Ext.Msg.alert('Error', 'Syncronize Connection Error');
+									}
                 }
             ],
             items: [
