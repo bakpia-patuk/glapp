@@ -37,28 +37,34 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     xtype: 'button',
                                     text: 'ADD_NEW',
                                     ui: 'orange-button',
-                                    itemId: 'poNew'
+                                    // itemId: 'poNew'
                                 },
                                 '-',
                                 {
                                     xtype: 'button',
                                     text: 'SAVE',
                                     ui: 'orange-button',
-                                    itemId: 'poSave'
+                                    handler: function() {
+										Ext.Msg.alert('Error', 'Syncronize Connection Error');
+									}
                                 },
                                 '-',
                                 {
                                     xtype: 'button',
                                     text: 'PRINT_PO',
                                     ui: 'orange-button',
-                                    itemId: 'poPrint'
+                                    handler: function() {
+										Ext.Msg.alert('Error', 'Syncronize Connection Error');
+									}
                                 },
                                 '-',
                                 {
                                     xtype: 'button',
                                     text: 'SENT_PDF',
                                     ui: 'orange-button',
-                                    itemId: 'poPdf'
+                                    handler: function() {
+										Ext.Msg.alert('Error', 'Syncronize Connection Error');
+									}
                                 },
                                 '->',
                                 {
