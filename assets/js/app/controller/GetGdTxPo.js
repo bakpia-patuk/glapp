@@ -33,6 +33,9 @@ Ext.define('GlApp.controller.GetGdTxPo', {
                 '#popanelform button[action=refreshPo]': {
                     click: this.reloadListPeng
                 },
+                '#popanelform button[action=poNew]': {
+                    click: this.resetPo
+                },
                 '#txpogrid': {
                     edit: this.editPoPengadaan
                 },
@@ -45,6 +48,26 @@ Ext.define('GlApp.controller.GetGdTxPo', {
             store: {
             }
         });
+    },
+    resetPo: function(btn) {
+        var form = this.getPoForm();
+
+        if (form.saved) {
+            this.onSuccess(1, 2);
+        } else {
+            Ext.Msg.show({
+                title: 'Konfirmasi',
+                msg: 'Anda sedang melakukan transaksi. Lanjutakan transaksi ?',
+                buttons: Ext.Msg.YESNO,
+                scope: this,
+                fn: function(btn) {
+                    if (btn === 'no') {
+                        this.ajaxReq('gd_po/reset', form.getForm().getValues(), 2);
+                    }
+                }
+            });
+            return false;
+        }
     },
     showListPeng: function(btn) {
         var panel = this.getPoPanel(),
@@ -155,24 +178,14 @@ Ext.define('GlApp.controller.GetGdTxPo', {
 
             gridPeng.getStore().load();
         } else if (idForm === 2) {
-            var store = grid2.getStore();
-
-            Ext.MessageBox.show({
-                title: resp.title,
-                msg: resp.msg,
-                buttons: Ext.MessageBox.OK,
-                icon: Ext.MessageBox.INFO
-            });
-
+            poPanel.down('#searchPo').enable();
+            poPanel.down('#poCabang').setReadOnly(false);
+            poPanel.down('#poCabang').reset();
+            
             form.getForm().reset();
-            form.down('#pengNewItem').disable();
-            form.saved = false;
+            form.saved = true;
 
-            form.down('#id').setValue(resp.data.id);
-            form.down('#no_pengadaan').setValue(resp.data.no_peng);
-
-            store.clearFilter(true);
-            store.filter('pengadaan_id', resp.data.id);
+            gridPeng.getStore().removeAll();
         } else {
             Ext.MessageBox.show({
                 title: resp.title,

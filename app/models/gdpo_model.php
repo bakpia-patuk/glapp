@@ -80,6 +80,19 @@ class Gdpo_model extends MY_Model {
         }
     }
     
+    public function total_po($id) {
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data = $this->gets($params, NULL, 'trx_pengadaan_detail');
+        $total = 0;
+        
+        if($data != NULL) {
+            foreach ($data as $val) {
+                $total += $this->__calc_netto($val->po_qty, $val->po_harga, $val->po_disc, $val->po_ppn);
+            }
+        }
+        
+        return $total;
+    }
     
     private function __calc_netto($qty, $harga, $disc, $ppn) {
         return 0;

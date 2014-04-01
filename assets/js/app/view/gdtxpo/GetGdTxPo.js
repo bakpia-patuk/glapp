@@ -37,7 +37,7 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     xtype: 'button',
                                     text: 'ADD_NEW',
                                     ui: 'orange-button',
-                                    itemId: 'poNew'
+                                    action: 'poNew'
                                 },
                                 '-',
                                 {
