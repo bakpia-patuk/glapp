@@ -26,24 +26,24 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
                     align: 'center',
                     text: '',
                     dataIndex: 'checked',
-//                    listeners: {
-//                        checkchange: function (column, recordIndex, checked) {
-//                            var grid = this.up('grid'),
-//                                noFak = grid.getStore().getAt(recordIndex).get('id'),
-//                                valueFak = grid.getStore().getAt(recordIndex).get('fktTotal');
-//
-//                            var fakField = Ext.getCmp('kkFakNo'),
-//                                fakTotal = Ext.getCmp('kkFakTotal');
-//
-//                            if (checked === true) {
-//                                fakField.setValue(fakField.getValue() + noFak + ';');
-//                                fakTotal.setValue(fakTotal.getValue() + valueFak);
-//                            } else {
-//                                fakField.setValue(fakField.getValue().replace(noFak + ';', ''));
-//                                fakTotal.setValue(fakTotal.getValue() - valueFak);
-//                            }
-//                        }
-//                    }
+                    listeners: {
+                        checkchange: function (column, recordIndex, checked) {
+                            var grid = this.up('grid'),
+                                noFak = grid.getStore().getAt(recordIndex).get('id'),
+                                valueFak = grid.getStore().getAt(recordIndex).get('faktur_nototal');
+
+                            var fakField = Ext.getCmp('kkFakNo'),
+                                fakTotal = Ext.getCmp('kkFakTotal');
+
+                            if (checked === true) {
+                                fakField.setValue(fakField.getValue() + noFak + ';');
+                                fakTotal.setValue(fakTotal.getValue() + valueFak);
+                            } else {
+                                fakField.setValue(fakField.getValue().replace(noFak + ';', ''));
+                                fakTotal.setValue(fakTotal.getValue() - valueFak);
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'gridcolumn',

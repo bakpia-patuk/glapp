@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
     alias: 'widget.gdtxfaktur.txbgfakturgrid',
     itemId: 'txbgfakturgrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxfaktur.FakturStore',
     autoScroll: true,
     forceFit: false,
     columnLines: true,
@@ -60,7 +60,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
                     xtype: 'datecolumn',
                     flex: 0.7,
                     text: 'NO FAKTUR',
-                    dataIndex: 'trxDate',
+                    dataIndex: 'faktur_tgl',
                     renderer: function(value, meta, record) {
                         var status = record.get('ttFakturStatus');
                         if (status !== 0) {
@@ -74,7 +74,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
                     xtype: 'gridcolumn',
                     flex: 0.2,
                     text: 'NOMINAL',
-                    dataIndex: 'ttNo',
+                    dataIndex: 'faktur_no',
                     renderer: function(value, meta, record) {
                         var status = record.get('ttFakturStatus');
                         if (status !== 0) {

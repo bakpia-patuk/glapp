@@ -92,6 +92,10 @@ Ext.application({
                     minHeight: 27,
                     maxHeight: 27,
                     bbar: [
+                        {
+                            xtype: 'tbtext',
+                            text: '<div style="color: red;">' + TTD_STRING + '</div>'
+                        },
                         '->',
                         {
                             xtype: 'tbtext',

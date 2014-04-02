@@ -17,7 +17,7 @@ var modelku = Ext.define('eTrav.model.AkunModelTree', {
         {name: 'aktifStatus', type: 'int'},
         {name: 'akunCurr', type: 'int'},
         {name: 'akunBall', type: 'float'},
-        //{name: 'isBerangkat', type: 'int'},
+        {name: 'isBerangkat', type: 'int'},
         {name: 'isAkunKas', type: 'boolean'},
         {name: 'akunStatusTampil', type: 'int'},
         {name: 'fungsiAkun', type: 'int'},
@@ -41,7 +41,7 @@ Ext.define('GlApp.store.akmsakun.AkunStoreTree', {
     root: {
         text: 'root',
         id: '0',
-        expanded: true
+        expanded: false
     },
     proxy: {
         type: 'ajax',

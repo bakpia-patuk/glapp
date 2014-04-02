@@ -41,6 +41,55 @@ class Gd_po extends Auth_Controller {
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Reset All Data'));
     }
 
+    public function save() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        if ($insert['id'] == 0) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum melakukan transaksi'));
+            return;
+        }
+
+        $data = array(
+            'po_ed' => mdate('%Y-%m-%d', strtotime($insert['po_ed'])),
+            'po_suppid' => $insert['po_suppid'],
+            'po_supp_email' => $insert['po_supp_email'],
+            'po_value' => $this->Gdpo_model->standard_money($insert['po_value']),
+            'po_isangsuran' => $insert['po_isangsuran'],
+            'po_angdp' => 0,
+            'po_angqty' => 0,
+            'po_angvalue' => 0,
+            'po_usersign' => $this->user->ttd_url,
+            'po_ttstatus' => 0,
+            'po_tfstatus' => 0,
+            'po_simpanstatus' => 1
+        );
+
+        $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        if (!$this->Gdpo_model->update($data, $params1, NULL, 'trx_po')) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        if (!$this->__set_po($insert['id'])) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        $this->Gdpo_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_P0');
+        echo json_encode(array('success' => 'true', 'data' => $insert['id'], 'title' => 'Info', 'msg' => 'Insert PO Success'));
+    }
+
+    private function __set_po($id_po) {
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id_po);
+        $data_pengadaan = $this->Gdpo_model->gets($params, NULL, 'trx_pengadaan_detail');
+
+        foreach ($data_pengadaan as $row) {
+            $this->Gdpo_model->insert_po_item($row->id);
+        }
+
+        return TRUE;
+    }
+
     public function set_status($type) {
         $insert = $this->input->post(NULL, TRUE);
 
@@ -80,7 +129,7 @@ class Gd_po extends Auth_Controller {
         $data = array(
             'id' => $last_no . '.' . $this->user->cabang_id,
             'trx_date' => mdate('%Y-%m-%d %H:%i:%s', now()),
-            'po_no' => sprintf('%06d', $last_no) . '/' . $detail_cabang->cabang_code . '/' . mdate('%Y%m%d', now()),
+            'po_no' => 'PO' . '/' . $detail_cabang->cabang_code . '/' . mdate('%d%m%y', now()) . '/' . sprintf('%06d', $last_no),
             'po_cabangid' => $insert['cabang'],
             'po_usercreate' => $this->user->id,
             'po_simpanstatus' => 0
@@ -91,6 +140,24 @@ class Gd_po extends Auth_Controller {
         } else {
             return '0';
         }
+    }
+
+    public function edit_peng_po() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        $data = array(
+            'po_qty' => $insert['po_qty'],
+            'po_harga' => $insert['po_harga'],
+            'po_disc' => $insert['po_disc'],
+            'po_ppn' => $insert['po_ppn'],
+            'po_katalog' => $insert['po_katalog'],
+            'barang_desc' => $insert['barang_desc']
+        );
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $this->Gdpo_model->update($data, $opt, NULL, 'trx_pengadaan_detail');
+        $id_po = $this->Gdpo_model->get_detail('id', $insert['id'], 'trx_pengadaan_detail')->po_id;
+        echo json_encode(array('success' => 'true', 'data' => $this->Gdpo_model->total_po($id_po)));
     }
 
     public function list_pengadaan_all() {
@@ -107,6 +174,7 @@ class Gd_po extends Auth_Controller {
         $params[] = array('field' => 'trx_pengadaan.peng_statusdiv', 'param' => 'where', 'operator' => '', 'value' => 1);
         $params[] = array('field' => 'trx_pengadaan.peng_statuspst', 'param' => 'where', 'operator' => '', 'value' => 1);
         $params[] = array('field' => 'trx_pengadaan.po_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
+        $params[] = array('field' => 'trx_pengadaan_detail.po_set', 'param' => 'where', 'operator' => '', 'value' => 0);
 
         $opt['sortBy'] = 'trx_pengadaan.id';
         $opt['sortDirection'] = 'ASC';
@@ -137,7 +205,7 @@ class Gd_po extends Auth_Controller {
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Gdpengadaan_model->gets($params, $opt, $tablename);
+        $result = $this->Gdpo_model->gets($params, $opt, $tablename);
         $no = 0;
 
         if ($result != NULL) {
@@ -167,7 +235,7 @@ class Gd_po extends Auth_Controller {
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Gdpengadaan_model->gets($params, $opt, $tablename);
+        $result = $this->Gdpo_model->gets($params, $opt, $tablename);
         $no = 0;
 
         if ($result != NULL) {
@@ -183,27 +251,113 @@ class Gd_po extends Auth_Controller {
         }
     }
 
-    private function __return_csspeng($id) {
-        $peng_detail = $this->Gdpengadaan_model->get_detail('id', $id, 'trx_pengadaan');
+    public function print_po($type, $id) {
+        $po = $this->Gdpo_model->get_detail('id', $id, 'trx_po');
+        $data['type'] = $type == 0 ? 'ASLI' : 'COPY';
+        $data['po_no'] = $po->po_no;
+        $data['po_tgl'] = mdate('%d %F %Y', strtotime($po->trx_date));
+        $data['po_ed'] = mdate('%d %F %Y', strtotime($po->po_ed));
+        $data['po_cabang'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_alias;
+        $data['po_add'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_address;
+        $data['po_company'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_name;
+        $data['po_company_add'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_alamat;
+        $data['po_company_cp'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_contact1 . ', Telp. ' . $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_telp;
+        $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
+        $user_create = $this->Gdpo_model->get_detail('id', $po->po_usercreate, 'users');
+        $user_app = $this->Gdpo_model->get_detail('id', 76, 'users');
 
-        if ($peng_detail->peng_type == 0) {
-            $po_status = $peng_detail->po_status;
-            $peng_statusdiv = $peng_detail->peng_statusdiv;
-            $peng_statuspst = $peng_detail->peng_statuspst;
+        $data['create_ttd'] = $user_create->ttd_url;
+        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
 
-            if ($po_status == 0 && $peng_statusdiv == 0 && $peng_statuspst == 0) {
-                return 'peng-null';
-            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 0) {
-                return 'peng-div';
-            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
-                return 'peng-pusat';
-            } else if ($po_status == 2 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
-                return 'peng-pobag';
-            } else if ($po_status == 1 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
-                return 'peng-poall';
-            } else {
-                return 'peng-grey';
-            }
+        $data['app_ttd'] = $user_app->ttd_url;
+        $data['app_name'] = strtoupper($user_app->first_name . ' ' . $user_app->last_name);
+        $data['detail_po'] = $this->Gdpo_model->get_po_detail($id);
+
+        $this->load->view('po_invoice', $data);
+    }
+
+    public function pdf_po($id) {
+        $po = $this->Gdpo_model->get_detail('id', $id, 'trx_po');
+        $data['type'] = 'ASLI';
+        $data['po_no'] = $po->po_no;
+        $data['po_tgl'] = mdate('%d %F %Y', strtotime($po->trx_date));
+        $data['po_ed'] = mdate('%d %F %Y', strtotime($po->po_ed));
+        $data['po_cabang'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_alias;
+        $data['po_add'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_address;
+        $data['po_company'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_name;
+        $data['po_company_add'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_alamat;
+        $data['po_company_cp'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_contact1 . ', Telp. ' . $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_telp;
+        $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
+        $user_create = $this->Gdpo_model->get_detail('id', $po->po_usercreate, 'users');
+        $user_app = $this->Gdpo_model->get_detail('id', 76, 'users');
+
+        $data['create_ttd'] = $user_create->ttd_url;
+        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
+
+        $data['app_ttd'] = $user_app->ttd_url;
+        $data['app_name'] = strtoupper($user_app->first_name . ' ' . $user_app->last_name);
+        $data['detail_po'] = $this->Gdpo_model->get_po_detail($id);
+
+        //SETTING PDF
+        $filename = 'PO' . $id . '_' . mdate('%d%m%Y', strtotime($po->trx_date)) . ".pdf";
+        $pdfFilePath = 'assets/pdf/po/' . $filename;
+        $data['page_title'] = 'PURCHASE ORDER'; // pass data to the view
+
+        if (file_exists($pdfFilePath) == FALSE) {
+            $this->__generate_pdf($pdfFilePath, $data);
+        }
+
+        //SEND EMAIL
+        $res = $this->__sent_pdf($pdfFilePath, $po->po_supp_email, 'Purchase Order', NULL);
+        if ($res == TRUE) {
+            echo json_encode(array('success' => 'true', 'message' => 'Email Berhasil Dikirim'));
+        } else {
+            echo json_encode(array('success' => 'false', 'message' => $res));
+        }
+    }
+
+    private function __generate_pdf($file_path, $data) {
+        //boost the memory limit if it's low
+        ini_set('memory_limit', '32M');
+        //render the view into HTML
+        $html = $this->load->view('po_pdf', $data, true);
+        
+
+        $this->load->library('pdf');
+        $pdf = $this->pdf->load();
+        // $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822));
+        $pdf->WriteHTML($html); // write the HTML into the PDF
+        $pdf->Output($file_path, 'F'); // D download, F file
+
+        return;
+    }
+    
+    private function __sent_pdf($attachment, $name, $subject, $message) {
+        $this->load->library('email');
+
+        $this->email->from('admin@parahita.com', 'Purchasing Parahita');
+        $this->email->to($name);
+        $this->email->cc('purchasingparahita@yahoo.co.id');
+        if ($subject != NULL) {
+            $this->email->subject($subject);
+        } else {
+            $this->email->subject('Email Subject');
+        }
+
+        if ($message != NULL) {
+            $this->email->message($message);
+        } else {
+            $this->email->message('This is email generated by software for Purchase Order.\n For Detail see PDF attachment');
+        }
+
+        if ($attachment != NULL) {
+            $this->email->attach($attachment);
+        }
+
+        if ($this->email->send()) {
+            return TRUE;
+        } else {
+            return $this->email->print_debugger();
         }
     }
 
