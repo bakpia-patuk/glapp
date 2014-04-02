@@ -129,14 +129,14 @@ header('Pragma: no-cache');
                     <td align="center" width="25%">
                         <span style="float: left;padding-left: 50px">Hormat kami,</span><br/>
                         <span style="float: left;padding-left: 50px">PARAHITA DIAGNOSTIC CENTER</span> <br/><br/>
-                        <div class="sign"><img width="60%" src="<?php echo base_url($create_ttd); ?>"><br /><strong><?php echo $create_name; ?></strong></div>
+                        <div class="sign"><img style="width:60%" src="<?php echo base_url($create_ttd); ?>"><br /><strong><?php echo $create_name; ?></strong></div>
                         <div class="hr"></div>
                         BAGIAN PEMBELIAN
                     </td>
                     <td align="center" width="25%">
                         <span style="float: left;padding-left: 30px">&nbsp;</span><br/>
                         Menyetujui,<br/><br/>
-                        <div class="sign"><img width="60%" src="<?php echo base_url($app_ttd); ?>"><br /><strong><?php echo $app_name; ?></strong></div>
+                        <div class="sign"><img style="width:60%" src="<?php echo base_url($app_ttd); ?>"><br /><strong><?php echo $app_name; ?></strong></div>
                         <div class="hr"></div>
                         MANAGER
                     </td>
