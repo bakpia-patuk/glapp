@@ -105,7 +105,7 @@ Ext.define('GlApp.controller.GetAkMsTelisa', {
                             if (resp.success === 'true') {
                                 form.reset();
                                 if (CABANG_ID !== '1') {
-                                    form.findField('mt_cabang').setValue(parseInt(userCabang));
+                                    form.findField('mt_cabang').setValue(parseInt(CABANG_ID));
                                 }
                                 sm.clearSelections();
                                 grid.getStore().load();

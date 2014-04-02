@@ -1,9 +1,9 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.akun.akunCustomForm', {
+Ext.define('GlApp.view.akakmsakunun.akunCustomForm', {
     extend: 'Ext.form.Panel',
-    alias: 'widget.akuncustomform',
+    alias: 'widget.akmsakun.akuncustomform',
     itemId: 'akuncustomform',
     border: false,
     bodyStyle: bg,

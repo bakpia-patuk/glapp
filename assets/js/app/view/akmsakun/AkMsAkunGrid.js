@@ -7,7 +7,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunGrid', {
     itemId: 'akmsakungrid',
     id: 'akuntreegrid',
     title: 'DAFTAR AKUN',
-//    store: 'AkunStoreTree',
+   store: 'akmsakun.AkunStoreTree',
     useArrows: true,
     border: false,
     componentCls: 'border-right',
@@ -72,12 +72,12 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunGrid', {
                     flex: 0.5,
                     dataIndex: 'namaAkun',
                     renderer: function(value, meta, record) {
-                        if (record.get('akunHead') === 1) {
+                        //if (record.get('akunHead') === 1) {
                             return value.toLowerCase().title();
-                        }
-                        else {
-                            return "<b>" + value.toUpperCase().capitalize() + "</b>";
-                        }
+                       // }
+                       // else {
+                        //    return "<b>" + value.toUpperCase().capitalize() + "</b>";
+                       // }
                     }
                 },
                 {

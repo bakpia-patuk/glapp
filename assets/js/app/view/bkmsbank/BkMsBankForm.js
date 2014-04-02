@@ -59,12 +59,12 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                     displayField: 'cabangName',
                     valueField: 'id',
                     queryMode: 'remote',
-                    name: 'bankCabang',
+                    name: 'cabang_alias',
                     allowBlank: false,
                     triggerAction: 'all',
                     valueNotFoundText: 'Tidak ada Data',
                     forceSelection: true,
-//                    store: 'CabangStore',
+                    store: 'bkmsbank.CabangStore',
 //                    hidden: userCabang === "14" ? false : true,
 //                    listeners: {
 //                        select: function() {

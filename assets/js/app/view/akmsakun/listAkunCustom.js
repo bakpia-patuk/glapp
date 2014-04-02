@@ -1,6 +1,6 @@
-Ext.define('eTrav.view.akun.listAkunCustom', {
+Ext.define('GlApp.view.akmsakun.listAkunCustom', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.listakuncustom',
+    alias: 'widget.akmsakun.listakuncustom',
     itemId: 'listakuncustom',
     border: false,
     forceFit: true,

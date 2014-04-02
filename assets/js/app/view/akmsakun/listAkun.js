@@ -1,6 +1,6 @@
-Ext.define('eTrav.view.akun.listAkun', {
+Ext.define('GlApp.view.akmsakun.listAkun', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.listakun',
+    alias: 'widget.akmsakun.listakun',
     itemId: 'listakun',
     border: false,
     forceFit: true,
@@ -8,7 +8,7 @@ Ext.define('eTrav.view.akun.listAkun', {
     width: 400,
     columnLines: true,
     flex: 1,
-    store: 'AkunStore',
+    store: 'akmsakun.AkunStore',
     initComponent: function () {
         var me = this;
 

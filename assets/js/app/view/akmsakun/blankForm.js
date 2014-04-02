@@ -1,12 +1,12 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.akun.blankForm', {
+Ext.define('GlApp.view.akmsakun.blankForm', {
     extend: 'Ext.form.Panel',
-    alias: 'widget.blankform',
+    alias: 'widget.akmsakun.blankform',
     itemId: 'blankform',
     border: false,
-    bodyStyle: bg,
+
     bodyPadding: 10,
     buttonAlign: 'right',
     fieldDefaults: {

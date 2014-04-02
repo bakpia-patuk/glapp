@@ -19,7 +19,7 @@ Ext.define('GlApp.store.akmstelisa.CabangStore', {
     alias: 'store.akmstelisa.cabangstore',
     model: CabangModel,
     storeId: 'AkMsTelisaCabangStore',
-    autoLoad: false,
+    autoLoad: true,
     remoteFilter: true,
     proxy: {
         success: true,
