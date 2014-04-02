@@ -14,6 +14,7 @@ class Gd_po extends Auth_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('Gdpo_model');
+        $this->Gdpo_model->cms_db = $this->load->database('outgoing', TRUE);
     }
 
     public function reset() {
@@ -70,11 +71,99 @@ class Gd_po extends Auth_Controller {
             return;
         }
 
+        //Insert Data PO on Outgoing
+        $data_po = $this->Gdpo_model->get($params1, NULL, 'trx_po');
+
+        $data_json = json_encode($data_po);
+                
+        $data_outgoing = array();
+        
+        $data_outgoing['jumlah'] = 1;
+        
+        $data_outgoing['tujuan'] = $data_po->po_cabangid;
+        
+        $data_outgoing['id_cabang'] = $this->user->cabang_id;
+
+        $no=$this->Gdpo_model->insert_outgoing($data_outgoing, 'head');
+
+        $data_outgoing = array();
+        $data_outgoing['data'] = $data_json;
+        $data_outgoing['head_id '] = $no.'.'.$this->user->cabang_id;
+        $data_outgoing['primary_key'] = $insert['id'];
+        $data_outgoing['table_name'] = 'trx_po';
+
+        $this->Gdpo_model->insert_outgoing($data_outgoing, 'detail');
+        ///////////////////////////////////////////////////////////////
+
         if (!$this->__set_po($insert['id'])) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
             return;
         }
 
+        //Insert pengadaan detail on outgoing
+        $params = array();
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $data_pengadaan = $this->Gdpo_model->gets($params, NULL, 'trx_pengadaan_detail');
+        $jumlah=0;
+        $data_detail_outgoing=array();
+        foreach ($data_pengadaan as $row) {
+            $data_outgoing = array();
+            $data_json = json_encode($row);
+            $data_outgoing['data'] = $data_json;
+            
+            $data_outgoing['primary_key'] = $row->id;
+            $data_outgoing['table_name'] = 'trx_pengadaan_detail';
+
+            $data_detail_outgoing[] = $data_outgoing;
+            $jumlah++;
+        }
+
+        $data_outgoing = array();
+        
+        $data_outgoing['jumlah'] = $jumlah;
+        
+        $data_outgoing['tujuan'] = $data_po->po_cabangid;
+        
+        $data_outgoing['id_cabang'] = $this->user->cabang_id;
+
+        $no=$this->Gdpo_model->insert_outgoing($data_outgoing, 'head');
+        foreach ($data_detail_outgoing as $key) {
+            $key['head_id '] = $no.'.'.$this->user->cabang_id;
+            $this->Gdpo_model->insert_outgoing($key, 'detail');
+        }
+
+
+        //Insert po detail on outgoing
+        $params = array();
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $data_pengadaan = $this->Gdpo_model->gets($params, NULL, 'trx_po_detail');
+        $jumlah=0;
+        $data_detail_outgoing=array();
+        foreach ($data_pengadaan as $row) {
+            $data_outgoing = array();
+            $data_json = json_encode($row);
+            $data_outgoing['data'] = $data_json;
+            
+            $data_outgoing['primary_key'] = $row->id;
+            $data_outgoing['table_name'] = 'trx_po_detail';
+
+            $data_detail_outgoing[] = $data_outgoing;
+            $jumlah++;
+        }
+
+        $data_outgoing = array();
+        
+        $data_outgoing['jumlah'] = $jumlah;
+        
+        $data_outgoing['tujuan'] = $data_po->po_cabangid;
+        
+        $data_outgoing['id_cabang'] = $this->user->cabang_id;
+
+        $no=$this->Gdpo_model->insert_outgoing($data_outgoing, 'head');
+        foreach ($data_detail_outgoing as $key) {
+            $key['head_id '] = $no.'.'.$this->user->cabang_id;
+            $this->Gdpo_model->insert_outgoing($key, 'detail');
+        }
         $this->Gdpo_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_P0');
         echo json_encode(array('success' => 'true', 'data' => $insert['id'], 'title' => 'Info', 'msg' => 'Insert PO Success'));
     }

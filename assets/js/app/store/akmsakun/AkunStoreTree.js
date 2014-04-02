@@ -17,7 +17,7 @@ var modelku = Ext.define('eTrav.model.AkunModelTree', {
         {name: 'aktifStatus', type: 'int'},
         {name: 'akunCurr', type: 'int'},
         {name: 'akunBall', type: 'float'},
-        {name: 'isBerangkat', type: 'int'},
+        //{name: 'isBerangkat', type: 'int'},
         {name: 'isAkunKas', type: 'boolean'},
         {name: 'akunStatusTampil', type: 'int'},
         {name: 'fungsiAkun', type: 'int'},
@@ -25,9 +25,9 @@ var modelku = Ext.define('eTrav.model.AkunModelTree', {
         {name: 'akunDesc', type: 'string'},
 //        {name: 'akunPosition', type: 'string'},
         {name: 'hasChild', type: 'boolean'},
-        {name: 'iconCls', type: 'string'},
+        //{name: 'iconCls', type: 'string'},
         {name: 'leaf', type: 'boolean'},
-        {name: 'expanded', defaultValue: true}
+        {name: 'expanded', defaultValue: false}
     ],
     idProperty: 'id'
 });
