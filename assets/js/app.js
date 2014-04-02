@@ -4,7 +4,22 @@ Ext.Loader.setConfig({
         'Ext.ux': BASE_PATH + 'assets/js/ux'
     }
 });
-
+Ext.require([
+    'Ext.data.*',
+    'Ext.dd.*',
+    'Ext.form.*',
+    'Ext.grid.*',
+    'Ext.menu.*',
+    'Ext.selection.*',
+    'Ext.state.*',
+    'Ext.tip.*',
+    'Ext.util.*',
+    'Ext.window.*',
+    'Ext.ux.*',
+    'Ext.ux.form.ComboGrid',
+    'Ext.ux.tree.plugin.NodeDisabled',
+    'Ext.ux.TreeFilter'
+]);
 Ext.application({
     requires: ['Ext.container.Viewport'],
     appFolder: BASE_PATH + 'assets/js/app',

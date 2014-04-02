@@ -7,7 +7,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunGrid', {
     itemId: 'akmsakungrid',
     id: 'akuntreegrid',
     title: 'DAFTAR AKUN',
-//    store: 'AkunStoreTree',
+   store: 'akmsakun.AkunStoreTree',
     useArrows: true,
     border: false,
     componentCls: 'border-right',

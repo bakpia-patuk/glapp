@@ -47,6 +47,97 @@ class Auth_Controller extends MY_Controller {
         return $message;
     }
 
+    public function property_reader($record) {
+        $param = NULL;
+
+        if (isset($record)) {
+            $parse = substr($record, -3);
+            if ($parse == "=ww" || $parse == "=ow" || $parse == "=ll" || $parse == "=ol") {
+                $param = substr($record, 0, -3);
+            } else {
+                $param = $record;
+            }
+
+            return $param;
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function param_reader($record) {
+        if (isset($record)) {
+            $parse = substr($record, -3);
+            switch ($parse) {
+                case '=ww':
+                    return 'where';
+                    break;
+
+                case '=ow':
+                    return 'or_where';
+                    break;
+
+                case '=ll':
+                    return 'like';
+                    break;
+
+                case '=ol':
+                    return 'or_like';
+                    break;
+
+                case '=nl':
+                    return 'not_like';
+                    break;
+
+                case '=hv':
+                    return 'having';
+                    break;
+
+                default:
+                    return 'where';
+                    break;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function operator_reader($record) {
+        if (isset($record)) {
+            $parse = substr($record, -2);
+            switch ($parse) {
+                case 'LT':
+                    return ' <=';
+                    break;
+
+                case 'GT':
+                    return ' >=';
+                    break;
+
+                case 'EQ':
+                    return '';
+                    break;
+
+                case 'NE':
+                    return ' <>';
+                    break;
+
+                case 'LL':
+                    return ' <';
+                    break;
+
+                case 'GG':
+                    return ' >';
+                    break;
+
+                default:
+                    return '';
+                    break;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
     private function __property_reader($record) {
         $param = NULL;
 

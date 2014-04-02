@@ -417,7 +417,7 @@ class Shared extends Auth_Controller {
             $data2['nama_column'] = 'id';
             $data2['hapus'] = 1;
 
-            $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
+            $this->Shared_model->insert_outgoing($data2, 'detail');
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Delete Success'));
         } else {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
@@ -490,6 +490,335 @@ class Shared extends Auth_Controller {
     
     public function list_supplier() {
         
+    }
+
+    //AKUN
+
+    public function get_groups_akun() {
+        $result = $this->Shared_model->get_group_akun();
+
+        if ($result) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Group Listed'));
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => $result, 'message' => 'Tidak ada data Group Akun'));
+        }
+    }
+    public function akun_tree() {
+        $is_cabang = isset($_POST['cabang']);
+        $akun_list = Array();
+        if ($is_cabang) {
+            $cabang = $_POST['cabang'];
+        } else {
+            $cabang = $this->ion_auth->user()->row()->cabang_id == 0 ? 14 : $this->ion_auth->user()->row()->cabang_id;
+        }
+        $tablename = "list_akun";
+
+        if ($_POST['node'] == 0) {
+            $parent = '0';
+            $params[] = array('field' => 'akun_parent', 'param' => 'where', 'operator' => '', 'value' => $parent);
+            $options['sortBy'] = 'akun_head_status';
+            $options['sortBy'] = 'id';
+            $options['sortDirection'] = 'ASC';
+            $result = $this->Shared_model->gets($params, $options, $tablename);
+
+            if ($result != NULL) {
+                foreach ($result as $row) {
+                    $akun_dtl = $this->Shared_model->get_detail('id', $row->akun_parent, $tablename);
+                    if($akun_dtl)
+                        $param1 = $akun_dtl->akun_code;
+                    else
+                        $param1=NULL;
+                    $format = $this->format_generate_akun($param1, $row->akun_code);
+
+                    if ($row->akun_child_status == 0) {
+                        $akun_list[] = Array(
+                            'id' => $row->id,
+                            'statusCabang' => 1,
+                            'lokasiCabang' => (int) $cabang,
+                            'namaTabel' => $tablename,
+                            'codeAkun' => $this->format_akun_titik($row->akun_code),
+                            'codeAkunchild' => $row->akun_parent,
+                            'codeAkunPure' => $format[1],
+                            'akunCodeOld' => $this->format_akun_titik($row->akun_code),
+                            'groupAkun' => $row->akun_group,
+                            'namaAkun' => $row->akun_name,
+                            'parentAkun' => $format[0],
+                            'isBiaya' => 'T',
+                            'debetKredit' => $row->akun_d_k,
+                            'aktifStatus' => $row->akun_active,
+                            'akunCurr' => $row->akun_curr,
+                            //'isBerangkat' => $row->akun_pb_code,
+                            'akunBall' => $row->akun_bal_init,
+                            'akunHead' => $row->akun_head_status,
+//                            'akunPosition' => $row->akun_pos_status,
+                            'akunStatusTampil' => $row->akun_status_tampil,
+                            'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
+                            'leaf' => false,
+                            'expanded' => true,
+                            'akunDesc' => $row->akun_note,
+                            'fungsiAkun' => $row->akun_fungsi,
+                            'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
+                        );
+                    } else {
+                        $akun_list[] = Array(
+                            'id' => $row->id,
+                            'statusCabang' => 1,
+                            'lokasiCabang' => (int) $cabang,
+                            'namaTabel' => $tablename,
+                            'codeAkun' => $this->format_akun_titik($row->akun_code),
+                            'codeAkunchild' => $row->akun_parent,
+                            'codeAkunPure' => $format[1],
+                            'akunCodeOld' => $this->format_akun_titik($row->akun_code),
+                            'groupAkun' => $row->akun_group,
+                            'namaAkun' => $row->akun_name,
+                            'parentAkun' => $format[0],
+                            'isBiaya' => 'T',
+                            'debetKredit' => $row->akun_d_k,
+                            'aktifStatus' => $row->akun_active,
+                            'akunCurr' => $row->akun_curr,
+                            //'isBerangkat' => $row->akun_pb_code,
+                            'akunBall' => $row->akun_bal_init,
+                            'akunHead' => $row->akun_head_status,
+//                            'akunPosition' => $row->akun_pos_status,
+                            'akunStatusTampil' => $row->akun_status_tampil,
+                            'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
+                            'leaf' => true,
+                            'expanded' => true,
+                            'akunDesc' => $row->akun_note,
+                            'fungsiAkun' => $row->akun_fungsi,
+                            'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
+                        );
+                    }
+                }
+            }
+        } else {
+            $parent = $_POST['node'];
+            $params[] = array('field' => 'akun_parent', 'param' => 'where', 'operator' => '', 'value' => $parent);
+            $options['sortBy'] = 'akun_head_status';
+            $options['sortBy'] = 'akun_alias';
+            $options['sortDirection'] = 'ASC';
+            $result = $this->Shared_model->gets($params, $options, $tablename);
+
+            if ($result != NULL) {
+                foreach ($result as $row) {
+                    $akun_dtl = $this->Shared_model->get_detail('id', $row->akun_parent, $tablename);
+                    if($akun_dtl)
+                        $param1 = $akun_dtl->akun_code;
+                    else
+                        $param1=NULL;
+                    $format = $this->format_generate_akun($param1, $row->akun_code);
+
+                    if ($row->akun_child_status == 0) {
+                        $akun_list[] = Array(
+                            'id' => $row->id,
+                            'statusCabang' => 1,
+                            'namaTabel' => $tablename,
+                            'lokasiCabang' => (int) $cabang,
+                            'codeAkun' => $this->format_akun_titik($row->akun_code),
+                            'codeAkunchild' => $row->akun_parent,
+                            'codeAkunPure' => $format[1],
+                            'akunCodeOld' => $this->format_akun_titik($row->akun_code),
+                            'groupAkun' => $row->akun_group,
+                            'namaAkun' => $row->akun_name,
+                            'parentAkun' => $format[0],
+                            'isBiaya' => 'T',
+                            'debetKredit' => $row->akun_d_k,
+                            'aktifStatus' => $row->akun_active,
+                            'akunCurr' => $row->akun_curr,
+                            //'isBerangkat' => $row->akun_pb_code,
+                            'akunBall' => $row->akun_bal_init,
+                            'akunHead' => $row->akun_head_status,
+//                            'akunPosition' => $row->akun_pos_status,
+                            'akunStatusTampil' => $row->akun_status_tampil,
+                            'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
+                            'leaf' => false,
+                            'expanded' => false,
+                            'akunDesc' => $row->akun_note,
+                            'fungsiAkun' => $row->akun_fungsi,
+                            'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
+                        );
+                    } else {
+                        $akun_list[] = Array(
+                            'id' => $row->id,
+                            'statusCabang' => 1,
+                            'lokasiCabang' => (int) $cabang,
+                            'namaTabel' => $tablename,
+                            'codeAkun' => $this->format_akun_titik($row->akun_code),
+                            'codeAkunchild' => $row->akun_parent,
+                            'codeAkunPure' => $format[1],
+                            'akunCodeOld' => $this->format_akun_titik($row->akun_code),
+                            'groupAkun' => $row->akun_group,
+                            'namaAkun' => $row->akun_name,
+                            'parentAkun' => $format[0],
+                            'isBiaya' => 'T',
+                            'debetKredit' => $row->akun_d_k,
+                            'aktifStatus' => $row->akun_active,
+                            'akunCurr' => $row->akun_curr,
+                            //'isBerangkat' => $row->akun_pb_code,
+                            'akunBall' => $row->akun_bal_init,
+                            'akunHead' => $row->akun_head_status,
+//                            'akunPosition' => $row->akun_pos_status,
+                            'akunStatusTampil' => $row->akun_status_tampil,
+                            'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
+                            'leaf' => true,
+                            'expanded' => true,
+                            'akunDesc' => $row->akun_note,
+                            'fungsiAkun' => $row->akun_fungsi,
+                            'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
+                        );
+                    }
+                }
+            }
+        }
+
+        echo json_encode($akun_list);
+    }
+    function format_generate_akun($parent_code, $kode_akun) {
+        //PARENT PROCESS
+        $x = strlen($parent_code);
+        $sisa = 11 - $x;
+
+        if ($x > 3) {
+            $st = substr($parent_code, 0, 3);
+            $dot1 = str_split($st, 1);
+            $pr1 = implode('.', $dot1);
+
+            $nd = substr($parent_code, -($x - 3));
+            $dot2 = str_split($nd, 2);
+            $pr2 = implode('.', $dot2);
+
+            $result1 = $pr1 . '.' . $pr2;
+        } else {
+            $dot1 = str_split($parent_code, 1);
+            $result1 = implode('.', $dot1);
+        }
+        //AKUN TITIK TITIK
+        $a = "0";
+        $b = "";
+        $akun_pure = substr($kode_akun, $x);
+        $c = strlen($akun_pure);
+
+        for ($z = $c; $z < $sisa; $z++) {
+            $b .= $a;
+        }
+
+        $newKode = $akun_pure . $b;
+        if ($x > 2) {
+//            $second = substr($newKode, $x);
+            $titik_dua = str_split($newKode, 2);
+            $ch2 = implode('.', $titik_dua);
+
+            $result2 = $ch2;
+        } else {
+            $first = substr($newKode, 0, $x == 1 ? 2 : 1);
+            $titik_satu = str_split($first, 1);
+            $ch1 = implode('.', $titik_satu);
+
+            $second = substr($newKode, $x == 1 ? 2 : 1);
+            $titik_dua = str_split($second, 2);
+            $ch2 = implode('.', $titik_dua);
+
+            $result2 = $ch1 . '.' . $ch2;
+        }
+
+
+        return array($result1, $result2);
+        //return $newKode;
+    }
+    function format_akun_titik($kode_akun) {
+        //AKUN TITIK TITIK
+//        $a = "0";
+//        $b = "";
+//        $c = strlen($kode_akun);
+//
+//        for ($z = $c; $z < 11; $z++) {
+//            $b .= $a;
+//        }
+//
+        $newKode = $kode_akun;
+
+        $first = substr($newKode, 0, 2);
+        $titik_satu = str_split($first, 1);
+        $result1 = implode('.', $titik_satu);
+
+//        $second = substr($newKode, -8);
+//        $titik_dua = str_split($second, 2);
+//        $result2 = implode('.', $titik_dua);
+        $second = substr($newKode, 2);
+//        $titik_dua = str_split($second, 2);
+//        $result2 = implode('.', $titik_dua);
+
+        // if (strlen($newKode) > 2) {
+        //     return $result1 . '.' . $second;
+        // } else {
+            return $kode_akun;
+        // }
+    }
+    public function get_akun_list() {
+        $records = isset($_GET['filter']);
+        $query = isset($_GET['query']);
+        $cabang = isset($_GET['cabang']);
+        $record = array();
+
+        if ($records) {
+            $raw_record = json_decode($_GET['filter'], true);
+            foreach ($raw_record as $key) {
+                $field = $this->property_reader($key['property']);
+                $param = $this->param_reader($key['property']);
+                $op = $this->operator_reader($key['value']);
+                $val = $this->property_reader($key['value']);
+
+                $record[] = array('field' => $field, 'param' => $param, 'operator' => $op, 'value' => $val);
+            }
+        }
+
+        if ($query && $_GET['query'] != "") {
+            $record[] = array('field' => 'akun_name', 'param' => 'like', 'operator' => '', 'value' => $_GET['query']);
+        }
+
+        if ($cabang && $_GET['cabang'] != "") {
+            $table = 'list_akun';
+        } else {
+            $table = 'list_akun';
+        }
+
+        $result = $this->Shared_model->get_akun($record, NULL, $table);
+
+        if ($result) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua akun'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Tidak ada data akun'));
+        }
+    }
+    public function get_mata_uang() {
+        $result = $this->Shared_model->get_mata_uang();
+
+        if ($result) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Mata Uang Listed'));
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => $result, 'message' => 'Tidak ada data Mata Uang'));
+        }
+    }
+
+    function akun_add() {
+
+        if ($this->ion_auth->user()->row()->cabang_id != 1) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak mempunyai hak untuk membuat Akun', 'title' => 'Error'));
+        } else {
+            $data = $this->Shared_model->akun_process();
+            if($data=='jurnal_group'){
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak bisa mengganti Jurnal Group', 'title' => 'Info'));
+            }
+            else if ($data) {
+                if ($data == 'headChild') {
+                    echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak bisa mengganti type Header ke type Detail', 'title' => 'Info'));
+                } else {
+                    echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => $data, 'title' => 'Info'));
+                }
+            } else {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'Database Error'));
+            }
+        }
     }
 }
 
