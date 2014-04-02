@@ -19,6 +19,11 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunGrid', {
     cls: 'akunGrid',
     flex: 1,
     forceFit: true,
+    requires: [
+        'Ext.data.*',
+        'Ext.grid.*',
+        'Ext.tree.*',
+    ],
     initComponent: function() {
         var me = this;
 

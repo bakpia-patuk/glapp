@@ -651,7 +651,7 @@ class Shared extends Auth_Controller {
                             'akunStatusTampil' => $row->akun_status_tampil,
                             'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
                             'leaf' => false,
-                            'expanded' => true,
+                            'expanded' => false,
                             'akunDesc' => $row->akun_note,
                             'fungsiAkun' => $row->akun_fungsi,
                             'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
@@ -680,7 +680,7 @@ class Shared extends Auth_Controller {
                             'akunStatusTampil' => $row->akun_status_tampil,
                             'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
                             'leaf' => true,
-                            'expanded' => true,
+                            'expanded' => false,
                             'akunDesc' => $row->akun_note,
                             'fungsiAkun' => $row->akun_fungsi,
                             'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
