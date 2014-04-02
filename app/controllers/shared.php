@@ -421,9 +421,57 @@ class Shared extends Auth_Controller {
     }
     
     //SUPPLIER
-    
     public function list_supplier() {
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        if ($query) {
+            if ($query != "") {
+                $params[] = array('field' => 'ms_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+            }
+        }
         
+        $params[] = array('field' => 'ms_kodesub', 'param' => 'where', 'operator' => ' <>', 'value' => 0);
+        $options['sortBy'] = 'ms_kode';
+        $options['sortDirection'] = 'ASC';
+        $datagroup = $this->Shared_model->gets($params, $options, 'ms_supplier');
+
+        if ($datagroup != null) {
+            foreach ($datagroup as $row) {
+
+                $listitem[] = array(
+                    'idms' => $row->id,
+                    'ms_kode' => $row->ms_kode,
+                    'ms_kodesub' => $row->ms_kodesub,
+                    'ms_status' => $row->ms_status,
+                    'ms_kota' => $row->ms_kota == "" ? 0 : $row->ms_kota,
+                    'namakotams' => $row->ms_kota == "" ? '-' : $this->Shared_model->get_detail('kota_id', $row->ms_kota, 'kota_kabupaten')->kota_kabupaten,
+                    'ms_name' => $row->ms_name,
+                    'ms_kode' => $row->ms_kode,
+                    'suppdisplay' => $row->ms_name . ', ' . ($row->ms_kota == "" ? '-' : $this->Shared_model->get_detail('kota_id', $row->ms_kota, 'kota_kabupaten')->kota_kabupaten),
+                    'ms_email' => $row->ms_email,
+                    'ms_alamat' => $row->ms_alamat,
+                    'ms_telp' => $row->ms_telp,
+                    'ms_telp2' => $row->ms_telp2,
+                    'ms_contact1' => $row->ms_contact1,
+                    'ms_contact2' => $row->ms_contact2,
+                    'ms_hp' => $row->ms_hp,
+                    'ms_fax' => $row->ms_fax,
+                    'ms_bank' => $row->ms_bank,
+                    'ms_rekening' => $row->ms_rekening,
+                    'grpalfabet' => strtoupper(substr($row->ms_name, 0, 1))
+                );
+            }
+            echo json_encode(array('success' => 'true', 'data' => $listitem, 'message' => 'Daftar semua supplier.'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => $listitem, 'message' => 'Tidak ada data supplier.'));
+        }
     }
 }
 
