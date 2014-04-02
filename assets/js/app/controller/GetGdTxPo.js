@@ -46,6 +46,9 @@ Ext.define('GlApp.controller.GetGdTxPo', {
                 '#popanelform button[action=poSavePrint]': {
                     click: this.savePoPrint
                 },
+                '#popanelform button[action=poSavePdf]': {
+                    click: this.savePoPdf
+                },
                 '#txpogrid': {
                     edit: this.editPoPengadaan
                 },
@@ -129,6 +132,18 @@ Ext.define('GlApp.controller.GetGdTxPo', {
 
         if (form.getForm().isValid()) {
             this.ajaxReq('gd_po/save', form.getForm().getValues(), 5);
+        }
+    },
+    savePoPdf: function(btn) {
+        var form = this.getPoForm(),
+                total = form.down('#po_value').getValue();
+        if (total === 0) {
+            Ext.Msg.alert('Info', 'Anda belum melakukan transaksi');
+            return;
+        }
+
+        if (form.getForm().isValid()) {
+            this.ajaxReq('gd_po/save', form.getForm().getValues(), 6);
         }
     },
     saveEmail: function(btn) {
@@ -270,18 +285,15 @@ Ext.define('GlApp.controller.GetGdTxPo', {
             form.getForm().reset();
             form.saved = true;
             gridPeng.getStore().removeAll();
-            this.printPo(0, resp.data)
+            this.printPo(0, resp.data);
         } else {
-            Ext.MessageBox.show({
-                title: resp.title,
-                msg: resp.msg,
-                buttons: Ext.MessageBox.OK,
-                icon: Ext.MessageBox.INFO
-            });
+            poPanel.down('#searchPo').enable();
+            poPanel.down('#poCabang').setReadOnly(false);
+            poPanel.down('#poCabang').reset();
             form.getForm().reset();
-            form.down('#pengNewItem').disable();
             form.saved = true;
-            grid2.getStore().removeAll();
+            gridPeng.getStore().removeAll();
+            this.pdfPo(resp.data);
         }
     },
     onFailure: function(resp, idForm) {
@@ -294,6 +306,32 @@ Ext.define('GlApp.controller.GetGdTxPo', {
     },
     printPo: function(type, id) {
         window.open(BASE_PATH + 'gd_po/print_po/'+ type + '/' + id, "Print Preview", "height="+screen.height +",width=950,modal=yes,alwaysRaised=yes,scrollbars=yes");
+    },
+    pdfPo: function(id) {
+        Ext.Ajax.request({
+            url: BASE_PATH + 'gd_po/pdf_po/' + id,
+            method: 'POST',
+            scope: this,
+            callback: function(options, success, response) {
+                var resp = Ext.decode(response.responseText);
+
+                if (resp.success === 'true') {
+//                    Ext.MessageBox.show({
+//                        title: 'Info',
+//                        msg: resp.message,
+//                        buttons: Ext.MessageBox.OK,
+//                        icon: Ext.MessageBox.INFO
+//                    });
+                } else {
+                    Ext.MessageBox.show({
+                        title: 'Error',
+                        msg: resp.message,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.ERROR
+                    });
+                }
+            }
+        });
     }
 });
 /* End of file Base.js */

@@ -58,9 +58,7 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     xtype: 'button',
                                     text: 'SENT_PDF',
                                     ui: 'orange-button',
-                                    handler: function() {
-                                        Ext.Msg.alert('Error', 'Syncronize Connection Error');
-                                    }
+                                    action: 'poSavePdf'
                                 },
                                 '->',
                                 {

@@ -82,11 +82,11 @@ class Gd_po extends Auth_Controller {
     private function __set_po($id_po) {
         $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id_po);
         $data_pengadaan = $this->Gdpo_model->gets($params, NULL, 'trx_pengadaan_detail');
-        
+
         foreach ($data_pengadaan as $row) {
             $this->Gdpo_model->insert_po_item($row->id);
         }
-        
+
         return TRUE;
     }
 
@@ -129,7 +129,7 @@ class Gd_po extends Auth_Controller {
         $data = array(
             'id' => $last_no . '.' . $this->user->cabang_id,
             'trx_date' => mdate('%Y-%m-%d %H:%i:%s', now()),
-            'po_no' => 'PO'. '/' . $detail_cabang->cabang_code . '/' . mdate('%d%m%y', now()).'/'.sprintf('%06d', $last_no),
+            'po_no' => 'PO' . '/' . $detail_cabang->cabang_code . '/' . mdate('%d%m%y', now()) . '/' . sprintf('%06d', $last_no),
             'po_cabangid' => $insert['cabang'],
             'po_usercreate' => $this->user->id,
             'po_simpanstatus' => 0
@@ -159,7 +159,7 @@ class Gd_po extends Auth_Controller {
         $id_po = $this->Gdpo_model->get_detail('id', $insert['id'], 'trx_pengadaan_detail')->po_id;
         echo json_encode(array('success' => 'true', 'data' => $this->Gdpo_model->total_po($id_po)));
     }
-    
+
     public function list_pengadaan_all() {
         $records = $this->input->get('filter');
         $params = array();
@@ -261,22 +261,79 @@ class Gd_po extends Auth_Controller {
         $data['po_add'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_address;
         $data['po_company'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_name;
         $data['po_company_add'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_alamat;
-        $data['po_company_cp'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_contact1.', Telp. '.$this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_telp;
+        $data['po_company_cp'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_contact1 . ', Telp. ' . $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_telp;
         $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
         $user_create = $this->Gdpo_model->get_detail('id', $po->po_usercreate, 'users');
         $user_app = $this->Gdpo_model->get_detail('id', 76, 'users');
 
         $data['create_ttd'] = $user_create->ttd_url;
-        $data['create_name'] = strtoupper($user_create->first_name.' '. $user_create->last_name);
-       
+        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
+
         $data['app_ttd'] = $user_app->ttd_url;
-        $data['app_name'] = strtoupper($user_app->first_name.' '. $user_app->last_name);
+        $data['app_name'] = strtoupper($user_app->first_name . ' ' . $user_app->last_name);
         $data['detail_po'] = $this->Gdpo_model->get_po_detail($id);
-        
+
         $this->load->view('po_invoice', $data);
     }
 
     public function pdf_po($id) {
-        
+        $po = $this->Gdpo_model->get_detail('id', $id, 'trx_po');
+        $data['type'] = 'ASLI';
+        $data['po_no'] = $po->po_no;
+        $data['po_tgl'] = mdate('%d %F %Y', strtotime($po->trx_date));
+        $data['po_ed'] = mdate('%d %F %Y', strtotime($po->po_ed));
+        $data['po_cabang'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_alias;
+        $data['po_add'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_address;
+        $data['po_company'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_name;
+        $data['po_company_add'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_alamat;
+        $data['po_company_cp'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_contact1 . ', Telp. ' . $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_telp;
+        $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
+        $user_create = $this->Gdpo_model->get_detail('id', $po->po_usercreate, 'users');
+        $user_app = $this->Gdpo_model->get_detail('id', 76, 'users');
+
+        $data['create_ttd'] = $user_create->ttd_url;
+        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
+
+        $data['app_ttd'] = $user_app->ttd_url;
+        $data['app_name'] = strtoupper($user_app->first_name . ' ' . $user_app->last_name);
+        $data['detail_po'] = $this->Gdpo_model->get_po_detail($id);
+
+        //SETTING PDF
+        $filename = 'PO' . $id . '_' . mdate('%d%m%Y', strtotime($po->trx_date)) . ".pdf";
+        $pdfFilePath = 'assets/pdf/po/' . $filename;
+        $data['page_title'] = 'PURCHASE ORDER'; // pass data to the view
+
+        if (file_exists($pdfFilePath) == FALSE) {
+            $this->__generate_pdf($pdfFilePath, $data);
+        }
+
+        //SEND EMAIL
+//        $res = $this->sent_pdf($pdfFilePath, $po->po_supp_email, 'Purchase Order', NULL);
+//        if ($res == TRUE) {
+            echo json_encode(array('success' => 'true', 'message' => 'Email Berhasil Dikirim'));
+//        } else {
+//            echo json_encode(array('success' => 'false', 'message' => $res));
+//        }
     }
+
+    private function __generate_pdf($file_path, $data) {
+        //boost the memory limit if it's low
+        ini_set('memory_limit', '32M');
+        //render the view into HTML
+        $html = $this->load->view('po_invoice', $data, true);
+        
+//        $style = base_url('assets/css/invoice_pdf.css');
+//        $stylesheet = file_get_contents($style);
+
+        $this->load->library('pdf');
+        $pdf = $this->pdf->load();
+        // $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822));
+        // write the Stylesheet into the PDF
+//        $pdf->WriteHTML($stylesheet, 1);
+        $pdf->WriteHTML($html, 1); // write the HTML into the PDF
+        $pdf->Output($file_path, 'F'); // D download, F file
+
+        return;
+    }
+
 }
