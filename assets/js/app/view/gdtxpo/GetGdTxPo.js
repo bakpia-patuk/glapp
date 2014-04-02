@@ -37,7 +37,7 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     xtype: 'button',
                                     text: 'ADD_NEW',
                                     ui: 'orange-button',
-                                    // itemId: 'poNew'
+                                    action: 'poNew'
                                 },
                                 '-',
                                 {
@@ -45,8 +45,8 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     text: 'SAVE',
                                     ui: 'orange-button',
                                     handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
+                                        Ext.Msg.alert('Error', 'Syncronize Connection Error');
+                                    }
                                 },
                                 '-',
                                 {
@@ -54,8 +54,8 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     text: 'PRINT_PO',
                                     ui: 'orange-button',
                                     handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
+                                        Ext.Msg.alert('Error', 'Syncronize Connection Error');
+                                    }
                                 },
                                 '-',
                                 {
@@ -63,8 +63,8 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     text: 'SENT_PDF',
                                     ui: 'orange-button',
                                     handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
+                                        Ext.Msg.alert('Error', 'Syncronize Connection Error');
+                                    }
                                 },
                                 '->',
                                 {

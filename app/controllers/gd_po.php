@@ -17,18 +17,39 @@ class Gd_po extends Auth_Controller {
     }
 
     public function reset() {
-        
+        $insert = $this->input->post(NULL, TRUE);
+
+        if ($insert['id'] != 0) {
+            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            if (!$this->Gdpo_model->delete($params, NULL, 'trx_po')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+                return;
+            }
+
+            $data = array(
+                'po_status' => 0,
+                'po_id' => 0
+            );
+
+            $param[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            if (!$this->Gdpo_model->update($data, $param, NULL, 'trx_pengadaan_detail')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+                return;
+            }
+        }
+
+        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Reset All Data'));
     }
 
     public function set_status($type) {
         $insert = $this->input->post(NULL, TRUE);
-        
+
         if ($insert['id'] == 0) {
             $insert['id'] = $this->__init_po($insert);
-//            if ($insert['id'] == FALSE) {
-//                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => $this->catch_db_err()));
-//                return;
-//            }
+            if ($insert['id'] == 0) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => $this->catch_db_err()));
+                return;
+            }
         }
 
         $data = array(
@@ -38,13 +59,18 @@ class Gd_po extends Auth_Controller {
 
         $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id_peng']);
         if (!$this->Gdpo_model->update($data, $params, NULL, 'trx_pengadaan_detail')) {
-            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
             return;
         }
-        
-        $rtn = $this->Gdpo_model->get_detail('id', $insert['id'], 'trx_po');
 
-        echo json_encode(array('success' => 'true', 'data' => $rtn, 'title' => 'Info', 'msg' => 'Insert Po Success'));
+        $rtn = $this->Gdpo_model->get_detail('id', $insert['id'], 'trx_po');
+        $return = array(
+            'id' => $rtn->id,
+            'po_no' => $rtn->po_no,
+            'po_value' => $this->Gdpo_model->total_po($insert['id'])
+        );
+
+        echo json_encode(array('success' => 'true', 'data' => $return, 'title' => 'Info', 'msg' => 'Insert Po Success'));
     }
 
     private function __init_po($insert) {
@@ -63,7 +89,7 @@ class Gd_po extends Auth_Controller {
         if ($this->Gdpo_model->insert($data, 'trx_po')) {
             return $last_no . '.' . $this->user->cabang_id;
         } else {
-            return FALSE;
+            return '0';
         }
     }
 

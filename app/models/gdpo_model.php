@@ -40,7 +40,7 @@ class Gdpo_model extends MY_Model {
                 );
             }
         }
-        
+
         return $rtrn;
     }
 
@@ -79,12 +79,29 @@ class Gdpo_model extends MY_Model {
             return false;
         }
     }
-    
-    
-    private function __calc_netto($qty, $harga, $disc, $ppn) {
-        return 0;
+
+    public function total_po($id) {
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data = $this->gets($params, NULL, 'trx_pengadaan_detail');
+        $total = 0;
+
+        if ($data != NULL) {
+            foreach ($data as $val) {
+                $total += $this->__calc_netto($val->po_qty, $val->po_harga, $val->po_disc, $val->po_ppn);
+            }
+        }
+
+        return $total;
     }
-    
+
+    private function __calc_netto($qty, $harga, $disc, $ppn) {
+        $a = $qty * $harga;
+        $b = 1 - ($disc / 100);
+        $c = 1 + ($ppn / 100);
+        
+        return $a * $b * $c;
+    }
+
     public function get_last($table) {
         $opt['sortBy'] = 'no';
         $opt['sortDirection'] = 'DESC';
@@ -105,10 +122,10 @@ class Gdpo_model extends MY_Model {
 
     public function approve_peng($param, $id) {
         $data = array($param => 1);
-        
+
         $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $this->Gdpengadaan_model->update($data, $params1, NULL, 'trx_pengadaan');
-        
+
         return TRUE;
     }
 

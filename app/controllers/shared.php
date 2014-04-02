@@ -264,7 +264,7 @@ class Shared extends Auth_Controller {
     //LIST JENIS TELISA
     public function list_telisajenis() {
         $records = $this->input->get('filter');
-        $query = $this->input->get('query');
+//        $query = $this->input->get('query');
         $params = array();
 
         if ($records) {
@@ -319,7 +319,7 @@ class Shared extends Auth_Controller {
     
     public function list_mstelisa() {
         $records = $this->input->get('filter');
-        $query = $this->input->get('query');
+//        $query = $this->input->get('query');
         $params = array();
 
         if ($records) {
@@ -393,7 +393,7 @@ class Shared extends Auth_Controller {
     //KEPERLUAN AKUN
     public function list_detailkp() {
         $records = $this->input->get('filter');
-        $query = $this->input->get('query');
+//        $query = $this->input->get('query');
         $params = array();
 
         if ($records) {
@@ -418,6 +418,12 @@ class Shared extends Auth_Controller {
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
+    }
+    
+    //SUPPLIER
+    
+    public function list_supplier() {
+        
     }
 }
 
