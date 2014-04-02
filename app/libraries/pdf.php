@@ -12,9 +12,9 @@ class pdf {
     {
         include_once APPPATH.'/third_party/mpdf/mpdf.php';
 
-        if ($params == NULL)
+        if ($param == NULL)
         {
-            $param = '"en-GB-x","A4","","",10,10,10,10,6,3';
+            $param = '"en-GB-x","A4","","",5,5,5,5,6,3';
         }
 
         return new mPDF($param);
