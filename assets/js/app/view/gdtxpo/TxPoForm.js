@@ -119,20 +119,24 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                     xtype: 'combobox',
                     fieldLabel: 'Supplier ',
                     name: 'po_suppid',
+                    itemId: 'po_suppid',
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'MasterSupplierStore',
-                    displayField: 'suppdisplay',
-                    valueField: 'idms',
+                    store: 'gdtxpo.SupplierStore',
+                    displayField: 'ms_name',
+                    valueField: 'id',
                     matchFieldWidth: false,
                     emptyText: 'ketik nama supplier',
                     allowBlank: false,
+                    listConfig: {
+                        minWidth: 185
+                    },
                     listeners: {
                         select: function() {
                             var val = this.getValue(),
-                                store = form.down('#supp_email').getStore();
-                        
+                                    store = form.down('#supp_email').getStore();
+
                             form.down('#supp_email').setReadOnly(false);
                             store.clearFilter(true);
                             store.filter('id', val);
@@ -144,47 +148,33 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                     name: 'supp_email',
                     itemId: 'supp_email',
                     fieldLabel: 'Email ',
-//                    store: 'SuppEmailStore',
-                    displayField: 'emailName',
+                    store: 'gdtxpo.SupplierEmailStore',
+                    displayField: 'email_name',
                     valueField: 'email',
                     trigger2Cls: 'x-form-new-trigger',
                     triggerAction: 'all',
                     multiSelect: true,
                     minChars: 2,
                     readOnly: true,
-                    onTrigger2Click: function () {
-                        var win = new Ext.widget('newwindow', {
-                            buttons: [
-                                {
-                                    text: 'Simpan',
-                                    itemId: 'newEmailSuppPo'
-                                }
-                            ]
-                        });
-                        var form = Ext.widget('posuppemail');
+                    onTrigger2Click: function() {
+                        var win = Ext.widget('gdtxpo.poemailwin');
 
-                        win.setTitle('Tambah Email');
-                        win.add(form);
-                        
-                        var idsupp = this.up('form').getForm().findField('poSup').getValue();
-                        
+                        win.down('#formEmail').down('#id_supp').setValue(form.down('#po_suppid').getValue());
+
                         Ext.Ajax.request({
-                            url: BASE_PATH + 'data/get_email/'+idsupp,
-                            callback: function (options, success, response) {
+                            url: BASE_PATH + 'shared/get_email/' + form.down('#po_suppid').getValue(),
+                            callback: function(options, success, response) {
                                 var resp = Ext.decode(response.responseText);
 
                                 if (resp.success === 'true') {
-                                    win.show();
-                                    form.getForm().findField('idSupp').setValue(idsupp);
-                                    form.getForm().findField('listEmail').setValue(resp.data);
+                                    win.down('#list_email').setValue(resp.data);
                                 }
                             }
                         });
                     },
                     listeners: {
                         select: function() {
-                            var email = this.up('form').getForm().findField('emailSupp');
-                            email.setValue(this.getRawValue());
+                            form.down('#po_supp_email').setValue(this.getRawValue());
                         }
                     }
                 },
@@ -192,6 +182,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Email supp',
                     name: 'po_supp_email',
+                    itemId: 'po_supp_email',
                     allowBlank: true,
                     hidden: true
                 },
@@ -210,7 +201,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                     itemId: 'po_value',
                     flex: 1,
                     decimalPrecision: 2,
-                    decimalSeparator: ',',
+                    decimalSeparator: '.',
                     alwaysDisplayDecimals: true,
                     allowNegative: false,
                     minValue: 0, //prevents negative numbers
@@ -331,7 +322,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoForm', {
                         Ext.create('Ext.Img', {
                             margins: '0 0 0 5',
                             baseCls: 'imagefieldthumb',
-                            src: BASE_PATH + 'assets/appdata/user/sign1.png',
+                            src: BASE_PATH + 'assets/appdata/signBlank.png',
                             itemId: 'imageTtdPO'
                         })
                     ]

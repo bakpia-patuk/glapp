@@ -17,6 +17,14 @@ class Shared extends Auth_Controller {
         $this->page = 'Master';
     }
 
+    public function check_ttd() {
+        if ($this->user->ttd_status == 1) {
+            echo json_encode(array('success' => 'true', 'url' => $this->user->ttd_url));
+        } else {
+            echo json_encode(array('success' => 'false'));
+        }
+    }
+
     //LIST, ADD, EDIT, DELETE BARANG START
     public function list_gol_barang() {
         $records = $this->input->get('filter');
@@ -260,7 +268,7 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
-    
+
     //LIST JENIS TELISA
     public function list_telisajenis() {
         $records = $this->input->get('filter');
@@ -292,9 +300,8 @@ class Shared extends Auth_Controller {
         }
     }
 
-    
     //MASTER TELISA
-    
+
     public function add_mstelisa() {
         $input = $this->input->post(NULL, TRUE);
 
@@ -316,7 +323,7 @@ class Shared extends Auth_Controller {
             }
         }
     }
-    
+
     public function list_mstelisa() {
         $records = $this->input->get('filter');
 //        $query = $this->input->get('query');
@@ -346,7 +353,7 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
-    
+
     public function del_telisa() {
         $input = $this->input->post(NULL, TRUE);
         $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
@@ -357,10 +364,9 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
         }
     }
-    
-    
+
     //GROUP KEPERLUAN
-    
+
     public function list_group_keperluan() {
         $records = $this->input->get('filter');
         $query = $this->input->get('query');
@@ -389,7 +395,7 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
-    
+
     //KEPERLUAN AKUN
     public function list_detailkp() {
         $records = $this->input->get('filter');
@@ -419,12 +425,105 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
-    
+
     //SUPPLIER
-    
+
     public function list_supplier() {
-        
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
+
+        $params[] = array('field' => 'ms_kodesub', 'param' => 'where', 'operator' => ' <>', 'value' => 0);
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        if ($query) {
+            if ($query != "") {
+                $params[] = array('field' => 'ms_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+            }
+        }
+
+        $tablename = 'dt_supplier';
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, $tablename);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Cabang'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
     }
+
+    public function list_supplier_email() {
+        $records = $this->input->get('filter');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        $tablename = 'dt_supplier';
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, $tablename);
+        $list_email = array();
+        $id = 1;
+
+        foreach ($result as $key) {
+            $supp_id = $key->id;
+            $email = rtrim(trim($key->ms_email, " "), ',');
+
+            if ($email != "") {
+                $row_email = explode(',', $email);
+
+                for ($i = 0; $i < count($row_email); $i++) {
+                    $list_email[] = array(
+                        'id' => $id,
+                        'supp_id' => $supp_id,
+                        'email' => strtolower($row_email[$i]),
+                        'email_name' => strtolower($row_email[$i])
+                    );
+                    $id++;
+                }
+            } else {
+                $list_email[] = array(
+                    'id' => $id,
+                    'supp_id' => $supp_id,
+                    'email' => 'Belum ada Email',
+                    'email_name' => 'Belum ada Email'
+                );
+            }
+        }
+
+        echo json_encode(array('success' => 'true', 'data' => $list_email));
+    }
+
+    public function get_email($id) {
+        $email = $this->Shared_model->get_detail('id', $id, 'dt_supplier');
+        echo json_encode(array('success' => 'true', 'data' => $email->ms_email));
+    }
+
+    public function add_email() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        $email = rtrim(trim($insert['list_email']), ',');
+
+        $data = array(
+            'ms_email' => $email,
+        );
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id_supp']);
+        $this->Shared_model->update($data, $opt, NULL, 'dt_supplier');
+
+        echo json_encode(array('success' => 'true', 'data' => NULL, 'msg' => 'Email Berhasil disimpan'));
+    }
+
 }
 
 /* End of file welcome.php */

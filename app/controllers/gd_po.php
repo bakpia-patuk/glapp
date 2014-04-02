@@ -41,6 +41,55 @@ class Gd_po extends Auth_Controller {
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Reset All Data'));
     }
 
+    public function save() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        if ($insert['id'] == 0) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum melakukan transaksi'));
+            return;
+        }
+
+        $data = array(
+            'po_ed' => mdate('%Y-%m-%d', strtotime($insert['po_ed'])),
+            'po_suppid' => $insert['po_suppid'],
+            'po_supp_email' => $insert['po_supp_email'],
+            'po_value' => $this->Gdpo_model->standard_money($insert['po_value']),
+            'po_isangsuran' => $insert['po_isangsuran'],
+            'po_angdp' => 0,
+            'po_angqty' => 0,
+            'po_angvalue' => 0,
+            'po_usersign' => $this->user->ttd_url,
+            'po_ttstatus' => 0,
+            'po_tfstatus' => 0,
+            'po_simpanstatus' => 1
+        );
+
+        $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        if (!$this->Gdpo_model->update($data, $params1, NULL, 'trx_po')) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        if (!$this->__set_po($insert['id'])) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        $this->Gdpo_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_P0');
+        echo json_encode(array('success' => 'true', 'data' => $insert['id'], 'title' => 'Info', 'msg' => 'Insert PO Success'));
+    }
+
+    private function __set_po($id_po) {
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id_po);
+        $data_pengadaan = $this->Gdpo_model->gets($params, NULL, 'trx_pengadaan_detail');
+        
+        foreach ($data_pengadaan as $row) {
+            $this->Gdpo_model->insert_po_item($row->id);
+        }
+        
+        return TRUE;
+    }
+
     public function set_status($type) {
         $insert = $this->input->post(NULL, TRUE);
 
@@ -93,6 +142,24 @@ class Gd_po extends Auth_Controller {
         }
     }
 
+    public function edit_peng_po() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        $data = array(
+            'po_qty' => $insert['po_qty'],
+            'po_harga' => $insert['po_harga'],
+            'po_disc' => $insert['po_disc'],
+            'po_ppn' => $insert['po_ppn'],
+            'po_katalog' => $insert['po_katalog'],
+            'barang_desc' => $insert['barang_desc']
+        );
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $this->Gdpo_model->update($data, $opt, NULL, 'trx_pengadaan_detail');
+        $id_po = $this->Gdpo_model->get_detail('id', $insert['id'], 'trx_pengadaan_detail')->po_id;
+        echo json_encode(array('success' => 'true', 'data' => $this->Gdpo_model->total_po($id_po)));
+    }
+    
     public function list_pengadaan_all() {
         $records = $this->input->get('filter');
         $params = array();
@@ -107,6 +174,7 @@ class Gd_po extends Auth_Controller {
         $params[] = array('field' => 'trx_pengadaan.peng_statusdiv', 'param' => 'where', 'operator' => '', 'value' => 1);
         $params[] = array('field' => 'trx_pengadaan.peng_statuspst', 'param' => 'where', 'operator' => '', 'value' => 1);
         $params[] = array('field' => 'trx_pengadaan.po_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
+        $params[] = array('field' => 'trx_pengadaan_detail.po_set', 'param' => 'where', 'operator' => '', 'value' => 0);
 
         $opt['sortBy'] = 'trx_pengadaan.id';
         $opt['sortDirection'] = 'ASC';
@@ -183,28 +251,8 @@ class Gd_po extends Auth_Controller {
         }
     }
 
-    private function __return_csspeng($id) {
-        $peng_detail = $this->Gdpengadaan_model->get_detail('id', $id, 'trx_pengadaan');
-
-        if ($peng_detail->peng_type == 0) {
-            $po_status = $peng_detail->po_status;
-            $peng_statusdiv = $peng_detail->peng_statusdiv;
-            $peng_statuspst = $peng_detail->peng_statuspst;
-
-            if ($po_status == 0 && $peng_statusdiv == 0 && $peng_statuspst == 0) {
-                return 'peng-null';
-            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 0) {
-                return 'peng-div';
-            } else if ($po_status == 0 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
-                return 'peng-pusat';
-            } else if ($po_status == 2 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
-                return 'peng-pobag';
-            } else if ($po_status == 1 && $peng_statusdiv == 1 && $peng_statuspst == 1) {
-                return 'peng-poall';
-            } else {
-                return 'peng-grey';
-            }
-        }
+    public function print_po($type, $id) {
+        $this->load->view('po_invoice');
     }
 
 }

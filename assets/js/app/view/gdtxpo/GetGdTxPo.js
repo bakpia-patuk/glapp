@@ -44,18 +44,14 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                                     xtype: 'button',
                                     text: 'SAVE',
                                     ui: 'orange-button',
-                                    handler: function() {
-                                        Ext.Msg.alert('Error', 'Syncronize Connection Error');
-                                    }
+                                    action: 'poSave'
                                 },
                                 '-',
                                 {
                                     xtype: 'button',
                                     text: 'PRINT_PO',
                                     ui: 'orange-button',
-                                    handler: function() {
-                                        Ext.Msg.alert('Error', 'Syncronize Connection Error');
-                                    }
+                                    action: 'poSavePrint'
                                 },
                                 '-',
                                 {

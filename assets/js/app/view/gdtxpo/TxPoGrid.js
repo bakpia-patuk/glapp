@@ -62,7 +62,10 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                     xtype: 'gridcolumn',
                     width: 100,
                     text: 'NO KATALOG',
-                    dataIndex: 'po_katalog'
+                    dataIndex: 'po_katalog',
+                    editor: {
+                        allowBlank: false
+                    }
                 },
                 {
                     xtype: 'numbercolumn',
@@ -81,21 +84,33 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                     width: 150,
                     text: 'HARGA',
                     align: 'right',
-                    dataIndex: 'po_harga'
+                    dataIndex: 'po_harga',
+                    editor: {
+                        allowBlank: false,
+                        hideTrigger: true
+                    }
                 },
                 {
                     xtype: 'numbercolumn',
                     width: 50,
                     text: 'DISC (%)',
                     align: 'center',
-                    dataIndex: 'po_disc'
+                    dataIndex: 'po_disc',
+                    editor: {
+                        allowBlank: false,
+                        hideTrigger: true
+                    }
                 },
                 {
                     xtype: 'numbercolumn',
                     width: 50,
                     text: 'PPN (%)',
                     align: 'center',
-                    dataIndex: 'po_ppn'
+                    dataIndex: 'po_ppn',
+                    editor: {
+                        allowBlank: false,
+                        hideTrigger: true
+                    }
                 },
                 {
                     xtype: 'numbercolumn',
@@ -108,7 +123,11 @@ Ext.define('GlApp.view.gdtxpo.TxPoGrid', {
                     xtype: 'gridcolumn',
                     width: 200,
                     text: 'KETERANGAN',
-                    dataIndex: 'barang_desc'
+                    dataIndex: 'barang_desc',
+                    editor: {
+                        allowBlank: false,
+                        hideTrigger: true
+                    }
                 }
             ]
         });
