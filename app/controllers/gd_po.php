@@ -129,7 +129,7 @@ class Gd_po extends Auth_Controller {
         $data = array(
             'id' => $last_no . '.' . $this->user->cabang_id,
             'trx_date' => mdate('%Y-%m-%d %H:%i:%s', now()),
-            'po_no' => sprintf('%06d', $last_no) . '/' . $detail_cabang->cabang_code . '/' . mdate('%Y%m%d', now()),
+            'po_no' => 'PO'. '/' . $detail_cabang->cabang_code . '/' . mdate('%d%m%y', now()).'/'.sprintf('%06d', $last_no),
             'po_cabangid' => $insert['cabang'],
             'po_usercreate' => $this->user->id,
             'po_simpanstatus' => 0
@@ -205,7 +205,7 @@ class Gd_po extends Auth_Controller {
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Gdpengadaan_model->gets($params, $opt, $tablename);
+        $result = $this->Gdpo_model->gets($params, $opt, $tablename);
         $no = 0;
 
         if ($result != NULL) {
@@ -235,7 +235,7 @@ class Gd_po extends Auth_Controller {
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Gdpengadaan_model->gets($params, $opt, $tablename);
+        $result = $this->Gdpo_model->gets($params, $opt, $tablename);
         $no = 0;
 
         if ($result != NULL) {
@@ -252,7 +252,28 @@ class Gd_po extends Auth_Controller {
     }
 
     public function print_po($type, $id) {
-        $this->load->view('po_invoice');
+        $po = $this->Gdpo_model->get_detail('id', $id, 'trx_po');
+        $data['type'] = $type == 0 ? 'ASLI' : 'COPY';
+        $data['po_no'] = $po->po_no;
+        $data['po_tgl'] = mdate('%d %F %Y', strtotime($po->trx_date));
+        $data['po_ed'] = mdate('%d %F %Y', strtotime($po->po_ed));
+        $data['po_cabang'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_alias;
+        $data['po_add'] = $this->Gdpo_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_address;
+        $data['po_company'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_name;
+        $data['po_company_add'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_alamat;
+        $data['po_company_cp'] = $this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_contact1.', Telp. '.$this->Gdpo_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_telp;
+        $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
+        $user_create = $this->Gdpo_model->get_detail('id', $po->po_usercreate, 'users');
+        $user_app = $this->Gdpo_model->get_detail('id', 76, 'users');
+
+        $data['create_ttd'] = $user_create->ttd_url;
+        $data['create_name'] = strtoupper($user_create->first_name.' '. $user_create->last_name);
+       
+        $data['app_ttd'] = $user_app->ttd_url;
+        $data['app_name'] = strtoupper($user_app->first_name.' '. $user_app->last_name);
+        $data['detail_po'] = $this->Gdpo_model->get_po_detail($id);
+        
+        $this->load->view('po_invoice', $data);
     }
 
 }

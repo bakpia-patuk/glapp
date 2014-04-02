@@ -126,7 +126,7 @@ class Gdpo_model extends MY_Model {
         $dpo = $this->get_detail('id', $dpeng->po_id, 'trx_po');
 
         $data = array(
-            'id' => $this->get_last('trx_po_detail').'.'.$dpo->po_cabangid,
+            'id' => $this->get_last('trx_po_detail') . '.' . $dpo->po_cabangid,
             'po_id' => $dpeng->po_id,
             'po_no' => $dpo->po_no,
             'po_ed' => mdate('%Y-%m-%d', strtotime($dpo->po_ed)),
@@ -149,12 +149,44 @@ class Gdpo_model extends MY_Model {
         );
 
         $this->insert($data, 'trx_po_detail');
-        
+
         $set_true = array('po_set' => 1);
         $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $this->update($set_true, $params1, NULL, 'trx_pengadaan_detail');
-        
+
         return TRUE;
+    }
+
+    public function get_po_detail($id) {
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data = $this->gets($params, NULL, 'trx_po_detail');
+        $no = 1;
+        $total = 0;
+        foreach ($data as $row) {
+            $netto = $this->__calc_netto($row->barang_qty, $row->barang_harga, $row->barang_disc, $row->barang_ppn);
+            $return[]= array(
+                'no' => $no,
+                'barang_name' => $this->get_item_detail($row->barang_id)->mi_name,
+                'barang_merk' => '-',
+                'barang_katalog' => $row->barang_katalog,
+                'barang_qty' => $row->barang_qty,
+                'barang_harga' => $row->barang_harga,
+                'barang_disc' => $row->barang_disc,
+                'barang_ppn' => $row->barang_ppn,
+                'barang_sub' => $netto,
+                'barang_desc' => $row->barang_ket
+            );
+            
+            $total += $netto;
+            $no++;
+        }
+        
+        $return = array(
+            'data' => $return,
+            'total' => $total
+        );
+        
+        return $return;
     }
 
 }

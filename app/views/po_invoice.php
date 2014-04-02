@@ -33,7 +33,7 @@ header('Pragma: no-cache');
                 <img alt="Mainlogo_large" class="logo screen" src="<?php echo base_url('assets/img/app/logo_invoice.jpg'); ?>" /> 
                 <!-- hCard microformat --> 
                 <div class="vcard" id="company-address"> 
-                    <div class="fn org" style="font-size: 13pt"><strong>ASLI</strong></div> 
+                    <div class="fn org" style="font-size: 13pt"><strong><?php echo $type; ?></strong></div> 
                 </div> 
                 <!-- company-address vcard --> 
             </div> 
@@ -44,23 +44,23 @@ header('Pragma: no-cache');
                 <br/>
             </div> 
             <div id="invoice-info"> 
-                <h2><strong>PO/DHR/241213/000041</strong></h2> 
-                <h3>24 December 2013</h3> 
-                <p id="payment-due">Payment due by 01 January 2014</p> 
-                <h3>PDC CABANG DHARMAWANGSA<br/>Jl. Dharmawangsa No. 66/70 Surabaya 60286</h3> 
+                <h2><strong><?php echo $po_no; ?></strong></h2> 
+                <h3><?php echo $po_tgl; ?></h3> 
+                <p id="payment-due">Payment due by <?php echo $po_ed; ?></p> 
+                <h3>PDC <?php echo $po_cabang == "PUSAT" ? $po_cabang : "CABANG " . $po_cabang; ?><br/><?php echo $po_add; ?></h3> 
 
             </div> 
             <!-- #invoice-info --> 
             <div class="vcard" id="client-details"> 
                 <div class="locality">Kepada Yth. </div> 
                 <div class="fn">REKANAN SUPPLIER</div> 
-                <div class="org">COMPANY NAME</div> 
+                <div class="org"><?php echo $po_company; ?></div> 
                 <div class="adr"> 
                     <div class="street-address">
-                        JL.BERBEK INDUSTRI I NO.1 GUDANG A-C SBY, Kota Surabaya<br/> 
+                        <?php echo $po_company_add; ?><br/> 
                     </div> 
                     <!-- street-address --> 
-                    <div id="your-tax-number">-</div>
+                    <div id="your-tax-number"><?php echo $po_company_cp; ?></div>
                 </div> 
                 <!-- adr --> 
             </div> 
@@ -90,54 +90,36 @@ header('Pragma: no-cache');
                     <tr id="total_tr"> 
                         <td colspan="6">&nbsp;</td> 
                         <td colspan="2" class="total" id="total_currency">Total</td> 
-                        <td class="total">21,676,366.80</td> 
+                        <td class="total"><?php echo number_format($detail_po['total'], 2); ?> </td> 
                         <td>&nbsp;</td> 
                     </tr> 
                 </tfoot> 
-                <tbody> 
-                    <tr class="item"> 
-                        <td class="item_l">1</td> 
-                        <td class="item_l">HCV 100 T ARCHITECT ABBOTT</td> 
-                        <td class="item_l">-</td> 
-                        <td class="item_l">-</td> 
-                        <td class="item_c">10</td> 
-                        <td class="item_r">1,200,000.00</td> 
-                        <td class="item_l">2.5 %</td> 
-                        <td class="item_l">20 %</td> 
-                        <td class="item_r">13,185,849.60</td> 
-                        <td class="item_l">CONFIRM ED</td> 
-                    </tr> 
-                    <tr class="item"> 
-                        <td class="item_l">2</td> 
-                        <td class="item_l">HBs Ag QUALITATIVE 100T </td> 
-                        <td class="item_l">-</td> 
-                        <td class="item_l">-</td> 
-                        <td class="item_c">10</td> 
-                        <td class="item_r">1,200,000.00</td> 
-                        <td class="item_l">2.5 %</td> 
-                        <td class="item_l">20 %</td> 
-                        <td class="item_r">7,469,431.20</td> 
-                        <td class="item_l">CONFIRM ED</td> 
-                    </tr> 
-                    <tr class="item"> 
-                        <td class="item_l">3</td> 
-                        <td class="item_l">ARCHITECT ABBOTT WASH BUFFER CONCENTRATE ARCHITECT</td> 
-                        <td class="item_l">-</td> 
-                        <td class="item_l">-</td> 
-                        <td class="item_c">10</td> 
-                        <td class="item_r">1,200,000.00</td> 
-                        <td class="item_l">2.5 %</td> 
-                        <td class="item_l">20 %</td> 
-                        <td class="item_r">1,021,086.00</td> 
-                        <td class="item_l">CONFIRM ED</td> 
-                    </tr> 
+                <tbody>
+                    <?php
+                    foreach ($detail_po['data'] as $value) {
+                        ?>
+                        <tr class="item"> 
+                            <td class="item_l"><?php echo $value['no']; ?></td> 
+                            <td class="item_l"><?php echo $value['barang_name']; ?></td> 
+                            <td class="item_l"><?php echo $value['barang_merk']; ?></td> 
+                            <td class="item_l"><?php echo $value['barang_katalog']; ?></td> 
+                            <td class="item_c"><?php echo $value['barang_qty']; ?></td> 
+                            <td class="item_r"><?php echo number_format($value['barang_harga'], 2); ?></td> 
+                            <td class="item_c"><?php echo $value['barang_disc'].' %'; ?></td> 
+                            <td class="item_c"><?php echo $value['barang_ppn'].' %'; ?></td> 
+                            <td class="item_r"><?php echo number_format($value['barang_sub'], 2); ?></td> 
+                            <td class="item_l"><?php echo $value['barang_desc']; ?></td> 
+                        </tr> 
+                        <?php
+                    }
+                    ?>
                 </tbody> 
             </table> 
             <!-- invoice-amount --> 
             <div id="invoice-ket2"> 
                 <p style="font-size: 8.5pt;padding-bottom: 10px">
-                    Mohon Pesanan tersebut dapat kami terima paling lambat tanggal 04 January 2014<br/>
-                    Pembayaran : 1 BULAN 
+                    Mohon Pesanan tersebut dapat kami terima paling lambat tanggal <?php echo $po_ed; ?><br/>
+                    Pembayaran : <?php echo $pembayaran; ?> 
                 </p>
             </div> 
             <table id="invoice-sign" cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -145,14 +127,14 @@ header('Pragma: no-cache');
                     <td align="center" width="25%">
                         <span style="float: left;padding-left: 50px">Hormat kami,</span><br/>
                         <span style="float: left;padding-left: 50px">PARAHITA DIAGNOSTIC CENTER</span> <br/><br/>
-                        <div class="sign"><img width="60%" src="<?php echo base_url('assets/appdata/user/sign1.png'); ?>"><br /><strong><?php echo 'SUPER ADMIN'; ?></strong></div>
+                        <div class="sign"><img width="60%" src="<?php echo base_url($create_ttd); ?>"><br /><strong><?php echo $create_name; ?></strong></div>
                         <div class="hr"></div>
                         BAGIAN PEMBELIAN
                     </td>
                     <td align="center" width="25%">
                         <span style="float: left;padding-left: 30px">&nbsp;</span><br/>
                         Menyetujui,<br/><br/>
-                        <div class="sign"><img width="60%" src="<?php echo base_url('assets/appdata/user/sign1.png'); ?>"><br /><strong><?php echo 'ELLI'; ?></strong></div>
+                        <div class="sign"><img width="60%" src="<?php echo base_url($app_ttd); ?>"><br /><strong><?php echo $app_name; ?></strong></div>
                         <div class="hr"></div>
                         MANAGER
                     </td>
