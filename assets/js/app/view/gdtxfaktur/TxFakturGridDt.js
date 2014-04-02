@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
     alias: 'widget.gdtxfaktur.txfakturgriddt',
     itemId: 'txfakturgriddt',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxfaktur.TtDetailStore',
     autoScroll: true,
     forceFit: true,
     columnLines: true,
@@ -44,7 +44,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     text: 'QTY PESAN',
                     align: 'center',
                     format: '0',
-                    dataIndex: 'ttQtyPesan'
+                    dataIndex: 'tt_qty_pesan'
                 },
                 {
                     xtype: 'numbercolumn',
@@ -52,14 +52,14 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     align: 'center',
                     format: '0',
                     text: 'QTY TERIMA',
-                    dataIndex: 'ttQtyKirim'
+                    dataIndex: 'tt_qty_kirim'
                 },
                 {
                     xtype: 'numbercolumn',
                     width: 150,
                     text: 'HARGA',
                     align: 'right',
-                    dataIndex: 'ttPrice',
+                    dataIndex: 'tt_harga',
                     format: '0.000,00/i'
                 },
                 {
@@ -67,7 +67,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     width: 60,
                     text: 'DISC',
                     align: 'center',
-                    dataIndex: 'ttDisc',
+                    dataIndex: 'tt_disc',
                     format: '0'
                 },
                 {
@@ -75,7 +75,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     width: 60,
                     text: 'PPN',
                     align: 'center',
-                    dataIndex: 'ttPpn',
+                    dataIndex: 'tt_ppn',
                     format: '0'
                 },
                 {

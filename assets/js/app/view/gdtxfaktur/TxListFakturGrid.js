@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxListFakturGrid', {
     alias: 'widget.gdtxfaktur.txlistfakturgrid',
     itemId: 'txlistfakturgrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxfaktur.ListFakturStore',
     autoScroll: true,
     forceFit: false,
     columnLines: true,
@@ -86,27 +86,27 @@ Ext.define('GlApp.view.gdtxfaktur.TxListFakturGrid', {
                     xtype: 'datecolumn',
                     flex: 0.35,
                     text: 'TGL. FAKTUR',
-                    dataIndex: 'fktTgl',
+                    dataIndex: 'faktur_tgl',
                     renderer: Ext.util.Format.dateRenderer('d/M/Y')
                 },
                 {
                     xtype: 'gridcolumn',
                     flex: 0.35,
                     text: 'NO FAKTUR',
-                    dataIndex: 'fktNo'
+                    dataIndex: 'faktur_no'
                 },
                 {
                     xtype: 'numbercolumn',
                     flex: 0.3,
                     align: 'right',
                     text: 'TOTAL',
-                    dataIndex: 'fktTotal'
+                    dataIndex: 'faktur_nototal'
                 },
                 {
                     xtype: 'gridcolumn',
                     flex: 0.2,
                     text: 'CABANG',
-                    dataIndex: 'fktCabangName'
+                    dataIndex: 'faktur_cabang'
                 }
 
             ]

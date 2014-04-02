@@ -29,6 +29,8 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                             xtype: 'panel',
                             title: 'DATA FAKTUR',
                             layout: 'border',
+                            itemId: 'tespanel1',
+                            name: 'TesPanel1',
                             border: false,
                             bodyPadding: '2 0 0 0',
                             defaults: {
@@ -56,6 +58,8 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                             title: 'DATA PERMINTAAN',
                             layout: 'border',
                             border: false,
+                            itemId: 'tespanel2',
+                            name: 'TesPanel2',
                             bodyPadding: '2 0 0 0',
                             defaults: {
                                 border: true,
@@ -81,6 +85,8 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                             xtype: 'panel',
                             title: 'DAFTAR KAS KELUAR',
                             layout: 'border',
+                            itemId: 'tespanel3',
+                            name: 'TesPanel4',
                             border: false,
                             bodyPadding: '2 0 0 0',
                             defaults: {
@@ -189,6 +195,8 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                             xtype: 'panel',
                             title: 'DATA RUJUKAN',
                             layout: 'border',
+                            itemId: 'tespanel4',
+                            name: 'TesPanel4',
                             border: false,
                             bodyPadding: '2 0 0 0',
                             defaults: {
@@ -207,8 +215,8 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                                     fieldLabel: 'Tgl. Awal',
                                     emptyText: 'Tgl Awal',
                                     hideLabel: true,
-                                    name: 'dateStart',
-                                    itemId: 'dateStartDr',
+                                    name: 'dateStartDr',
+                                    itemId: 'datestartdr',
                                     format: 'd/M/Y',
                                     submitFormat: 'Y-m-d'
                                 },
@@ -222,15 +230,15 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                                     fieldLabel: 'Tgl. Akhir',
                                     emptyText: 'Tgl Akhir',
                                     hideLabel: true,
-                                    name: 'dateEnd',
-                                    itemId: 'dateEndDr',
+                                    name: 'dateEndDr',
+                                    itemId: 'dateenddr',
                                     format: 'd/M/Y',
                                     submitFormat: 'Y-m-d'
                                 },
                                 {
                                     xtype: 'textfield',
                                     emptyText: 'Nama Pemeriksaan',
-                                    itemId: 'namapemeriksa'
+                                    itemId: 'drperiksa'
                                 },
                                 {
                                     xtype: 'button',
