@@ -22,47 +22,6 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
         var form = me;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    text: 'SIMPAN',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-save',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'BARU',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-add',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'CETAK TT',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-delete',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                },
-                {
-                    xtype: 'button',
-                    hidden: true,
-                    text: 'KIRIM PDF',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-delete',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                }
-            ],
             items: [
                 {
                     xtype: 'numberfield',

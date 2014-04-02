@@ -160,35 +160,42 @@ class Gd_tt extends Auth_Controller {
         echo json_encode(array('success' => 'true', 'data' => $this->Gdpo_model->total_po($id_po)));
     }
 
-    public function list_pengadaan_all() {
+    public function list_po_all() {
         $records = $this->input->get('filter');
         $params = array();
 
         if ($records) {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
-        } else {
-            $params[] = array('field' => 'trx_pengadaan.cabang_id', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
         }
 
-        $params[] = array('field' => 'trx_pengadaan.peng_statusdiv', 'param' => 'where', 'operator' => '', 'value' => 1);
-        $params[] = array('field' => 'trx_pengadaan.peng_statuspst', 'param' => 'where', 'operator' => '', 'value' => 1);
-        $params[] = array('field' => 'trx_pengadaan.po_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
-        $params[] = array('field' => 'trx_pengadaan_detail.po_set', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $params[] = array('field' => 'po_ed', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d", now()));
+        $params[] = array('field' => 'po_cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        $params[] = array('field' => 'tt_status', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $params[] = array('field' => 'tt_set', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $params[] = array('field' => 'simpan_status', 'param' => 'where', 'operator' => '', 'value' => 1);
 
-        $opt['sortBy'] = 'trx_pengadaan.id';
+        $opt['sortBy'] = 'po_id';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Gdpo_model->get_peng_list($params, $opt);
-
+        $result = $this->Gdtt_model->gets($params, $opt, 'trx_po_detail');
+        $no = 0;
+//tt_qty_sisa
         if ($result != NULL) {
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan'));
+            foreach ($result as $row) {
+                $barang = $this->Gdtt_model->get_item_detail($row->barang_id);
+                $result[$no]->barang_name = $barang->mi_name;
+                $result[$no]->tt_qty_sisa = $row->tt_qty_kirim;
+                $result[$no]->merk_name = $this->Gdtt_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
+                $no++;
+            }
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All PO Supplier'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
     }
 
-    public function list_po_all() {
+    public function list_tt_all() {
         $records = $this->input->get('filter');
         $params = array();
 
@@ -222,7 +229,7 @@ class Gd_tt extends Auth_Controller {
         }
     }
 
-    public function list_po_detail() {
+    public function list_tt_detail() {
         $records = $this->input->get('filter');
         $params = array();
 
@@ -321,7 +328,7 @@ class Gd_tt extends Auth_Controller {
         ini_set('memory_limit', '32M');
         //render the view into HTML
         $html = $this->load->view('po_pdf', $data, true);
-        
+
 
         $this->load->library('pdf');
         $pdf = $this->pdf->load();
@@ -331,7 +338,7 @@ class Gd_tt extends Auth_Controller {
 
         return;
     }
-    
+
     private function __sent_pdf($attachment, $name, $subject, $message) {
         $this->load->library('email');
 

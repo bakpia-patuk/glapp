@@ -7,6 +7,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     models: [
     ],
     stores: [
+        'gdtxterima.SupplierStore',
+        'gdtxterima.PoDetailStore'
     ],
     views: [
         'gdtxterima.GetGdTxTerima',
@@ -18,22 +20,16 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
         'gdtxterima.TxTtLotWin'
     ],
     refs: [
-        {ref: 'SupplierForm', selector: '#mssupplierform'},
-        {ref: 'SupplierGrid', selector: '#mssuppliergrid'}
+        {ref: 'PanelTerima', selector: '#newttpanel'},
+        {ref: 'TtPoGrid', selector: '#txttgrid'}
     ],
     init: function() {
         this.listen({
             controller: {
             },
             component: {
-                '#txttform button[action=getClientSign]': {
-                    click: this.showSignForm
-                },
-                '#txttgriddt button[action=ttLotAdd]': {
-                    click: this.showLotForm
-                },
-                '#mssupplierform button[action=suppDelete]': {
-                    click: this.showSatuan
+                '#newttpanel button[action=searchTt]': {
+                    click: this.showListPo
                 }
             },
             global: {
@@ -42,14 +38,38 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             }
         });
     },
-    showSignForm: function(btn) {
-        var win = Ext.widget('gdtxterima.txttsignwin');
-    },
-    showLotForm: function(btn) {
-        var win = Ext.widget('gdtxterima.txttlotwin');
-    },
-    showSatuan: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbarangsatuanwin');
+    showListPo: function(btn) {
+        var panel = this.getPanelTerima(),
+                tgl1 = panel.down('#ttTgl1').getValue(),
+                tgl2 = panel.down('#ttTgl2').getValue(),
+                supplier = panel.down('#ttSupplier').getValue(),
+                grid1 = this.getTtPoGrid(),
+                store = grid1.getStore(),
+                filterCollection = [];
+        if (supplier !== null) {
+//            var statusFilter = new Ext.util.Filter({
+//                property: 'trx_po.trx_date',
+//                value: Ext.Date.format(tgl1 === null ? new Date() : tgl1, 'Y-m-d 00:00:00') + 'GT'
+//            });
+//            filterCollection.push(statusFilter);
+//            var statusFilter = new Ext.util.Filter({
+//                property: 'trx_po.trx_date',
+//                value: Ext.Date.format(tgl2 === null ? new Date() : tgl2, 'Y-m-d 23:59:59') + 'LT'
+//            });
+//            filterCollection.push(statusFilter);
+            var statusFilter = new Ext.util.Filter({
+                property: 'po_supp_id',
+                value: supplier
+            });
+            filterCollection.push(statusFilter);
+
+            grid1.getSelectionModel().clearSelections();
+            store.clearFilter(true);
+            store.filter(filterCollection);
+            store.group('po_no');
+        } else {
+            Ext.Msg.alert('Warning', 'Pilih Supplier terlebih dahulu');
+        }
     }
 });
 
