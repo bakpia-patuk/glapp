@@ -8,7 +8,7 @@ Ext.define('GlApp.view.kskeluar.DataRujukanGrid', {
     autoScroll: true,
     title: 'DATA RUJUKAN',
     forceFit: true,
-//    store: 'MintaBayarStore',
+    store: 'kskeluar.MintaKasRujukanStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -22,77 +22,27 @@ Ext.define('GlApp.view.kskeluar.DataRujukanGrid', {
                 emptyText: 'Tidak ada data Rujukan',
                 deferEmptyText: false
             },
-            tbar: [
-                {
-                    xtype: 'tbtext',
-                    text: '<strong>Filter :</strong>'
-                },
-                {
-                    xtype: 'datefield',
-                    width: 130,
-                    fieldLabel: 'Tgl. Awal',
-                    emptyText: 'Tgl Awal',
-                    hideLabel: true,
-                    name: 'dateStart',
-                    itemId: 'dateStartKk',
-                    format: 'd/M/Y',
-                    submitFormat: 'Y-m-d'
-                },
-                {
-                    xtype: 'tbtext',
-                    text: '<small>s/d</small>'
-                },
-                {
-                    xtype: 'datefield',
-                    width: 130,
-                    fieldLabel: 'Tgl. Akhir',
-                    emptyText: 'Tgl Akhir',
-                    hideLabel: true,
-                    name: 'dateEnd',
-                    itemId: 'dateEndKk',
-                    format: 'd/M/Y',
-                    submitFormat: 'Y-m-d'
-                },
-                {
-                    xtype: 'button',
-                    cls: 'searchBtn',
-                    iconCls: 'icon-btn-search'
-//                    action: 'kkSearch'
-                },
-                '->',
-                {
-                    xtype: 'textfield',
-                    emptyText: 'Nama Pemeriksaan',
-                    itemId: 'namapemeriksa'
-                },
-                {
-                    xtype: 'button',
-                    cls: 'searchBtn',
-                    iconCls: 'icon-btn-search'
-//                    action: 'kkSearch'
-                }
-            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {
                     xtype: 'datecolumn',
                     flex: 0.17,
                     text: 'TGL RUJUKAN',
-                    dataIndex: 'tglTrx',
+                    dataIndex: 'tgl_trx',
                     renderer: Ext.util.Format.dateRenderer('d/M/Y')
                 },
                 {
                     xtype: 'gridcolumn',
                     flex: 0.23,
                     text: 'NAMA PASIEN',
-                    dataIndex: 'namaPasien',
+                    dataIndex: 'mkr_namapasien',
                     renderer: 'uppercase'
                 },
                 {
                     xtype: 'gridcolumn',
                     flex: 0.6,
                     text: 'NAMA PEMERIKSAAN',
-                    dataIndex: 'pemeriksaan'
+                    dataIndex: 'mkr_pemeriksaan'
                 }
             ]
         });

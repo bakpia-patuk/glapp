@@ -8,7 +8,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarGrid', {
     autoScroll: true,
     title: 'DAFTAR KAS KELUAR',
     forceFit: true,
-//    store: 'TrxKasStore',
+    store: 'kskeluar.TrxKasStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -29,7 +29,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarGrid', {
                     xtype: 'datecolumn',
                     width: 100,
                     text: 'TGL. TRANS',
-                    dataIndex: 'tglTransaksi',
+                    dataIndex: 'kas_tgltrx',
                     renderer: Ext.util.Format.dateRenderer('d/M/Y')
                 },
                 {
@@ -37,13 +37,13 @@ Ext.define('GlApp.view.kskeluar.KsKeluarGrid', {
                     width: 300,
                     hidden: false,
                     text: 'KEPERLUAN',
-                    dataIndex: 'keteranganKd'
+//                    dataIndex: 'keteranganKd'
                 },
                 {
                     width: 150,
                     align: 'right',
                     header: 'JUMLAH',
-                    dataIndex: 'jumlahTrx',
+                    dataIndex: 'kas_jumlah',
                     renderer: function(value, meta, record) {
                         return Ext.util.Format.number(value, '0.000,00/i');
                     }
