@@ -138,7 +138,7 @@ Ext.define('GlApp.view.gdtxpo.GetGdTxPo', {
                             bodyPadding: '2 0 0 0',
                             defaults: {
                                 border: true,
-                                ui: 'blue-panel',
+                                ui: 'orange-panel',
                                 split: true
                             },
                             items: [

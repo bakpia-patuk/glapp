@@ -9,12 +9,11 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Gd_po extends Auth_Controller {
+class Gd_tt extends Auth_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->model('Gdpo_model');
-        $this->Gdpo_model->cms_db = $this->load->database('outgoing', TRUE);
+        $this->load->model('Gdtt_model');
     }
 
     public function reset() {
@@ -71,99 +70,11 @@ class Gd_po extends Auth_Controller {
             return;
         }
 
-        //Insert Data PO on Outgoing
-        $data_po = $this->Gdpo_model->get($params1, NULL, 'trx_po');
-
-        $data_json = json_encode($data_po);
-                
-        $data_outgoing = array();
-        
-        $data_outgoing['jumlah'] = 1;
-        
-        $data_outgoing['tujuan'] = $data_po->po_cabangid;
-        
-        $data_outgoing['id_cabang'] = $this->user->cabang_id;
-
-        $no=$this->Gdpo_model->insert_outgoing($data_outgoing, 'head');
-
-        $data_outgoing = array();
-        $data_outgoing['data'] = $data_json;
-        $data_outgoing['head_id '] = $no.'.'.$this->user->cabang_id;
-        $data_outgoing['primary_key'] = $insert['id'];
-        $data_outgoing['table_name'] = 'trx_po';
-
-        $this->Gdpo_model->insert_outgoing($data_outgoing, 'detail');
-        ///////////////////////////////////////////////////////////////
-
         if (!$this->__set_po($insert['id'])) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
             return;
         }
 
-        //Insert pengadaan detail on outgoing
-        $params = array();
-        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-        $data_pengadaan = $this->Gdpo_model->gets($params, NULL, 'trx_pengadaan_detail');
-        $jumlah=0;
-        $data_detail_outgoing=array();
-        foreach ($data_pengadaan as $row) {
-            $data_outgoing = array();
-            $data_json = json_encode($row);
-            $data_outgoing['data'] = $data_json;
-            
-            $data_outgoing['primary_key'] = $row->id;
-            $data_outgoing['table_name'] = 'trx_pengadaan_detail';
-
-            $data_detail_outgoing[] = $data_outgoing;
-            $jumlah++;
-        }
-
-        $data_outgoing = array();
-        
-        $data_outgoing['jumlah'] = $jumlah;
-        
-        $data_outgoing['tujuan'] = $data_po->po_cabangid;
-        
-        $data_outgoing['id_cabang'] = $this->user->cabang_id;
-
-        $no=$this->Gdpo_model->insert_outgoing($data_outgoing, 'head');
-        foreach ($data_detail_outgoing as $key) {
-            $key['head_id '] = $no.'.'.$this->user->cabang_id;
-            $this->Gdpo_model->insert_outgoing($key, 'detail');
-        }
-
-
-        //Insert po detail on outgoing
-        $params = array();
-        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-        $data_pengadaan = $this->Gdpo_model->gets($params, NULL, 'trx_po_detail');
-        $jumlah=0;
-        $data_detail_outgoing=array();
-        foreach ($data_pengadaan as $row) {
-            $data_outgoing = array();
-            $data_json = json_encode($row);
-            $data_outgoing['data'] = $data_json;
-            
-            $data_outgoing['primary_key'] = $row->id;
-            $data_outgoing['table_name'] = 'trx_po_detail';
-
-            $data_detail_outgoing[] = $data_outgoing;
-            $jumlah++;
-        }
-
-        $data_outgoing = array();
-        
-        $data_outgoing['jumlah'] = $jumlah;
-        
-        $data_outgoing['tujuan'] = $data_po->po_cabangid;
-        
-        $data_outgoing['id_cabang'] = $this->user->cabang_id;
-
-        $no=$this->Gdpo_model->insert_outgoing($data_outgoing, 'head');
-        foreach ($data_detail_outgoing as $key) {
-            $key['head_id '] = $no.'.'.$this->user->cabang_id;
-            $this->Gdpo_model->insert_outgoing($key, 'detail');
-        }
         $this->Gdpo_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_P0');
         echo json_encode(array('success' => 'true', 'data' => $insert['id'], 'title' => 'Info', 'msg' => 'Insert PO Success'));
     }
@@ -285,9 +196,9 @@ class Gd_po extends Auth_Controller {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
         } else {
-            $params[] = array('field' => 'trx_date', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d 00:00:00", now()));
-            $params[] = array('field' => 'trx_date', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d 23:59:59", now()));
-            $params[] = array('field' => 'po_cabangid', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
+            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d 00:00:00", now()));
+            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d 23:59:59", now()));
+            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
         }
 
         $tablename = 'trx_po';
@@ -299,11 +210,13 @@ class Gd_po extends Auth_Controller {
 
         if ($result != NULL) {
             foreach ($result as $row) {
-                $result[$no]->supp_name = $this->Gdpo_model->get_detail('id', $row->po_suppid, 'dt_supplier')->ms_name;
-                $result[$no]->tgl_trx = explode(' ', $row->trx_date)[0];
+                $result[$no]->tgl_trx = explode(' ', $row->tgl_trx)[0];
+                $result[$no]->cabang_name = $this->Gdpengadaan_model->get_detail('id', $row->cabang_id, 'dt_cabang')->cabang_alias;
+                $result[$no]->divisi_name = $this->Gdpengadaan_model->get_detail('id', $row->divisi, 'dt_divisi')->divisi_name;
+                $result[$no]->peng_class_row = $this->__return_csspeng($row->id);
                 $no++;
             }
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All PO'));
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
@@ -318,7 +231,7 @@ class Gd_po extends Auth_Controller {
             $params = $this->generate_db_query($raw_record);
         }
 
-        $tablename = 'trx_po_detail';
+        $tablename = 'trx_pengadaan_detail';
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
@@ -327,13 +240,12 @@ class Gd_po extends Auth_Controller {
 
         if ($result != NULL) {
             foreach ($result as $row) {
-                $barang = $this->Gdpo_model->get_item_detail($row->barang_id);
+                $barang = $this->Gdpengadaan_model->get_item_detail($row->barang_id);
                 $result[$no]->barang_name = $barang->mi_name;
-                $result[$no]->merk_name = $this->Gdpo_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
-                $result[$no]->barang_netto = $this->Gdpo_model->po_item_netto($row->barang_qty, $row->barang_harga, $row->barang_disc, $row->barang_ppn);
+                $result[$no]->merk_name = $this->Gdpengadaan_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
                 $no++;
             }
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Po Detail'));
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan Detail'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }

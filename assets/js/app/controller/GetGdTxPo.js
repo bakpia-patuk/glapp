@@ -10,7 +10,9 @@ Ext.define('GlApp.controller.GetGdTxPo', {
         'gdtxpo.CabangStore',
         'gdtxpo.PoPengStore',
         'gdtxpo.SupplierStore',
-        'gdtxpo.SupplierEmailStore'
+        'gdtxpo.SupplierEmailStore',
+        'gdtxpo.PoStore',
+        'gdtxpo.PoDetailStore'
     ],
     views: [
         'gdtxpo.GetGdTxPo',
@@ -23,6 +25,8 @@ Ext.define('GlApp.controller.GetGdTxPo', {
     refs: [
         {ref: 'PoPanel', selector: '#popanelform'},
         {ref: 'PoForm', selector: '#txpoform'},
+        {ref: 'PoGrid', selector: '#txpolistgrid'},
+        {ref: 'PoDtGrid', selector: '#txpolistgriddt'},
         {ref: 'PoPengGrid', selector: '#txpogrid'},
         {ref: 'PoEmailWin', selector: '#poemailwin'}
     ],
@@ -51,6 +55,20 @@ Ext.define('GlApp.controller.GetGdTxPo', {
                 },
                 '#txpogrid': {
                     edit: this.editPoPengadaan
+                },
+                '#txpolistgrid': {
+                    selectionchange: function(m, r) {
+                        var grid = this.getPoDtGrid(),
+                                store = grid.getStore();
+                        
+                        if(r[0]) {
+                            store.clearFilter(true);
+                            store.filter('po_id', r[0].get('id'));
+                        }
+                    }
+                },
+                '#txpolistgrid button[action=searchPo]': {
+                    click: this.showListPo
                 },
                 '#setPo': {
                     checkchange: this.setItemPo
@@ -184,6 +202,36 @@ Ext.define('GlApp.controller.GetGdTxPo', {
             Ext.Msg.alert('Warning', 'Pilih Cabang terlebih dahulu');
         }
     },
+    showListPo: function(btn) {
+        var grid1 = this.getPoGrid(),
+                tgl1 = grid1.down('#poListTgl1').getValue(),
+                tgl2 = grid1.down('#poListTgl2').getValue(),
+                cabang = grid1.down('#poListCabang').getValue(),
+                store = grid1.getStore(),
+                filterCollection = [];
+
+        var statusFilter = new Ext.util.Filter({
+            property: 'trx_date',
+            value: Ext.Date.format(tgl1 === null ? new Date() : tgl1, 'Y-m-d 00:00:00') + 'GT'
+        });
+        filterCollection.push(statusFilter);
+
+        var statusFilter = new Ext.util.Filter({
+            property: 'trx_date',
+            value: Ext.Date.format(tgl2 === null ? new Date() : tgl2, 'Y-m-d 23:59:59') + 'LT'
+        });
+        filterCollection.push(statusFilter);
+
+        var statusFilter = new Ext.util.Filter({
+            property: 'po_cabangid',
+            value: cabang !== null ? cabang : CABANG_ID
+        });
+        filterCollection.push(statusFilter);
+
+        grid1.getSelectionModel().clearSelections();
+        store.clearFilter(true);
+        store.filter(filterCollection);
+    },
     reloadListPeng: function(btn) {
         var panel = this.getPoPanel(),
                 cabang = panel.down('#poCabang').getValue(),
@@ -305,7 +353,7 @@ Ext.define('GlApp.controller.GetGdTxPo', {
         });
     },
     printPo: function(type, id) {
-        window.open(BASE_PATH + 'gd_po/print_po/'+ type + '/' + id, "Print Preview", "height="+screen.height +",width=950,modal=yes,alwaysRaised=yes,scrollbars=yes");
+        window.open(BASE_PATH + 'gd_po/print_po/' + type + '/' + id, "Print Preview", "height=" + screen.height + ",width=950,modal=yes,alwaysRaised=yes,scrollbars=yes");
     },
     pdfPo: function(id) {
         Ext.Ajax.request({

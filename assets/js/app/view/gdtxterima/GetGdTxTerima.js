@@ -18,7 +18,7 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                     xtype: 'tabpanel',
                     deferredRender: false,
                     plain: true,
-                    ui: 'blue-tab',
+                    ui: 'orange-tab',
                     border: false,
                     itemId: 'poTab',
                     items: [
@@ -30,7 +30,7 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                             bodyPadding: '2 0 0 0',
                             defaults: {
                                 border: true,
-                                ui: 'blue-panel',
+                                ui: 'orange-panel',
                                 split: true
                             },
                             items: [
@@ -54,7 +54,7 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                                     border: false,
                                     defaults: {
                                         border: true,
-                                        ui: 'blue-panel',
+                                        ui: 'orange-panel',
                                         split: true
                                     },
                                     items: [
