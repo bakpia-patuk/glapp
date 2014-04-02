@@ -320,7 +320,7 @@ class Gd_po extends Auth_Controller {
         //boost the memory limit if it's low
         ini_set('memory_limit', '32M');
         //render the view into HTML
-        $html = $this->load->view('po_invoice', $data, true);
+        $html = $this->load->view('po_pdf', $data, true);
         
 //        $style = base_url('assets/css/invoice_pdf.css');
 //        $stylesheet = file_get_contents($style);
@@ -330,7 +330,7 @@ class Gd_po extends Auth_Controller {
         // $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822));
         // write the Stylesheet into the PDF
 //        $pdf->WriteHTML($stylesheet, 1);
-        $pdf->WriteHTML($html, 1); // write the HTML into the PDF
+        $pdf->WriteHTML($html); // write the HTML into the PDF
         $pdf->Output($file_path, 'F'); // D download, F file
 
         return;
