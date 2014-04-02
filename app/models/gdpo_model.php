@@ -95,6 +95,10 @@ class Gdpo_model extends MY_Model {
         return $total;
     }
 
+    public function po_item_netto($qty, $harga, $disc, $ppn) {
+        return $this->__calc_netto($qty, $harga, $disc, $ppn);
+    }
+    
     private function __calc_netto($qty, $harga, $disc, $ppn) {
         $a = $qty * $harga;
         $b = 1 - ($disc / 100);

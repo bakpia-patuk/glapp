@@ -6,9 +6,9 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGridDt', {
     alias: 'widget.gdtxpo.txpolistgriddt',
     itemId: 'txpolistgriddt',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxpo.PoDetailStore',
     autoScroll: true,
-    forceFit: false,
+    forceFit: true,
     columnLines: true,
 
     initComponent: function () {
@@ -30,45 +30,79 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGridDt', {
                 Ext.create('Ext.grid.RowNumberer'),
                 {
                     xtype: 'gridcolumn',
-                    width: 200,
+                    flex: 0.5,
                     text: 'NAMA BARANG',
-                    dataIndex: 'namams'
+                    dataIndex: 'barang_name'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'UNTUK TGL.',
-                    dataIndex: 'alamatms'
-                },
-                {
-                    xtype: 'gridcolumn',
-                    width: 100,
+                    flex: 0.3,
                     text: 'MERK',
-                    dataIndex: 'namakotams'
+                    dataIndex: 'merk_name'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
+                    flex: 0.2,
                     text: 'NO KATALOG',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'barang_katalog'
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'KEMASAN',
-                    dataIndex: 'tlp2ms'
+                    xtype: 'numbercolumn',
+                    flex: 0.1,
+                    text: 'QTY',
+                    format: '000',
+                    dataIndex: 'barang_qty',
+                    editor: {
+                        allowBlank: false
+                    }
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'QTY PESANAN',
-                    dataIndex: 'hpms'
+                    xtype: 'numbercolumn',
+                    flex: 0.3,
+                    text: 'HARGA',
+                    align: 'right',
+                    dataIndex: 'barang_harga',
+                    editor: {
+                        allowBlank: false,
+                        decimalPrecision: 2,
+                        decimalSeparator: ',',
+                        alwaysDisplayDecimals: true,
+                        allowNegative: false,
+                        minValue: 0, //prevents negative numbers
+                    }
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 250,
-                    text: 'KETERANGAN',
-                    dataIndex: 'faxms'
+                    xtype: 'numbercolumn',
+                    flex: 0.1,
+                    text: 'DISC',
+                    align: 'center',
+                    dataIndex: 'barang_disc',
+                    editor: {
+                        allowBlank: true,
+                        decimalPrecision: 2,
+                        decimalSeparator: ',',
+                        alwaysDisplayDecimals: true,
+                        allowNegative: false,
+                        minValue: 0, //prevents negative numbers
+                    }
+                },
+                {
+                    xtype: 'numbercolumn',
+                    flex: 0.1,
+                    text: 'PPN',
+                    format: '000',
+                    align: 'center',
+                    dataIndex: 'barang_ppn',
+                    editor: {
+                        allowBlank: true
+                    }
+                },
+                {
+                    xtype: 'numbercolumn',
+                    flex: 0.3,
+                    text: 'HRG. NETTO',
+                    align: 'right',
+                    dataIndex: 'barang_netto'
                 }
             ]
         });

@@ -196,9 +196,9 @@ class Gd_po extends Auth_Controller {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
         } else {
-            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d 00:00:00", now()));
-            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d 23:59:59", now()));
-            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
+            $params[] = array('field' => 'trx_date', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d 00:00:00", now()));
+            $params[] = array('field' => 'trx_date', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d 23:59:59", now()));
+            $params[] = array('field' => 'po_cabangid', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
         }
 
         $tablename = 'trx_po';
@@ -210,13 +210,11 @@ class Gd_po extends Auth_Controller {
 
         if ($result != NULL) {
             foreach ($result as $row) {
-                $result[$no]->tgl_trx = explode(' ', $row->tgl_trx)[0];
-                $result[$no]->cabang_name = $this->Gdpengadaan_model->get_detail('id', $row->cabang_id, 'dt_cabang')->cabang_alias;
-                $result[$no]->divisi_name = $this->Gdpengadaan_model->get_detail('id', $row->divisi, 'dt_divisi')->divisi_name;
-                $result[$no]->peng_class_row = $this->__return_csspeng($row->id);
+                $result[$no]->supp_name = $this->Gdpo_model->get_detail('id', $row->po_suppid, 'dt_supplier')->ms_name;
+                $result[$no]->tgl_trx = explode(' ', $row->trx_date)[0];
                 $no++;
             }
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan'));
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All PO'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
@@ -231,7 +229,7 @@ class Gd_po extends Auth_Controller {
             $params = $this->generate_db_query($raw_record);
         }
 
-        $tablename = 'trx_pengadaan_detail';
+        $tablename = 'trx_po_detail';
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
@@ -240,12 +238,13 @@ class Gd_po extends Auth_Controller {
 
         if ($result != NULL) {
             foreach ($result as $row) {
-                $barang = $this->Gdpengadaan_model->get_item_detail($row->barang_id);
+                $barang = $this->Gdpo_model->get_item_detail($row->barang_id);
                 $result[$no]->barang_name = $barang->mi_name;
-                $result[$no]->merk_name = $this->Gdpengadaan_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
+                $result[$no]->merk_name = $this->Gdpo_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
+                $result[$no]->barang_netto = $this->Gdpo_model->po_item_netto($row->barang_qty, $row->barang_harga, $row->barang_disc, $row->barang_ppn);
                 $no++;
             }
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan Detail'));
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Po Detail'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
         }
