@@ -71,9 +71,9 @@ Created by Roan Lavery
 
 #invoice-amount .no_th{width:3%}
 #invoice-amount .details_th{width:35%}
-#invoice-amount .merk_th{width:5%}
-#invoice-amount .katalog_th{width:5%}
-#invoice-amount .quantity_th{width:5%}
+#invoice-amount .merk_th{width:5%; text-align:center}
+#invoice-amount .katalog_th{width:5%; text-align:center}
+#invoice-amount .quantity_th{width:5%; text-align:center}
 #invoice-amount .disc_th{width:7%; text-align:center}
 #invoice-amount .ppn_th{width:7%; text-align:center}
 #invoice-amount .subtotal_th{width:10%; text-align:right}

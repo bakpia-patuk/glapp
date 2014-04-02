@@ -78,6 +78,7 @@ header('Pragma: no-cache');
                         <th class="details_th">Nama Barang</th> 
                         <th class="merk_th">Merk</th> 
                         <th class="katalog_th">Katalog</th> 
+                        <th class="merk_th">Kems.</th> 
                         <th class="quantity_th">Qty</th> 
                         <th class="unitprice_th">Harga</th> 
                         <th class="disc_th">Disc.</th> 
@@ -88,7 +89,7 @@ header('Pragma: no-cache');
                 </thead> 
                 <tfoot> 
                     <tr id="total_tr"> 
-                        <td colspan="6">&nbsp;</td> 
+                        <td colspan="7">&nbsp;</td> 
                         <td colspan="2" class="total" id="total_currency">Total</td> 
                         <td class="total"><?php echo number_format($detail_po['total'], 2); ?> </td> 
                         <td>&nbsp;</td> 
@@ -103,6 +104,7 @@ header('Pragma: no-cache');
                             <td class="item_l"><?php echo $value['barang_name']; ?></td> 
                             <td class="item_l"><?php echo $value['barang_merk']; ?></td> 
                             <td class="item_l"><?php echo $value['barang_katalog']; ?></td> 
+                            <td class="item_l"><?php echo $value['barang_kemasan']; ?></td> 
                             <td class="item_c"><?php echo $value['barang_qty']; ?></td> 
                             <td class="item_r"><?php echo number_format($value['barang_harga'], 2); ?></td> 
                             <td class="item_c"><?php echo $value['barang_disc'].' %'; ?></td> 

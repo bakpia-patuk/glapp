@@ -168,6 +168,7 @@ class Gdpo_model extends MY_Model {
                 'no' => $no,
                 'barang_name' => $this->get_item_detail($row->barang_id)->mi_name,
                 'barang_merk' => '-',
+                'barang_kemasan' => '-',
                 'barang_katalog' => $row->barang_katalog,
                 'barang_qty' => $row->barang_qty,
                 'barang_harga' => $row->barang_harga,
