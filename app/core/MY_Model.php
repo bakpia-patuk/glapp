@@ -264,7 +264,7 @@ class MY_Model extends CI_Model {
             $tablename = $this->table;
         }
         $this->cms_db->insert($tablename, $data);
-        return True;
+        return $this->cms_db->insert_id();
     }
     public function get_outgoing($params = NULL, $options = NULL, $tablename = "") {
         if ($tablename == "") {
