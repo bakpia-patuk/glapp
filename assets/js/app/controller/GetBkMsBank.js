@@ -7,6 +7,7 @@ Ext.define('GlApp.controller.GetBkMsBank', {
     models: [
     ],
     stores: [
+        'bkmsbank.CabangStore'
     ],
     views: [
         'bkmsbank.GetBkMsBank',
