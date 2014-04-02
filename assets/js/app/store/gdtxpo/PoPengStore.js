@@ -17,6 +17,7 @@ var PoPengModel = Ext.define('GlApp.model.PoPengModel', {
         {name: 'po_ppn', type: 'float'},
         {name: 'po_netto', type: 'float'},
         {name: 'barang_desc', type: 'string'},
+        {name: 'po_id', type: 'int'},
         {name: 'po_status', type: 'boolean'},
         {name: 'po_class_row', type: 'string'}
     ],

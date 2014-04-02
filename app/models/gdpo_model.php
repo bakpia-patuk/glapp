@@ -35,6 +35,7 @@ class Gdpo_model extends MY_Model {
                     'po_ppn' => $row->po_ppn,
                     'po_netto' => $this->__calc_netto($row->po_qty, $row->po_harga, $row->po_disc, $row->po_ppn),
                     'barang_desc' => $row->barang_desc,
+                    'po_id' => $row->po_id,
                     'po_status' => $row->po_status,
                     'po_class_row' => 'peng_po'
                 );
@@ -46,7 +47,7 @@ class Gdpo_model extends MY_Model {
 
     private function __po_cabang($params, $options) {
         $this->db->select('trx_pengadaan_detail.no AS no, trx_pengadaan_detail.id AS id, pengadaan_id, no_pengadaan, barang_id, po_merk, po_katalog, po_kemasan, po_qty, po_harga,'
-                . ' po_disc, po_ppn, trx_pengadaan_detail.po_status AS po_status, barang_desc');
+                . ' po_disc, po_ppn, trx_pengadaan_detail.po_status AS po_status, barang_desc, po_id');
         $this->db->from('trx_pengadaan');
         $this->db->join('trx_pengadaan_detail', 'trx_pengadaan.id = trx_pengadaan_detail.pengadaan_id');
         if ($params != NULL) {
@@ -98,7 +99,7 @@ class Gdpo_model extends MY_Model {
         $a = $qty * $harga;
         $b = 1 - ($disc / 100);
         $c = 1 + ($ppn / 100);
-        
+
         return $a * $b * $c;
     }
 
@@ -120,13 +121,73 @@ class Gdpo_model extends MY_Model {
         return $data;
     }
 
-    public function approve_peng($param, $id) {
-        $data = array($param => 1);
+    public function insert_po_item($id) {
+        $dpeng = $this->get_detail('id', $id, 'trx_pengadaan_detail');
+        $dpo = $this->get_detail('id', $dpeng->po_id, 'trx_po');
 
+        $data = array(
+            'id' => $this->get_last('trx_po_detail') . '.' . $dpo->po_cabangid,
+            'po_id' => $dpeng->po_id,
+            'po_no' => $dpo->po_no,
+            'po_ed' => mdate('%Y-%m-%d', strtotime($dpo->po_ed)),
+            'po_cabang_id' => $dpo->po_cabangid,
+            'po_divisi' => $dpeng->divisi,
+            'po_supp_id' => $dpo->po_suppid,
+            'peng_id' => $dpeng->pengadaan_id,
+            'barang_id' => $dpeng->barang_id,
+            'barang_qty' => $dpeng->po_qty,
+            'barang_harga' => $dpeng->po_harga,
+            'barang_disc' => $dpeng->po_disc,
+            'barang_ppn' => $dpeng->po_ppn,
+            'barang_merk' => $dpeng->po_merk,
+            'barang_ket' => $dpeng->barang_desc,
+            'barang_katalog' => $dpeng->po_katalog,
+            'tt_status' => 0,
+            'tt_id' => 0,
+            'tt_qty_kirim' => $dpeng->po_qty,
+            'simpan_status' => 1
+        );
+
+        $this->insert($data, 'trx_po_detail');
+
+        $set_true = array('po_set' => 1);
         $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $this->Gdpengadaan_model->update($data, $params1, NULL, 'trx_pengadaan');
+        $this->update($set_true, $params1, NULL, 'trx_pengadaan_detail');
 
         return TRUE;
+    }
+
+    public function get_po_detail($id) {
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data = $this->gets($params, NULL, 'trx_po_detail');
+        $no = 1;
+        $total = 0;
+        foreach ($data as $row) {
+            $netto = $this->__calc_netto($row->barang_qty, $row->barang_harga, $row->barang_disc, $row->barang_ppn);
+            $return[]= array(
+                'no' => $no,
+                'barang_name' => $this->get_item_detail($row->barang_id)->mi_name,
+                'barang_merk' => '-',
+                'barang_kemasan' => '-',
+                'barang_katalog' => $row->barang_katalog,
+                'barang_qty' => $row->barang_qty,
+                'barang_harga' => $row->barang_harga,
+                'barang_disc' => $row->barang_disc,
+                'barang_ppn' => $row->barang_ppn,
+                'barang_sub' => $netto,
+                'barang_desc' => $row->barang_ket
+            );
+            
+            $total += $netto;
+            $no++;
+        }
+        
+        $return = array(
+            'data' => $return,
+            'total' => $total
+        );
+        
+        return $return;
     }
 
 }

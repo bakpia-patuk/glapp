@@ -27,6 +27,7 @@ class Auth extends MY_Controller {
         $data['logged_user'] = "";
         $data['cabang_name'] = "";
         $data['cabang_id'] = "0";
+        $data['ttd_string'] = '';
         $this->load->view('app_page', $data);
     }
 

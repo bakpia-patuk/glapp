@@ -7,6 +7,10 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
     models: [
     ],
     stores: [
+        'gdtxfaktur.TtStore',
+        'gdtxfaktur.TtDetailStore',
+        'gdtxfaktur.FakturStore',
+        'gdtxfaktur.ListFakturStore'
     ],
     views: [
         'gdtxfaktur.GetGdTxFaktur',

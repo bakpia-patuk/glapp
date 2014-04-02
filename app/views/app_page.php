@@ -20,9 +20,11 @@
                     CABANG_NAME = "<?php echo $cabang_name; ?>",
                     CABANG_ID = <?php echo $cabang_id; ?>,
                     DATE_TODAY = "<?php echo date("l, d F Y"); ?>",
+                    TTD_STRING = "<?php echo $ttd_string; ?>",
                     TAB_BG = 'background:#3892D3;',
                     FORM_BG = "background:#F8F9F9;",
                     tinggi = 27;
+                    
         </script>
         <script type="text/javascript" src="<?php echo base_url("assets/js/$app"); ?>.js"></script>
         <link rel="icon" href="<?php echo base_url("favicon.ico"); ?>" type="image/gif">
