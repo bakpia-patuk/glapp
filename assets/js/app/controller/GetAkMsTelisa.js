@@ -46,7 +46,7 @@ Ext.define('GlApp.controller.GetAkMsTelisa', {
                                         icon: Ext.MessageBox.INFO
                                     });
                                     if (CABANG_ID !== '1') {
-                                        form.findField('mt_cabang').setValue(parseInt(userCabang));
+                                        form.findField('mt_cabang').setValue(parseInt(CABANG_ID));
                                     }
                                     
                                     form.reset();

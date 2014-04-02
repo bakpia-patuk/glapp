@@ -7,7 +7,7 @@ Ext.define('GlApp.view.kskeluar.ListMintaBayar', {
     forceFit: true,
     columnLines: true,
     flex: 1,
-//    store: 'MintaBayarStore',
+    store: 'kskeluar.MintaKasStore',
 
     initComponent: function () {
         var me = this;
@@ -18,43 +18,34 @@ Ext.define('GlApp.view.kskeluar.ListMintaBayar', {
                 emptyText: 'Tidak ada daftar Permintaan Bayar',
                 deferEmptyText: false
             },
-            tbar: [
-                '->',
-                {
-                    iconCls: 'icon-btn-refresh',
-//                    handler: function () {
-//                        this.up('grid').getStore().load();
-//                    }
-                }
-            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {
                     xtype: 'datecolumn',
                     flex: 0.18,
                     text: 'TGL. TRANS',
-                    dataIndex: 'tglTrx',
+                    dataIndex: 'tgl_trx',
                     renderer: Ext.util.Format.dateRenderer('d/M/Y')
                 },
                 {
                     xtype: 'gridcolumn',
                     flex: 0.25,
                     text: 'NAMA PENERIMA',
-                    dataIndex: 'namaPenerima',
+                    dataIndex: 'trx_penerima',
                     renderer: 'uppercase'
                 },
                 {
                     xtype: 'gridcolumn',
                     flex: 0.6,
                     text: 'KEPERLUAN',
-                    dataIndex: 'keterangan'
+                    dataIndex: 'trx_desc'
                 },
                 {
                     xtype: 'numbercolumn',
                     flex: 0.3,
                     text: 'JUMLAH',
                     align: 'right',
-                    dataIndex: 'trxValue',
+                    dataIndex: 'trx_value',
                     renderer: function (value, meta, record) {
                         return Ext.util.Format.number(value, '0.000,00/i');
                     }

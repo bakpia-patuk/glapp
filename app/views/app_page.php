@@ -24,6 +24,7 @@
                     TAB_BG = 'background:#3892D3;',
                     FORM_BG = "background:#F8F9F9;",
                     tinggi = 27;
+                    
         </script>
         <script type="text/javascript" src="<?php echo base_url("assets/js/$app"); ?>.js"></script>
         <link rel="icon" href="<?php echo base_url("favicon.ico"); ?>" type="image/gif">

@@ -7,7 +7,7 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
     forceFit: true,
     columnLines: true,
     flex: 1,
-//    store: 'FakturStore',
+    store: 'kskeluar.FakturStore',
     //selModel: Ext.create('Ext.selection.CheckboxModel', {
     //}),
 
@@ -19,15 +19,6 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
                 emptyText: 'Tidak ada data faktur',
                 deferEmptyText: false
             },
-            tbar: [
-                '->',
-                {
-                    iconCls: 'icon-btn-refresh',
-//                    handler: function () {
-//                        this.up('grid').getStore().load();
-//                    }
-                }
-            ],
             columns: [
                 {
                     xtype: 'checkcolumn',
@@ -58,14 +49,14 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
                     xtype: 'gridcolumn',
                     flex: 0.6,
                     text: 'NOMOR FAKTUR',
-                    dataIndex: 'fktNo'
+                    dataIndex: 'faktur_no'
                 },
                 {
                     xtype: 'numbercolumn',
                     flex: 0.3,
                     align: 'right',
                     text: 'NILAI',
-                    dataIndex: 'fktTotal',
+                    dataIndex: 'faktur_nototal',
                     renderer: function (value, meta, record) {
                         return Ext.util.Format.number(value, '0.000,00/i');
                     }

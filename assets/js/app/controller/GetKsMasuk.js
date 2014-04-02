@@ -74,6 +74,12 @@ Ext.define('GlApp.controller.GetKsMasuk', {
                         Ext.Msg.alert('Perhatian', 'Mohon isi salah satu filter.');
                         return;
                     } else {
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'kas_type',
+                            value: 'kasmasuk'
+                        });
+                        filterCollection.push(statusFilter);
+                        
                         if(cabang !== null && date1 === null && date2 === null){
                             var statusFilter = new Ext.util.Filter({
                                 property: 'cabang_id',
@@ -177,7 +183,10 @@ Ext.define('GlApp.controller.GetKsMasuk', {
                             store = grid.getStore();
                     
                     store.clearFilter();
-                    store.load();
+                    store.filter('kas_type', 'kasmasuk');
+                    this.getStartKm().reset(),
+                    this.getEndKm().reset(),
+                    this.getCabangKm().reset();
                 }
             },
             '#KasMasukNew':{

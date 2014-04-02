@@ -1,7 +1,7 @@
 var MsTelisa = Ext.define('GlApp.model.MasterTelisaModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'id', type: 'int'},
+        {name: 'id', type: 'string'},
         {name: 'mt_cabang', type: 'int'},
         {name: 'mt_jenis', type: 'int'},
         {name: 'mt_nama', type: 'string'},

@@ -15,6 +15,7 @@ class Shared extends Auth_Controller {
         parent::__construct();
         $this->load->model('Shared_model');
         $this->page = 'Master';
+        $this->Shared_model->cms_db = $this->load->database('outgoing', TRUE);
     }
 
     public function check_ttd() {
@@ -311,14 +312,58 @@ class Shared extends Auth_Controller {
             if (!$this->Shared_model->update($input, $opt, NULL, 'ms_telisa')) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
             } else {
+                $data_json = json_encode($input);
+                
+                $data = array();
+                
+                $data['jumlah'] = 1;
+                if($this->user->cabang_id==1)
+                    $data['tujuan'] = $input['mt_cabang'];
+                else
+                    $data['tujuan'] = 1;
+                $data['id_cabang'] = $this->user->cabang_id;
+
+                $no=$this->Shared_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id '] = $no.'.'.$this->user->cabang_id;
+                $data['primary_key'] = $input['id'];
+                $data['table_name'] = 'ms_telisa';
+
+                $this->Shared_model->insert_outgoing($data, 'detail');
+
                 echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Update Success'));
             }
         } else {
             unset($input['id']);
             $input['mt_nama'] = strtoupper($input['mt_nama']);
-            if (!$this->Shared_model->insert($input, 'ms_telisa')) {
+            $no_insert = $this->Shared_model->insert($input, 'ms_telisa');
+            if (!$no_insert) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
             } else {
+
+                $input['id'] = $no_insert.'.'.$input['mt_cabang'];
+                $data_json = json_encode($input);
+                
+                $data = array();
+                
+                $data['jumlah'] = 1;
+                if($this->user->cabang_id==1)
+                    $data['tujuan'] = $input['mt_cabang'];
+                else
+                    $data['tujuan'] = 1;
+                $data['id_cabang'] = $this->user->cabang_id;
+
+                $no=$this->Shared_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id '] = $no.'.'.$this->user->cabang_id;
+                $data['primary_key'] = $no_insert.'.'.$input['mt_cabang'];
+                $data['table_name'] = 'ms_telisa';
+
+                $this->Shared_model->insert_outgoing($data, 'detail');
                 echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Success'));
             }
         }
@@ -359,6 +404,27 @@ class Shared extends Auth_Controller {
         $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
 
         if ($this->Shared_model->delete($params, NULL, 'ms_telisa')) {
+            $data2 = array();
+            // $data2['id'] = $id;
+            $data2['jumlah'] = 1;
+            if($this->user->cabang_id==1)
+                $data2['tujuan'] = $input['mt_cabang'];
+            else
+                $data2['tujuan']=1;
+            $data2['id_cabang'] = $this->user->cabang_id;
+
+            $no=$this->Shared_model->insert_outgoing($data2, 'head');
+
+            $data2 = array();
+            $data2['data'] = '{}';
+            
+            $data2['head_id '] = $no.'.'.$this->user->cabang_id;
+            $data2['primary_key'] = $input['id'];
+            $data2['table_name'] = 'ms_telisa';
+            $data2['nama_column'] = 'id';
+            $data2['hapus'] = 1;
+
+            $this->Gdpengadaan_model->insert_outgoing($data2, 'detail');
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Delete Success'));
         } else {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
