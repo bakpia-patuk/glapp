@@ -276,4 +276,7 @@ class Gd_po extends Auth_Controller {
         $this->load->view('po_invoice', $data);
     }
 
+    public function pdf_po($id) {
+        
+    }
 }
