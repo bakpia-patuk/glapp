@@ -120,11 +120,7 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                                     maxWidth: 325,
                                     collapsible: true,
                                     title: 'FORM PENERIMAAN BARANG',
-                                    items: [
-                                        {
-                                            xtype: 'gdtxterima.txttform'
-                                        }
-                                    ]
+                                    xtype: 'gdtxterima.txttform'
                                 },
                                 {
                                     region: 'center',
