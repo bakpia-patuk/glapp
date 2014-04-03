@@ -21,18 +21,18 @@ class Gd_tt extends Auth_Controller {
 
         if ($insert['id'] != 0) {
             $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-            if (!$this->Gdtt_model->delete($params, NULL, 'trx_po')) {
+            if (!$this->Gdtt_model->delete($params, NULL, 'trx_tt')) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
                 return;
             }
 
             $data = array(
-                'po_status' => 0,
-                'po_id' => 0
+                'tt_status' => 0,
+                'tt_id' => 0
             );
 
-            $param[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-            if (!$this->Gdtt_model->update($data, $param, NULL, 'trx_pengadaan_detail')) {
+            $param[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            if (!$this->Gdtt_model->update($data, $param, NULL, 'trx_po_detail')) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
                 return;
             }
@@ -102,8 +102,8 @@ class Gd_tt extends Auth_Controller {
         }
 
         $data = array(
-            'tt_id' => $type == 1 ? $insert['id'] : 0,
-            'tt_status' => $type == 1 ? 1 : 0
+            'tt_status' => $type == 1 ? 1 : 0,
+            'tt_id' => $type == 1 ? $insert['id'] : 0
         );
 
         $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id_po']);
@@ -115,8 +115,7 @@ class Gd_tt extends Auth_Controller {
         $rtn = $this->Gdtt_model->get_detail('id', $insert['id'], 'trx_tt');
         $return = array(
             'id' => $rtn->id,
-            'po_no' => $rtn->po_no,
-            'po_value' => $this->Gdtt_model->total_po($insert['id'])
+            'tt_no' => $rtn->tt_no
         );
 
         echo json_encode(array('success' => 'true', 'data' => $return, 'title' => 'Info', 'msg' => 'Insert Tt Success'));
@@ -173,7 +172,7 @@ class Gd_tt extends Auth_Controller {
 
         $params[] = array('field' => 'po_ed', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d", now()));
         $params[] = array('field' => 'po_cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
-        $params[] = array('field' => 'tt_status', 'param' => 'where', 'operator' => '', 'value' => 0);
+//        $params[] = array('field' => 'tt_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
         $params[] = array('field' => 'tt_set', 'param' => 'where', 'operator' => '', 'value' => 0);
         $params[] = array('field' => 'simpan_status', 'param' => 'where', 'operator' => '', 'value' => 1);
 
@@ -182,12 +181,12 @@ class Gd_tt extends Auth_Controller {
 
         $result = $this->Gdtt_model->gets($params, $opt, 'trx_po_detail');
         $no = 0;
-//tt_qty_sisa
+
         if ($result != NULL) {
             foreach ($result as $row) {
                 $barang = $this->Gdtt_model->get_item_detail($row->barang_id);
                 $result[$no]->barang_name = $barang->mi_name;
-                $result[$no]->tt_qty_sisa = 0;
+                $result[$no]->tt_qty_sisa = $this->Gdtt_model->get_tt_sisa($row->po_id, $row->peng_id, $row->barang_id);
                 $result[$no]->merk_name = $this->Gdtt_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
                 $no++;
             }

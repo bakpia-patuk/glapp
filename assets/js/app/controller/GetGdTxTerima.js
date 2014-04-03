@@ -29,6 +29,15 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             controller: {
             },
             component: {
+                '#newttpanel button[action=ttNew]': {
+                    click: this.resetTt
+                },
+                '#newttpanel button[action=ttSave]': {
+                    click: this.showListPo
+                },
+                '#newttpanel button[action=ttPrintWindow]': {
+                    click: this.showListPo
+                },
                 '#newttpanel button[action=searchTt]': {
                     click: this.showListPo
                 },
@@ -37,6 +46,21 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                 },
                 '#setTt': {
                     checkchange: this.setItemTt
+                },
+                '#txttform': {
+                    afterrender: function(){
+                        this.initForm(this.getTtForm(), '#imageTtdTb');
+                    }
+                },
+                '#txttform button[action=getClientSign]': {
+                    click: function(btn){
+                        var win = Ext.widget('gdtxterima.txttsignwin');
+                    }
+                },
+                '#txttgriddt button[action=ttLotAdd]': {
+                    click: function(btn){
+                        var win = Ext.widget('gdtxterima.txttlotwin');
+                    }
                 }
             },
             global: {
@@ -78,6 +102,25 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             store.group('po_no');
         }
     },
+    resetTt: function(btn) {
+        var form = this.getTtForm();
+        if (form.saved) {
+            this.onSuccess(1, 2);
+        } else {
+            Ext.Msg.show({
+                title: 'Konfirmasi',
+                msg: 'Anda sedang melakukan transaksi. Lanjutakan transaksi ?',
+                buttons: Ext.Msg.YESNO,
+                scope: this,
+                fn: function(btn) {
+                    if (btn === 'no') {
+                        this.ajaxReq('gd_tt/reset', form.getForm().getValues(), 2);
+                    }
+                }
+            });
+            return false;
+        }
+    },
     setItemTt: function(column, recordIndex, checked) {
         var form = this.getTtForm(),
                 grid = this.getTtPoGrid(),
@@ -103,23 +146,23 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     onSuccess: function(resp, idForm) {
         var form = this.getTtForm(),
                 poPanel = this.getPanelTerima(),
-                gridPeng = this.getTtPoGrid();
+                gridPo = this.getTtPoGrid();
         if (idForm === 1) {
+            //SET TT INIT
             poPanel.down('#searchTt').disable();
             poPanel.down('#ttSupplier').setReadOnly(true);
-//            form.down('#id').setValue(resp.data.id);
+            form.down('#id').setValue(resp.data.id);
             form.down('#tt_supp_name').setValue(poPanel.down('#ttSupplier').getRawValue());
-//            form.down('#po_no').setValue(resp.data.po_no);
-//            form.down('#po_value').setValue(resp.data.po_value);
+            form.down('#tt_no').setValue(resp.data.tt_no);
             form.saved = false;
-            gridPeng.getStore().load();
+            gridPo.getStore().load();
         } else if (idForm === 2) {
-            poPanel.down('#searchPo').enable();
-            poPanel.down('#poCabang').setReadOnly(false);
-            poPanel.down('#poCabang').reset();
+            poPanel.down('#searchTt').enable();
+            poPanel.down('#ttSupplier').setReadOnly(false);
+            poPanel.down('#ttSupplier').reset();
             form.getForm().reset();
             form.saved = true;
-            gridPeng.getStore().removeAll();
+            gridPo.getStore().removeAll();
         } else if (idForm === 3) {
             Ext.StoreMgr.lookup('gdtxpo.SupplierEmailStore').load();
         } else if (idForm === 4) {
@@ -128,7 +171,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             poPanel.down('#poCabang').reset();
             form.getForm().reset();
             form.saved = true;
-            gridPeng.getStore().removeAll();
+            gridPo.getStore().removeAll();
 
             Ext.MessageBox.show({
                 title: resp.title,
@@ -142,7 +185,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             poPanel.down('#poCabang').reset();
             form.getForm().reset();
             form.saved = true;
-            gridPeng.getStore().removeAll();
+            gridPo.getStore().removeAll();
             this.printPo(0, resp.data);
         } else {
             poPanel.down('#searchPo').enable();
@@ -150,7 +193,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             poPanel.down('#poCabang').reset();
             form.getForm().reset();
             form.saved = true;
-            gridPeng.getStore().removeAll();
+            gridPo.getStore().removeAll();
             this.pdfPo(resp.data);
         }
     },

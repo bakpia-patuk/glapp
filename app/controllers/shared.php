@@ -918,6 +918,31 @@ class Shared extends Auth_Controller {
         }
     }
 
+        public function upload_ttd_trx($field) {
+        if ($_FILES[$field]['name'] != "signNull.png") {
+            echo '{success:false, message: "Upload tanda tangan sesuai yang ditentukan"}';
+            return FALSE;
+        }       
+
+        $config['upload_path'] = './assets/ttdtx/';
+        $config['allowed_types'] = 'png';
+        $config['file_name'] = $field . 'NULL.jpg';
+        $config['max_size'] = '20';
+        $config['max_width'] = '300';
+        $config['max_height'] = '150';
+        $config['overwrite'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload($field)) {
+            $data_apl = $this->upload->data();
+            echo '{success:true, message: "Verifikasi Selesai", url: "assets/ttdtx/' . $field . 'NULL' . $data_apl['file_ext'] . '"}';
+        } else {
+            $msg = json_encode($this->upload->display_errors('<p>', '</p>'));
+            echo '{success:false, message: ' . $msg . '}';
+        }
+    }
 }
 
 /* End of file welcome.php */

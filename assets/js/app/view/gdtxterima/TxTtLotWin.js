@@ -5,6 +5,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
     extend: 'Ext.window.Window',
     alias: 'widget.gdtxterima.txttlotwin',
     itemId: 'txttlotwin',
+    ui: 'orange-window',
     title: 'DATA NOMER LOT',
     width: 700,
     height: 400,
@@ -23,10 +24,10 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                     xtype: 'panel',
                     layout: 'border',
                     border: false,
-                    bodyStyle: 'background: #6BADF6',
+                    bodyStyle: 'background: #F5AE45',
                     defaults: {
                         border: false,
-                        ui: 'green-panel',
+                        ui: 'blue-panel',
                         split: true
                     },
                     items: [

@@ -12,7 +12,8 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
     columnLines: true,
     initComponent: function() {
         var me = this;
-
+        
+        var grid = me;
         Ext.applyIf(me, {
             viewConfig: {
                 autoScroll: true,
@@ -20,6 +21,17 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
                 deferEmptyText: false
             },
             tbar: [
+                {
+                    text: 'PRINT_PO',
+                    ui: 'orange-button',
+                    action: 'printPoCopy'
+                },
+                {
+                    text: 'SEND_PDF',
+                    ui: 'orange-button',
+                    action: 'sentPoPdf'
+                },
+                '->',
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Filter ',
@@ -60,22 +72,15 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
                     ui: 'orange-button',
                     action: 'searchPo'
                 },
-                '->',
-                {
-                    text: 'PRINT_PO',
-                    ui: 'orange-button',
-                    action: 'printPoCopy'
-                },
-                {
-                    text: 'SEND_PDF',
-                    ui: 'orange-button',
-                    action: 'sentPoPdf'
-                },
+                '-',
                 {
                     text: 'REFRESH',
                     ui: 'orange-button',
-                    action: 'refreshPo'
+                    handler: function() {
+                        grid.getStore().load();
+                    }
                 },
+                '-',
                 {
                     text: 'ALL',
                     ui: 'orange-button',

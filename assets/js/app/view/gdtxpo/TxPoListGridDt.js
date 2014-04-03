@@ -20,12 +20,6 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGridDt', {
                 emptyText: 'Tidak ada data Barang Pengadaan',
                 deferEmptyText: false
             },
-            tbar: [
-                {
-                    text: 'REFRESH'
-                }
-                
-            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {

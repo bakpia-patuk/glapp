@@ -49,7 +49,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtSignWin', {
                                     buttonText: 'Verifikasi TTD',
                                     margins: '10 0 0 5',
                                     itemId: 'preTtdAppr',
-                                    name: 'fileSgn',
+                                    name: 'ttSign',
                                     onChange: function(value) {
                                         var form = this.up('form').getForm();
                                         form.submit({

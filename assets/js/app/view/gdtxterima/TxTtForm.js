@@ -34,33 +34,19 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                 },
                 {
                     xtype: 'textfield',
-                    fieldLabel: 'Id Detail',
-                    emptyText: 'Nama SUpplier',
+                    fieldLabel: 'Nama Supplier ',
+                    emptyText: 'Nama Supplier',
                     name: 'tt_supp_name',
                     itemId: 'tt_supp_name',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
-                    hidden: true
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: 'Supplier ',
-                    name: 'tt_supp_id',
-                    itemId: 'tt_supp_id'
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: 'No PO ',
-                    name: 'ttPoNo',
-                    emptyText: 'pilih No PO disamping',
-                    hidden: true,
-                    readOnly: true,
-                    fieldCls: 'x-item-readonly'
+                    hidden: false
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No TT ',
-                    name: 'ttNo',
+                    name: 'tt_no',
+                    itemId: 'tt_no',
                     emptyText: 'auto-generate',
                     readOnly: true,
                     fieldCls: 'x-item-readonly'
@@ -90,7 +76,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                         Ext.create('Ext.Img', {
                             margin: '0 0 0 5',
                             baseCls: 'imagefieldthumb',
-                            src: BASE_PATH + 'assets/appdata/user/sign1.png',
+                            src: BASE_PATH + 'assets/appdata/signBlank.png',
                             id: 'imageTtdTb',
                             itemId: 'imageTtdTb'
                         })
@@ -99,14 +85,14 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Pengirim ',
-                    name: 'pengirim',
+                    name: 'tt_penerima',
                     emptyText: 'Nama Pengirim',
                     allowBlank: false
                 },
                 {
                     xtype: 'textareafield',
                     fieldLabel: 'Keterangan ',
-                    name: 'keterangan',
+                    name: 'tt_desc',
                     height: 50
                 },
                 {
@@ -124,7 +110,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                         },
                         {
                             xtype: 'button',
-                            ui: 'blue-button',
+                            ui: 'orange-button',
                             iconCls: 'icon-btn-search',
                             text: 'Ambil TTD',
                             margin: '2 0 0 5',
@@ -148,7 +134,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                         Ext.create('Ext.Img', {
                             margin: '0 0 0 5',
                             baseCls: 'imagefieldthumb',
-                            src: BASE_PATH + 'assets/appdata/user/sign1.png',
+                            src: BASE_PATH + 'assets/appdata/signBlank.png',
                             id: 'imageTtdTb1'
                         })
                     ]
