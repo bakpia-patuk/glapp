@@ -10,8 +10,6 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
     autoScroll: true,
     forceFit: false,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
-    }),
 
     initComponent: function () {
         var me = this;
@@ -35,13 +33,20 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
             ],
             columns: [
                 {
+                    xtype: 'checkcolumn',
+                    flex: 0.25,
+                    align: 'center',
+                    dataIndex: 'tt_status',
+                    itemId: 'setTt'
+                },
+                {
                     xtype: 'gridcolumn',
                     width: 300,
                     text: 'NAMA BARANG',
                     dataIndex: 'barang_name',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -56,8 +61,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     format: '000',
                     dataIndex: 'barang_qty',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -72,8 +77,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     format: '000',
                     dataIndex: 'tt_qty_kirim',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -93,8 +98,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     format: '000',
                     dataIndex: 'tt_qty_sisa',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -107,15 +112,15 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     text: 'MERK',
                     dataIndex: 'merk_name',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
+                        var status = record.get('tt_status');
                         if (value === 0) {
-                            if(status !== 0) {
+                            if(status) {
                                 return '-';
                             } else {
                                 return '<span style="color:red;">-</span>';
                             }
                         } else {
-                            if(status !== 0) {
+                            if(status) {
                                 return value;
                             } else {
                                 return '<span style="color:red;">' + value + '</span>';
@@ -129,15 +134,15 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     text: 'KATALOG',
                     dataIndex: 'barang_katalog',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
+                        var status = record.get('tt_status');
                         if (value === 0) {
-                            if(status !== 0) {
+                            if(status) {
                                 return '-';
                             } else {
                                 return '<span style="color:red;">-</span>';
                             }
                         } else {
-                            if(status !== 0) {
+                            if(status) {
                                 return value;
                             } else {
                                 return '<span style="color:red;">' + value + '</span>';

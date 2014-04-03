@@ -103,13 +103,13 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                                     text: 'SEARCH',
                                     ui: 'orange-button',
                                     action: 'searchTt',
-                                    itemId: 'searchPo'
+                                    itemId: 'searchTt'
                                 },
                                 '-',
                                 {
                                     text: 'REFRESH',
                                     ui: 'orange-button',
-                                    action: 'refreshPo'
+                                    action: 'refreshTt'
                                 }
                             ],
                             items: [

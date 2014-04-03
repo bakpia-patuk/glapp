@@ -19,7 +19,7 @@ var PoDetailModel = Ext.define('GlApp.model.PoDetailModel', {
         {name: 'barang_merk', type: 'int'},
         {name: 'barang_ket', type: 'string'},
         {name: 'barang_katalog', type: 'string'},
-        {name: 'tt_status', type: 'int'},
+        {name: 'tt_status', type: 'boolean'},
         {name: 'tt_id', type: 'int'},
         {name: 'tt_qty_kirim', type: 'int'},
         {name: 'tt_qty_sisa', type: 'int'},

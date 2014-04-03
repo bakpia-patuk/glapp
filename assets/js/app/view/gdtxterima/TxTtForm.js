@@ -24,43 +24,29 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
         Ext.applyIf(me, {
             items: [
                 {
-                    xtype: 'numberfield',
+                    xtype: 'textfield',
                     fieldLabel: 'Id Tt ',
                     name: 'id',
                     itemId: 'id',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
-                    hidden: false,
-                    listeners: {
-                        change: function(field) {
-                            var form = field.up('form');
-                            form.saved = false;
-                        }
-                    }
+                    hidden: true
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Id Detail',
-                    name: 'idDetailTt',
-                    itemId: 'idDetailTtField',
+                    emptyText: 'Nama SUpplier',
+                    name: 'tt_supp_name',
+                    itemId: 'tt_supp_name',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
                     hidden: true
                 },
                 {
-                    xtype: 'combobox',
+                    xtype: 'textfield',
                     fieldLabel: 'Supplier ',
-                    name: 'ttSupId',
-                    itemId: 'poSuppCmb',
-                    id: 'poSuppCmb',
-                    triggerAction: 'all',
-                    queryMode: 'remote',
-                    minChars: 2,
-//                    store: 'MasterSupplierStore',
-                    displayField: 'suppdisplay',
-                    valueField: 'idms',
-                    emptyText: 'ketik nama Supplier',
-                    hideTrigger: false
+                    name: 'tt_supp_id',
+                    itemId: 'tt_supp_id'
                 },
                 {
                     xtype: 'textfield',

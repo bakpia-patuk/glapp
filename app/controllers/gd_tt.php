@@ -94,7 +94,7 @@ class Gd_tt extends Auth_Controller {
         $insert = $this->input->post(NULL, TRUE);
 
         if ($insert['id'] == 0) {
-            $insert['id'] = $this->__init_po($insert);
+            $insert['id'] = $this->__init_tt($insert);
             if ($insert['id'] == 0) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => $this->catch_db_err()));
                 return;
@@ -102,40 +102,42 @@ class Gd_tt extends Auth_Controller {
         }
 
         $data = array(
-            'po_id' => $type == 1 ? $insert['id'] : 0,
-            'po_status' => $type == 1 ? 1 : 0
+            'tt_id' => $type == 1 ? $insert['id'] : 0,
+            'tt_status' => $type == 1 ? 1 : 0
         );
 
-        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id_peng']);
-        if (!$this->Gdtt_model->update($data, $params, NULL, 'trx_pengadaan_detail')) {
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id_po']);
+        if (!$this->Gdtt_model->update($data, $params, NULL, 'trx_po_detail')) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
             return;
         }
 
-        $rtn = $this->Gdtt_model->get_detail('id', $insert['id'], 'trx_po');
+        $rtn = $this->Gdtt_model->get_detail('id', $insert['id'], 'trx_tt');
         $return = array(
             'id' => $rtn->id,
             'po_no' => $rtn->po_no,
             'po_value' => $this->Gdtt_model->total_po($insert['id'])
         );
 
-        echo json_encode(array('success' => 'true', 'data' => $return, 'title' => 'Info', 'msg' => 'Insert Po Success'));
+        echo json_encode(array('success' => 'true', 'data' => $return, 'title' => 'Info', 'msg' => 'Insert Tt Success'));
     }
 
     private function __init_tt($insert) {
-        $last_no = $this->Gdtt_model->get_last('trx_po');
+        $last_no = $this->Gdtt_model->get_last('trx_tt');
         $detail_cabang = $this->Gdtt_model->get_detail('id', $this->user->cabang_id, 'dt_cabang');
 
         $data = array(
             'id' => $last_no . '.' . $this->user->cabang_id,
-            'trx_date' => mdate('%Y-%m-%d %H:%i:%s', now()),
-            'po_no' => 'PO' . '/' . $detail_cabang->cabang_code . '/' . mdate('%d%m%y', now()) . '/' . sprintf('%06d', $last_no),
-            'po_cabangid' => $insert['cabang'],
-            'po_usercreate' => $this->user->id,
-            'po_simpanstatus' => 0
+            'tt_tgltrx' => mdate('%Y-%m-%d %H:%i:%s', now()),
+            'tt_no' => 'TT' . '/' . $detail_cabang->cabang_code . '/' . mdate('%d%m%y', now()) . '/' . sprintf('%06d', $last_no),
+            'tt_supp_id' => $insert['supplier'],
+            'tt_cabang' => $this->user->cabang_id,
+            'tt_petugas' => $this->user->id,
+            'tt_urlsign' => $this->user->ttd_url,
+            'simpan_status' => 0
         );
 
-        if ($this->Gdtt_model->insert($data, 'trx_po')) {
+        if ($this->Gdtt_model->insert($data, 'trx_tt')) {
             return $last_no . '.' . $this->user->cabang_id;
         } else {
             return '0';
@@ -185,7 +187,7 @@ class Gd_tt extends Auth_Controller {
             foreach ($result as $row) {
                 $barang = $this->Gdtt_model->get_item_detail($row->barang_id);
                 $result[$no]->barang_name = $barang->mi_name;
-                $result[$no]->tt_qty_sisa = $row->tt_qty_kirim;
+                $result[$no]->tt_qty_sisa = 0;
                 $result[$no]->merk_name = $this->Gdtt_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
                 $no++;
             }

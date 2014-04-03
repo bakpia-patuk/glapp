@@ -21,7 +21,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     ],
     refs: [
         {ref: 'PanelTerima', selector: '#newttpanel'},
-        {ref: 'TtPoGrid', selector: '#txttgrid'}
+        {ref: 'TtPoGrid', selector: '#txttgrid'},
+        {ref: 'TtForm', selector: '#txttform'}
     ],
     init: function() {
         this.listen({
@@ -30,6 +31,12 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             component: {
                 '#newttpanel button[action=searchTt]': {
                     click: this.showListPo
+                },
+                '#newttpanel button[action=refreshTt]': {
+                    click: this.reloadListPo
+                },
+                '#setTt': {
+                    checkchange: this.setItemTt
                 }
             },
             global: {
@@ -47,16 +54,6 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                 store = grid1.getStore(),
                 filterCollection = [];
         if (supplier !== null) {
-//            var statusFilter = new Ext.util.Filter({
-//                property: 'trx_po.trx_date',
-//                value: Ext.Date.format(tgl1 === null ? new Date() : tgl1, 'Y-m-d 00:00:00') + 'GT'
-//            });
-//            filterCollection.push(statusFilter);
-//            var statusFilter = new Ext.util.Filter({
-//                property: 'trx_po.trx_date',
-//                value: Ext.Date.format(tgl2 === null ? new Date() : tgl2, 'Y-m-d 23:59:59') + 'LT'
-//            });
-//            filterCollection.push(statusFilter);
             var statusFilter = new Ext.util.Filter({
                 property: 'po_supp_id',
                 value: supplier
@@ -70,6 +67,100 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
         } else {
             Ext.Msg.alert('Warning', 'Pilih Supplier terlebih dahulu');
         }
+    },
+    reloadListPo: function(btn) {
+        var panel = this.getPanelTerima(),
+                cabang = panel.down('#ttSupplier').getValue(),
+                grid1 = this.getTtPoGrid(),
+                store = grid1.getStore();
+        if (cabang !== null) {
+            store.load();
+            store.group('po_no');
+        }
+    },
+    setItemTt: function(column, recordIndex, checked) {
+        var form = this.getTtForm(),
+                grid = this.getTtPoGrid(),
+                poPanel = this.getPanelTerima(),
+                store = grid.getStore(),
+                idTt = form.down('#id').getValue(),
+                poSupplier= poPanel.down('#ttSupplier').getValue(),
+                idPo = store.getAt(recordIndex).get('id'),
+                url, params;
+        params = {
+            id: idTt,
+            id_po: idPo,
+            supplier: poSupplier
+        };
+        if (checked) {
+            url = 'gd_tt/set_status/1';
+        } else {
+            url = 'gd_tt/set_status/0';
+        }
+
+        this.ajaxReq(url, params, 1);
+    },
+    onSuccess: function(resp, idForm) {
+        var form = this.getTtForm(),
+                poPanel = this.getPanelTerima(),
+                gridPeng = this.getTtPoGrid();
+        if (idForm === 1) {
+            poPanel.down('#searchTt').disable();
+            poPanel.down('#ttSupplier').setReadOnly(true);
+//            form.down('#id').setValue(resp.data.id);
+            form.down('#tt_supp_name').setValue(poPanel.down('#ttSupplier').getRawValue());
+//            form.down('#po_no').setValue(resp.data.po_no);
+//            form.down('#po_value').setValue(resp.data.po_value);
+            form.saved = false;
+            gridPeng.getStore().load();
+        } else if (idForm === 2) {
+            poPanel.down('#searchPo').enable();
+            poPanel.down('#poCabang').setReadOnly(false);
+            poPanel.down('#poCabang').reset();
+            form.getForm().reset();
+            form.saved = true;
+            gridPeng.getStore().removeAll();
+        } else if (idForm === 3) {
+            Ext.StoreMgr.lookup('gdtxpo.SupplierEmailStore').load();
+        } else if (idForm === 4) {
+            poPanel.down('#searchPo').enable();
+            poPanel.down('#poCabang').setReadOnly(false);
+            poPanel.down('#poCabang').reset();
+            form.getForm().reset();
+            form.saved = true;
+            gridPeng.getStore().removeAll();
+
+            Ext.MessageBox.show({
+                title: resp.title,
+                msg: resp.msg,
+                buttons: Ext.MessageBox.OK,
+                icon: Ext.MessageBox.INFO
+            });
+        } else if (idForm === 5) {
+            poPanel.down('#searchPo').enable();
+            poPanel.down('#poCabang').setReadOnly(false);
+            poPanel.down('#poCabang').reset();
+            form.getForm().reset();
+            form.saved = true;
+            gridPeng.getStore().removeAll();
+            this.printPo(0, resp.data);
+        } else {
+            poPanel.down('#searchPo').enable();
+            poPanel.down('#poCabang').setReadOnly(false);
+            poPanel.down('#poCabang').reset();
+            form.getForm().reset();
+            form.saved = true;
+            gridPeng.getStore().removeAll();
+            this.pdfPo(resp.data);
+        }
+    },
+    onFailure: function(resp, idForm) {
+        Ext.MessageBox.show({
+            title: resp.title,
+            msg: resp.msg,
+            buttons: Ext.MessageBox.OK,
+            icon: Ext.MessageBox.ERROR
+        });
     }
 });
 
