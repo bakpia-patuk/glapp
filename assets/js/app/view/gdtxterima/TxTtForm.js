@@ -29,6 +29,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                     name: 'id',
                     itemId: 'id',
                     readOnly: true,
+                    value: 0,
                     fieldCls: 'x-item-readonly',
                     hidden: true
                 },

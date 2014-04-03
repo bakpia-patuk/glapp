@@ -36,6 +36,14 @@ class Gd_tt extends Auth_Controller {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
                 return;
             }
+
+            $filename = 'assets/ttd_tx/ttSign' . $insert['id'] . 'NULL_.png';
+
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+
+            clearstatcache();
         }
 
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Reset All Data'));

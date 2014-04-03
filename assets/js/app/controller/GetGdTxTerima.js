@@ -48,17 +48,44 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                     checkchange: this.setItemTt
                 },
                 '#txttform': {
-                    afterrender: function(){
+                    afterrender: function() {
                         this.initForm(this.getTtForm(), '#imageTtdTb');
                     }
                 },
                 '#txttform button[action=getClientSign]': {
-                    click: function(btn){
+                    click: function(btn) {
+                        var form = this.getTtForm();
+                        if (form.down('#id').getValue() === '0') {
+                            Ext.Msg.alert('Warning', 'Lakukan transaksi terlebih dahulu');
+                            return;
+                        }
                         var win = Ext.widget('gdtxterima.txttsignwin');
+                        win.down('#idTt').setValue(form.down('#id').getValue());
+                    }
+                },
+                '#txttsignwin button[action=ttSave]': {
+                    click: function(btn) {
+                        var form = this.getTtForm(),
+                                id = form.down('#id').getValue();
+
+                        form.down('#imageTtdTb1').setSrc('assets/ttd_tx/ttSign' + id + 'NULL_.png');
+                        btn.up('window').close();
                     }
                 },
                 '#txttgriddt button[action=ttLotAdd]': {
-                    click: function(btn){
+                    click: function(btn) {
+                        var form = this.getTtForm();
+                        if (form.down('#id').getValue() === '0') {
+                            Ext.Msg.alert('Warning', 'Lakukan transaksi terlebih dahulu');
+                            return;
+                        }
+
+                        var grid = this.getTtPoGrid(),
+                                sel = grid.getSelectionModel().getSelection();
+                        if (!sel.length) {
+                            Ext.Msg.alert('Warning', 'Pilih barang yang akan di buat lot');
+                            return;
+                        }
                         var win = Ext.widget('gdtxterima.txttlotwin');
                     }
                 }
@@ -71,8 +98,6 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     },
     showListPo: function(btn) {
         var panel = this.getPanelTerima(),
-                tgl1 = panel.down('#ttTgl1').getValue(),
-                tgl2 = panel.down('#ttTgl2').getValue(),
                 supplier = panel.down('#ttSupplier').getValue(),
                 grid1 = this.getTtPoGrid(),
                 store = grid1.getStore(),
@@ -127,7 +152,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                 poPanel = this.getPanelTerima(),
                 store = grid.getStore(),
                 idTt = form.down('#id').getValue(),
-                poSupplier= poPanel.down('#ttSupplier').getValue(),
+                poSupplier = poPanel.down('#ttSupplier').getValue(),
                 idPo = store.getAt(recordIndex).get('id'),
                 url, params;
         params = {
@@ -163,6 +188,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             form.getForm().reset();
             form.saved = true;
             gridPo.getStore().removeAll();
+            form.down('#imageTtdTb1').setSrc('assets/appdata/signBlank.png');
         } else if (idForm === 3) {
             Ext.StoreMgr.lookup('gdtxpo.SupplierEmailStore').load();
         } else if (idForm === 4) {
