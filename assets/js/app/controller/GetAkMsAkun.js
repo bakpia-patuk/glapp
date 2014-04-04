@@ -32,7 +32,42 @@ Ext.define('GlApp.controller.GetAkMsAkun', {
             '#akmsakunform button[action=akunSave]': {
                 click: this.saveAkun
             },
+            '#akmsakungrid': {
+                itemclick: this.clickRow
+            },
+             '#akmsakunform button[action=akunNew]': {
+                click: this.newAkun
+            },
+            '#akmsakunform button[action=akunDelete]': {
+                click: this.deleteAkun
+            },
+            '#akmsakunform button[action=akunRefresh]': {
+                click: this.refreshAkun
+            },
         });
+    },
+    clickRow: function() {
+        console.log('Edit Akun Disabled temporary');
+        var tg = this.getAkMsAkunGrid(),
+                form = this.getAkMsAkunForm().getForm(),
+                forem = this.getAkMsAkunForm(),
+                sm = tg.getSelectionModel(),
+                node;
+
+        if (sm.hasSelection()) {
+            node = sm.getSelection()[0];
+        }
+        form.findField('groupAkun').getStore().load();
+        form.findField('akunCurr').getStore().load();
+
+        if (node) {
+            form.loadRecord(node);
+            form.findField('lokasiCabang').setReadOnly(true);
+            forem.down('#statusAkunBerlaku').disable();
+            if (node.get('fungsiAkun') === 9) {
+                form.findField('fungsiAkun').setValue('');
+            }
+        }
     },
     saveAkun: function(button, e, options) {
 
@@ -104,6 +139,103 @@ Ext.define('GlApp.controller.GetAkMsAkun', {
                 }
             }
         });
+    },
+    newAkun: function(button, e, options) {
+        var form = this.getAkMsAkunForm().getForm(),
+                forem = this.getAkMsAkunForm();
+        form.reset();
+        form.findField('codeAkunchild').disable();
+        form.findField('lokasiCabang').setReadOnly(false);
+        forem.down('#statusAkunBerlaku').enable();
+    },
+    deleteAkun: function(button, e, options) {
+        var grid = this.getAkMsAkunGrid();
+        var me = this;
+        if (grid) {
+            var sm = grid.getSelectionModel();
+            var rs = sm.getSelection();
+            if (!rs.length) {
+                Ext.MessageBox.show({
+                    title: 'Peringatan',
+                    msg: 'Pilih akun yang akan dihapus',
+                    buttons: Ext.MessageBox.OK,
+                    icon: Ext.MessageBox.WARNING
+                });
+                return;
+            }
+            var sel = rs[0];
+            me.deleteConfirm(sel, me);
+        }
+    },
+    deleteConfirm: function(sel, me) {
+        var data = sel;
+        if (data.get('parentAkun') !== "") {
+            var msg = '';
+            if (sel.get('akunHead') === 0) {
+                msg = 'Anda akan mengapus Header, Akun dibawahnya akan terhapus. Apakah anda yakin?';
+            }
+            else {
+                msg = 'Anda akan menghapus Akun. Apakah anda yakin?';
+            }
+            Ext.Msg.show({
+                title: 'Konfirmasi',
+                msg: msg,
+                buttons: Ext.Msg.YESNO,
+                icon: Ext.MessageBox.WARNING,
+                fn: function(btn) {
+                    if (btn === 'yes') {
+                        me.delFinal(data);
+                    }
+                }
+            });
+        } else {
+            Ext.Msg.show({
+                title: 'Error',
+                msg: 'Anda tidak bisa menghapus Group Akun',
+                buttons: Ext.Msg.YES,
+                icon: Ext.MessageBox.WARNING
+            });
+        }
+    },
+    delFinal: function(data) {
+        var params = data.get('id'),
+                opt = "master", tree = this.getAkMsAkunGrid(), form = this.getAkMsAkunForm().getForm(),
+                forem = this.getAkMsAkunForm();
+        Ext.Ajax.request({
+            url: BASE_PATH + 'shared/akun_del/' ,
+            method: 'POST',
+            params: {id: params, table_name: data.get('namaTabel')},
+            callback: function(options, success, response) {
+                var resp = Ext.decode(response.responseText);
+
+                if (resp.success === 'true') {
+                    Ext.MessageBox.show({
+                        title: resp.title,
+                        msg: resp.message,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.INFO
+                    });
+
+                    form.reset();
+                    form.findField('codeAkunchild').disable();
+                    form.findField('lokasiCabang').setReadOnly(false);
+                    forem.down('#statusAkunBerlaku').enable();
+                    tree.setRootNode({id: 0});
+                } else {
+                    Ext.MessageBox.show({
+                        title: resp.title,
+                        msg: resp.message,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.ERROR
+                    });
+                }
+            }
+        });
+    },
+    refreshAkun: function(button, e, options) {
+        var tree = this.getAkMsAkunForm();
+
+        tree.setRootNode({id: 0});
     },
 });
 

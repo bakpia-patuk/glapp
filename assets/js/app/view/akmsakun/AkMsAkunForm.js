@@ -26,7 +26,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    disabled: userCabang === '14' ? false : true,
+                   disabled: CABANG_ID === '1' ? true : false,
                    action: 'akunSave'
                 },
                 {
@@ -34,16 +34,16 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     ui: 'blue-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
-//                    disabled: userCabang === '14' ? false : true,
-//                    action: 'akunNew'
+                   disabled: CABANG_ID === '1' ? true : false,
+                   action: 'akunNew'
                 },
                 {
                     xtype: 'button',
                     ui: 'blue-button',
                     text: 'Hapus',
                     iconCls: 'icon-btn-delete',
-//                    disabled: userCabang === '14' ? false : true,
-//                    action: 'akunDelete'
+                   disabled: CABANG_ID === '1' ? true : false,
+                   action: 'akunDelete'
                 }
             ],
             items: [

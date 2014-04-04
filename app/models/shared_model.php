@@ -281,7 +281,7 @@ class Shared_model extends MY_Model {
             
                 
                 $id = NULL; 
-                $tablename = 'list_akun_' . $i;
+                $tablename = 'list_akun';
                 $opt_has_child = array();
                 $opt_has_child[] = array('field' => 'akun_parent', 'param' => 'where', 'operator' => '', 'value' => $id);
                 $is_get_child = $this->gets($opt_has_child, NULL, $tablename);
@@ -475,5 +475,148 @@ class Shared_model extends MY_Model {
         }
 
         return TRUE;
+    }
+    function reset_akun_kode($id, $tablename) {
+        $reset_akun = array(
+            'akun_code' => 0,
+        );
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        if ($this->update($reset_akun, $opt, NULL, $tablename)) {
+            return TRUE;
+        } else {
+            return FAlSE;
+        }
+    }
+    function reset_akun_kode_old($id, $tablename) {
+        $reset_akun = array(
+            'akun_code' => 0,
+            'akun_alias' => 0,
+        );
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        if ($this->update($reset_akun, $opt, NULL, $tablename)) {
+            return TRUE;
+        } else {
+            return FAlSE;
+        }
+    }
+    
+    function generate_kode_akun($parent_detail, $id, $is_child, $tablename) {
+        $opts[] = array('field' => 'akun_code', 'param' => 'where', 'operator' => ' !=', 'value' => 0);
+        $opts[] = array('field' => 'akun_parent', 'param' => 'where', 'operator' => '', 'value' => $parent_detail->id);
+        $optx['limit'] = 1;
+        $optx['sortBy'] = 'akun_alias';
+        $optx['sortDirection'] = 'DESC';
+        $last_item = $this->get($opts, $optx, $tablename);
+        if($last_item)
+            $akun_alias = $last_item->akun_alias+1;
+        else
+            $akun_alias=1;
+        if(count(explode('.', $parent_detail->akun_code))>=3){
+            if($akun_alias<10)
+                $akun_alias='0'.$akun_alias;
+        }
+        $codeGolNew = $parent_detail->akun_code.'.'.$akun_alias;
+        
+        //UPDATE DATA ..................()
+        $item_sortn = $this->gets($opts, NULL, $tablename);
+
+        $up_item_data = array(
+            'akun_code' => $codeGolNew,
+            'akun_parent' => $parent_detail->id,
+            'akun_alias' => $akun_alias,
+//            'mi_sort' => $item_sortn == NULL ? 1 : count($item_sortn) + 1
+        );
+
+        $opt_up_item[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        if ($this->update($up_item_data, $opt_up_item, NULL, $tablename)) {
+            if ($is_child == 0) {
+                if ($this->replace_akun_child($id, $tablename)) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            } else {
+                return TRUE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+    function generate_kode_akun_old($parent_detail, $id, $is_child, $tablename) {
+        $opts[] = array('field' => 'akun_code', 'param' => 'where', 'operator' => ' !=', 'value' => 0);
+        $opts[] = array('field' => 'akun_parent', 'param' => 'where', 'operator' => '', 'value' => $parent_detail->id);
+        $optx['limit'] = 1;
+        $optx['sortBy'] = 'akun_alias';
+        $optx['sortDirection'] = 'DESC';
+        $last_item = $this->get($opts, $optx, $tablename);
+        if($last_item)
+            $akun_alias = $last_item->akun_alias+1;
+        else
+            $akun_alias=1;
+        if(count(explode('.', $parent_detail->akun_code))>=3){
+            if($akun_alias<10)
+                $akun_alias='0'.$akun_alias;
+        }
+        $codeGolNew = $parent_detail->akun_code.'.'.$akun_alias;
+        
+        //UPDATE DATA ..................()
+        $item_sortn = $this->gets($opts, NULL, $tablename);
+
+        $up_item_data = array(
+            'akun_code' => $codeGolNew,
+            'akun_parent' => $parent_detail->id,
+            'akun_alias' => $akun_alias,
+//            'mi_sort' => $item_sortn == NULL ? 1 : count($item_sortn) + 1
+        );
+
+        $opt_up_item[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        if ($this->update($up_item_data, $opt_up_item, NULL, $tablename)) {
+            if ($is_child == 0) {
+                if ($this->replace_akun_child_old($id, $tablename)) {
+                    return TRUE;
+                } else {
+                    return FALSE;
+                }
+            } else {
+                return TRUE;
+            }
+        } else {
+            return FALSE;
+        }
+    }
+
+    public function akun_process_del($id, $table_name) {
+
+        $akun_detail = $this->get_detail('id', $id, $table_name);
+
+        $opt[] = array('field' => 'id_akun', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $detail = $this->gets($opt, NULL, 'trx_jurnal_harian');
+
+        if (!$detail) {
+            if ($akun_detail->akun_head_status == 0) {
+                $opt_member_del[] = array('field' => 'akun_parent', 'param' => 'where', 'operator' => '', 'value' => $id);
+                $this->delete($opt_member_del, NULL, $table_name);
+            }
+
+            $opt_member[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $akun_detail->akun_parent);
+            $member = $this->gets($opt_member, NULL, $table_name);
+
+            if (count($member) < 1) {
+                $data_parent = array(
+                    'akun_child_status' => '1'
+                );
+
+                $this->update($data_parent, $opt_member, NULL, $table_name);
+            }
+
+            $opt_del[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+            $this->delete($opt_del, NULL, $table_name);
+
+            return 'Akun berhasil di hapus';
+        } else {
+            return FALSE;
+        }
     }
 }

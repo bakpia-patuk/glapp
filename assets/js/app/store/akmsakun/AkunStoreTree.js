@@ -1,9 +1,9 @@
-var modelku = Ext.define('eTrav.model.AkunModelTree', {
+var modelku = Ext.define('GlApp.model.AkunModelTree', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id', type: 'int'},
         {name: 'statusCabang', type: 'int'},
-        {name: 'lokasiCabang', type: 'int'},
+        //{name: 'lokasiCabang', type: 'int'},
         {name: 'namaTabel', type: 'string'},
         {name: 'codeAkun', type: 'string'},
         {name: 'codeAkunchild', type: 'int'},
@@ -27,7 +27,7 @@ var modelku = Ext.define('eTrav.model.AkunModelTree', {
         {name: 'hasChild', type: 'boolean'},
         //{name: 'iconCls', type: 'string'},
         {name: 'leaf', type: 'boolean'},
-        {name: 'expanded', defaultValue: false}
+        {name: 'expanded', defaultValue: true}
     ],
     idProperty: 'id'
 });
@@ -41,7 +41,7 @@ Ext.define('GlApp.store.akmsakun.AkunStoreTree', {
     root: {
         text: 'root',
         id: '0',
-        expanded: false
+        expanded: true
     },
     proxy: {
         type: 'ajax',

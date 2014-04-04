@@ -631,7 +631,7 @@ class Shared extends Auth_Controller {
                         $akun_list[] = Array(
                             'id' => $row->id,
                             'statusCabang' => 1,
-                            'lokasiCabang' => (int) $cabang,
+                            //'lokasiCabang' => (int) $cabang,
                             'namaTabel' => $tablename,
                             'codeAkun' => $this->format_akun_titik($row->akun_code),
                             'codeAkunchild' => $row->akun_parent,
@@ -651,7 +651,7 @@ class Shared extends Auth_Controller {
                             'akunStatusTampil' => $row->akun_status_tampil,
                             'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
                             'leaf' => false,
-                            'expanded' => false,
+                            'expanded' => true,
                             'akunDesc' => $row->akun_note,
                             'fungsiAkun' => $row->akun_fungsi,
                             'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
@@ -660,7 +660,7 @@ class Shared extends Auth_Controller {
                         $akun_list[] = Array(
                             'id' => $row->id,
                             'statusCabang' => 1,
-                            'lokasiCabang' => (int) $cabang,
+                            //'lokasiCabang' => (int) $cabang,
                             'namaTabel' => $tablename,
                             'codeAkun' => $this->format_akun_titik($row->akun_code),
                             'codeAkunchild' => $row->akun_parent,
@@ -680,7 +680,7 @@ class Shared extends Auth_Controller {
                             'akunStatusTampil' => $row->akun_status_tampil,
                             'hasChild' => $row->akun_child_status = 1 ? TRUE : FALSE,
                             'leaf' => true,
-                            'expanded' => false,
+                            'expanded' => true,
                             'akunDesc' => $row->akun_note,
                             'fungsiAkun' => $row->akun_fungsi,
                             'isAkunKas' => $row->akun_fungsi != 9 ? 1 : 0
@@ -710,7 +710,7 @@ class Shared extends Auth_Controller {
                             'id' => $row->id,
                             'statusCabang' => 1,
                             'namaTabel' => $tablename,
-                            'lokasiCabang' => (int) $cabang,
+                            //'lokasiCabang' => (int) $cabang,
                             'codeAkun' => $this->format_akun_titik($row->akun_code),
                             'codeAkunchild' => $row->akun_parent,
                             'codeAkunPure' => $format[1],
@@ -738,7 +738,7 @@ class Shared extends Auth_Controller {
                         $akun_list[] = Array(
                             'id' => $row->id,
                             'statusCabang' => 1,
-                            'lokasiCabang' => (int) $cabang,
+                            //'lokasiCabang' => (int) $cabang,
                             'namaTabel' => $tablename,
                             'codeAkun' => $this->format_akun_titik($row->akun_code),
                             'codeAkunchild' => $row->akun_parent,
@@ -915,6 +915,17 @@ class Shared extends Auth_Controller {
             } else {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'Database Error'));
             }
+        }
+    }
+    function akun_del() {
+        $id = $this->input->post('id');
+        //$table_name = $this->input->post('table_name');
+
+        $delete = $this->Shared_model->akun_process_del($id, 'list_akun');
+        if ($delete) {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => $delete, 'title' => 'Info'));
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Akun sudah digunakan untuk transaksi', 'title' => 'Error'));
         }
     }
 
