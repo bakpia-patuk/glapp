@@ -24,7 +24,7 @@ Ext.define('GlApp.view.gdlsstockop.GetGdLsStockOp', {
                     layout: 'border',
                     defaults: {
                         border: true,
-                        ui: 'blue-panel',
+                        ui: 'orange-panel',
                         split: true
                     },
                     items: [
@@ -46,7 +46,7 @@ Ext.define('GlApp.view.gdlsstockop.GetGdLsStockOp', {
                 },
                 {
                     region: 'west',
-                    ui: 'blue-panel',
+                    ui: 'orange-panel',
                     width: 325,
                     minWidth: 325,
                     maxWidth: 325,
