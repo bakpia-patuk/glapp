@@ -313,21 +313,21 @@ class Shared extends Auth_Controller {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
             } else {
                 $data_json = json_encode($input);
-                
+
                 $data = array();
-                
+
                 $data['jumlah'] = 1;
-                if($this->user->cabang_id==1)
+                if ($this->user->cabang_id == 1)
                     $data['tujuan'] = $input['mt_cabang'];
                 else
                     $data['tujuan'] = 1;
                 $data['id_cabang'] = $this->user->cabang_id;
 
-                $no=$this->Shared_model->insert_outgoing($data, 'head');
+                $no = $this->Shared_model->insert_outgoing($data, 'head');
 
                 $data = array();
                 $data['data'] = $data_json;
-                $data['head_id '] = $no.'.'.$this->user->cabang_id;
+                $data['head_id '] = $no . '.' . $this->user->cabang_id;
                 $data['primary_key'] = $input['id'];
                 $data['table_name'] = 'ms_telisa';
 
@@ -343,24 +343,24 @@ class Shared extends Auth_Controller {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
             } else {
 
-                $input['id'] = $no_insert.'.'.$input['mt_cabang'];
+                $input['id'] = $no_insert . '.' . $input['mt_cabang'];
                 $data_json = json_encode($input);
-                
+
                 $data = array();
-                
+
                 $data['jumlah'] = 1;
-                if($this->user->cabang_id==1)
+                if ($this->user->cabang_id == 1)
                     $data['tujuan'] = $input['mt_cabang'];
                 else
                     $data['tujuan'] = 1;
                 $data['id_cabang'] = $this->user->cabang_id;
 
-                $no=$this->Shared_model->insert_outgoing($data, 'head');
+                $no = $this->Shared_model->insert_outgoing($data, 'head');
 
                 $data = array();
                 $data['data'] = $data_json;
-                $data['head_id '] = $no.'.'.$this->user->cabang_id;
-                $data['primary_key'] = $no_insert.'.'.$input['mt_cabang'];
+                $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                $data['primary_key'] = $no_insert . '.' . $input['mt_cabang'];
                 $data['table_name'] = 'ms_telisa';
 
                 $this->Shared_model->insert_outgoing($data, 'detail');
@@ -407,18 +407,18 @@ class Shared extends Auth_Controller {
             $data2 = array();
             // $data2['id'] = $id;
             $data2['jumlah'] = 1;
-            if($this->user->cabang_id==1)
+            if ($this->user->cabang_id == 1)
                 $data2['tujuan'] = $input['mt_cabang'];
             else
-                $data2['tujuan']=1;
+                $data2['tujuan'] = 1;
             $data2['id_cabang'] = $this->user->cabang_id;
 
-            $no=$this->Shared_model->insert_outgoing($data2, 'head');
+            $no = $this->Shared_model->insert_outgoing($data2, 'head');
 
             $data2 = array();
             $data2['data'] = '{}';
-            
-            $data2['head_id '] = $no.'.'.$this->user->cabang_id;
+
+            $data2['head_id '] = $no . '.' . $this->user->cabang_id;
             $data2['primary_key'] = $input['id'];
             $data2['table_name'] = 'ms_telisa';
             $data2['nama_column'] = 'id';
@@ -600,6 +600,7 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => $result, 'message' => 'Tidak ada data Group Akun'));
         }
     }
+
     public function akun_tree() {
         $is_cabang = isset($_POST['cabang']);
         $akun_list = Array();
@@ -621,10 +622,10 @@ class Shared extends Auth_Controller {
             if ($result != NULL) {
                 foreach ($result as $row) {
                     $akun_dtl = $this->Shared_model->get_detail('id', $row->akun_parent, $tablename);
-                    if($akun_dtl)
+                    if ($akun_dtl)
                         $param1 = $akun_dtl->akun_code;
                     else
-                        $param1=NULL;
+                        $param1 = NULL;
                     $format = $this->format_generate_akun($param1, $row->akun_code);
 
                     if ($row->akun_child_status == 0) {
@@ -699,10 +700,10 @@ class Shared extends Auth_Controller {
             if ($result != NULL) {
                 foreach ($result as $row) {
                     $akun_dtl = $this->Shared_model->get_detail('id', $row->akun_parent, $tablename);
-                    if($akun_dtl)
+                    if ($akun_dtl)
                         $param1 = $akun_dtl->akun_code;
                     else
-                        $param1=NULL;
+                        $param1 = NULL;
                     $format = $this->format_generate_akun($param1, $row->akun_code);
 
                     if ($row->akun_child_status == 0) {
@@ -770,6 +771,7 @@ class Shared extends Auth_Controller {
 
         echo json_encode($akun_list);
     }
+
     function format_generate_akun($parent_code, $kode_akun) {
         //PARENT PROCESS
         $x = strlen($parent_code);
@@ -822,6 +824,7 @@ class Shared extends Auth_Controller {
         return array($result1, $result2);
         //return $newKode;
     }
+
     function format_akun_titik($kode_akun) {
         //AKUN TITIK TITIK
 //        $a = "0";
@@ -844,13 +847,13 @@ class Shared extends Auth_Controller {
         $second = substr($newKode, 2);
 //        $titik_dua = str_split($second, 2);
 //        $result2 = implode('.', $titik_dua);
-
         // if (strlen($newKode) > 2) {
         //     return $result1 . '.' . $second;
         // } else {
-            return $kode_akun;
+        return $kode_akun;
         // }
     }
+
     public function get_akun_list() {
         $records = isset($_GET['filter']);
         $query = isset($_GET['query']);
@@ -887,6 +890,7 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Tidak ada data akun'));
         }
     }
+
     public function get_mata_uang() {
         $result = $this->Shared_model->get_mata_uang();
 
@@ -903,10 +907,9 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak mempunyai hak untuk membuat Akun', 'title' => 'Error'));
         } else {
             $data = $this->Shared_model->akun_process();
-            if($data=='jurnal_group'){
+            if ($data == 'jurnal_group') {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak bisa mengganti Jurnal Group', 'title' => 'Info'));
-            }
-            else if ($data) {
+            } else if ($data) {
                 if ($data == 'headChild') {
                     echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Anda tidak bisa mengganti type Header ke type Detail', 'title' => 'Info'));
                 } else {
@@ -926,6 +929,32 @@ class Shared extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => $delete, 'title' => 'Info'));
         } else {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Akun sudah digunakan untuk transaksi', 'title' => 'Error'));
+        }
+    }
+
+    public function upload_ttd_trx($field, $params) {
+        if ($_FILES[$field]['name'] != "signNull.png") {
+            echo '{success:false, message: "Upload tanda tangan sesuai yang ditentukan"}';
+            return FALSE;
+        }
+
+        $config['upload_path'] = './assets/ttd_tx/';
+        $config['allowed_types'] = 'png';
+        $config['file_name'] = $field . $params . 'NULL.png';
+        $config['max_size'] = '20';
+        $config['max_width'] = '300';
+        $config['max_height'] = '150';
+        $config['overwrite'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload($field)) {
+            $data_apl = $this->upload->data();
+            echo '{success:true, message: "Verifikasi Selesai", url: "assets/ttdtx/' . $field. $params . 'NULL' . $data_apl['file_ext'] . '"}';
+        } else {
+            $msg = json_encode($this->upload->display_errors('<p>', '</p>'));
+            echo '{success:false, message: ' . $msg . '}';
         }
     }
 

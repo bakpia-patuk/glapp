@@ -23,10 +23,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtGridDt', {
             tbar: [
                 {
                     text: 'TAMBAH',
+                    ui: 'orange-button',
                     action: 'ttLotAdd'
-                },
-                {
-                    text: 'REFRESH'
                 }
             ],
             columns: [

@@ -22,102 +22,35 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
         var form = me;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    text: 'SIMPAN',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-save',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'BARU',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-add',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                },
-                {
-                    xtype: 'button',
-                    disabled: false,
-                    text: 'CETAK TT',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-delete',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                },
-                {
-                    xtype: 'button',
-                    hidden: true,
-                    text: 'KIRIM PDF',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-delete',
-                                    handler: function() {
-										Ext.Msg.alert('Error', 'Syncronize Connection Error');
-									}
-                }
-            ],
             items: [
                 {
-                    xtype: 'numberfield',
+                    xtype: 'textfield',
                     fieldLabel: 'Id Tt ',
                     name: 'id',
                     itemId: 'id',
                     readOnly: true,
-                    fieldCls: 'x-item-readonly',
-                    hidden: false,
-                    listeners: {
-                        change: function(field) {
-                            var form = field.up('form');
-                            form.saved = false;
-                        }
-                    }
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: 'Id Detail',
-                    name: 'idDetailTt',
-                    itemId: 'idDetailTtField',
-                    readOnly: true,
+                    value: 0,
                     fieldCls: 'x-item-readonly',
                     hidden: true
                 },
                 {
-                    xtype: 'combobox',
-                    fieldLabel: 'Supplier ',
-                    name: 'ttSupId',
-                    itemId: 'poSuppCmb',
-                    id: 'poSuppCmb',
-                    triggerAction: 'all',
-                    queryMode: 'remote',
-                    minChars: 2,
-//                    store: 'MasterSupplierStore',
-                    displayField: 'suppdisplay',
-                    valueField: 'idms',
-                    emptyText: 'ketik nama Supplier',
-                    hideTrigger: false
-                },
-                {
                     xtype: 'textfield',
-                    fieldLabel: 'No PO ',
-                    name: 'ttPoNo',
-                    emptyText: 'pilih No PO disamping',
-                    hidden: true,
+                    fieldLabel: 'Nama Supplier ',
+                    emptyText: 'Nama Supplier',
+                    name: 'tt_supp_name',
+                    itemId: 'tt_supp_name',
                     readOnly: true,
-                    fieldCls: 'x-item-readonly'
+                    fieldCls: 'x-item-readonly',
+                    hidden: false
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No TT ',
-                    name: 'ttNo',
+                    name: 'tt_no',
+                    itemId: 'tt_no',
                     emptyText: 'auto-generate',
                     readOnly: true,
+                    allowBlank: false,
                     fieldCls: 'x-item-readonly'
                 },
                 {
@@ -145,7 +78,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                         Ext.create('Ext.Img', {
                             margin: '0 0 0 5',
                             baseCls: 'imagefieldthumb',
-                            src: BASE_PATH + 'assets/appdata/user/sign1.png',
+                            src: BASE_PATH + 'assets/appdata/signBlank.png',
                             id: 'imageTtdTb',
                             itemId: 'imageTtdTb'
                         })
@@ -154,14 +87,14 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Pengirim ',
-                    name: 'pengirim',
+                    name: 'tt_penerima',
                     emptyText: 'Nama Pengirim',
                     allowBlank: false
                 },
                 {
                     xtype: 'textareafield',
                     fieldLabel: 'Keterangan ',
-                    name: 'keterangan',
+                    name: 'tt_desc',
                     height: 50
                 },
                 {
@@ -179,7 +112,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                         },
                         {
                             xtype: 'button',
-                            ui: 'blue-button',
+                            ui: 'orange-button',
                             iconCls: 'icon-btn-search',
                             text: 'Ambil TTD',
                             margin: '2 0 0 5',
@@ -203,7 +136,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                         Ext.create('Ext.Img', {
                             margin: '0 0 0 5',
                             baseCls: 'imagefieldthumb',
-                            src: BASE_PATH + 'assets/appdata/user/sign1.png',
+                            src: BASE_PATH + 'assets/appdata/signBlank.png',
                             id: 'imageTtdTb1'
                         })
                     ]

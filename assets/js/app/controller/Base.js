@@ -11,6 +11,28 @@ Ext.define('GlApp.controller.Base', {
             }
         });
     },
+    initForm: function(form, signArea) {
+        Ext.Ajax.request({
+            url: BASE_PATH + 'shared/check_ttd',
+            method: 'POST',
+            scope: this,
+            callback: function(options, success, response) {
+                var resp = Ext.decode(response.responseText);
+
+                if (resp.success === 'false') {
+                    form.body.mask();
+                    Ext.MessageBox.show({
+                        title: 'WARNING',
+                        msg: TTD_STRING,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.WARNING
+                    });
+                } else {
+                    form.down(signArea).setSrc(BASE_URL + resp.url);
+                }
+            }
+        });
+    },
     ajaxReq: function(url, param, id) {
         var maskingBody = new Ext.LoadMask(Ext.getBody(), {msg: "Memproses Data. Mohon Menunggu."});
         
