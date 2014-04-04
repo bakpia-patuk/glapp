@@ -5,6 +5,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
     extend: 'Ext.window.Window',
     alias: 'widget.gdtxterima.txttlotwin',
     itemId: 'txttlotwin',
+    ui: 'orange-window',
     title: 'DATA NOMER LOT',
     width: 700,
     height: 400,
@@ -23,10 +24,10 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                     xtype: 'panel',
                     layout: 'border',
                     border: false,
-                    bodyStyle: 'background: #6BADF6',
+                    bodyStyle: 'background: #F5AE45',
                     defaults: {
                         border: false,
-                        ui: 'green-panel',
+                        ui: 'blue-panel',
                         split: true
                     },
                     items: [
@@ -36,6 +37,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                             region: 'west',
                             width: 275,
                             bodyPadding: 10,
+                            itemId: 'formLot',
                             fieldDefaults: {
                                 labelAlign: 'right',
                                 labelWidth: 90,
@@ -63,24 +65,27 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Id Tt ',
-                                    name: 'idTt',
+                                    fieldLabel: 'Type Trx',
+                                    name: 'stk_trxreftype',
+                                    readOnly: true,
+                                    fieldCls: 'x-item-readonly',
+                                    value: 'ttgudang',
+                                    hidden: true
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    fieldLabel: 'Id Ref ',
+                                    name: 'stk_trxref',
+                                    itemId: 'stk_trxref',
                                     readOnly: true,
                                     fieldCls: 'x-item-readonly',
                                     hidden: true
                                 },
                                 {
                                     xtype: 'textfield',
-                                    fieldLabel: 'Id Po ',
-                                    name: 'idPo',
-                                    readOnly: true,
-                                    fieldCls: 'x-item-readonly',
-                                    hidden: true
-                                },
-                                {
-                                    xtype: 'textfield',
-                                    fieldLabel: 'Id barang ',
-                                    name: 'idBarang',
+                                    fieldLabel: 'Id Barang ',
+                                    name: 'stl_barangid',
+                                    itemId: 'stl_barangid',
                                     readOnly: true,
                                     fieldCls: 'x-item-readonly',
                                     hidden: true
@@ -88,33 +93,34 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                                 {
                                     xtype: 'textfield',
                                     fieldLabel: 'Nama Barang ',
-                                    name: 'namaBarang',
+                                    name: 'stl_barangname',
+                                    itemId: 'stl_barangname',
                                     readOnly: true,
                                     fieldCls: 'x-item-readonly'
                                 },
                                 {
                                     xtype: 'textfield',
                                     fieldLabel: 'Barcode ',
-                                    name: 'noBarcode',
+                                    name: 'stl_barcode',
                                     allowBlank: true
                                 },
                                 {
                                     xtype: 'textfield',
                                     fieldLabel: 'No Lot ',
-                                    name: 'noLot',
+                                    name: 'stl_nolot',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'datefield',
                                     fieldLabel: 'Expired Date ',
-                                    name: 'tglEd',
+                                    name: 'stl_baranged',
                                     format: 'd/M/Y',
                                     submitFormat: 'Y-m-d',
                                     allowBlank: false
                                 },
                                 {
                                     xtype: 'numberfield',
-                                    name: 'qtyLot',
+                                    name: 'stl_qty',
                                     width: 150,
                                     fieldLabel: 'Jumlah ',
                                     allowNegative: false,
@@ -127,7 +133,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                                 },
                                 {
                                     xtype: 'numberfield',
-                                    name: 'qtyTt',
+                                    name: 'qty_tt',
+                                    itemId: 'qty_tt',
                                     width: 150,
                                     fieldLabel: 'Jumlah Kirim ',
                                     allowNegative: false,
@@ -141,7 +148,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                                 },
                                 {
                                     xtype: 'numberfield',
-                                    name: 'qtyOld',
+                                    name: 'qty_tt_old',
+                                    itemId: 'qty_tt_old',
                                     width: 150,
                                     fieldLabel: 'Jumlah Old ',
                                     allowNegative: false,
@@ -159,19 +167,30 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
                             xtype: 'grid',
                             title: 'DAFTAR LOT',
                             region: 'center',
+                            itemId: 'gridLot',
                             forceFit: true,
+                            store: 'gdtxterima.TtLotStore',
                             columns: [
+                                Ext.create('Ext.grid.RowNumberer'),
                                 {
                                     xtype: 'gridcolumn',
-                                    header: 'NO LOT'
+                                    flex: 0.5,
+                                    text: 'NO LOT',
+                                    dataIndex: 'stl_nolot'
                                 },
                                 {
-                                    xtype: 'gridcolumn',
-                                    header: 'TGL EXPIRED'
+                                    xtype: 'datecolumn',
+                                    flex: 0.3,
+                                    text: 'TGL. EXPIRED',
+                                    dataIndex: 'stl_baranged',
+                                    format: 'd/M/Y'
                                 },
                                 {
-                                    xtype: 'gridcolumn',
-                                    header: 'QTY'
+                                    xtype: 'numbercolumn',
+                                    flex: 0.15,
+                                    text: 'JUMLAH',
+                                    format: '000',
+                                    dataIndex: 'stl_qtylast'
                                 }
                             ]
                         }
@@ -181,7 +200,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtLotWin', {
             buttons: [
                 {
                     text: 'Save',
-                    action: 'satuanSave'
+                    scope: this,
+                    handler: this.close
                 },
                 {
                     text: 'Cancel',

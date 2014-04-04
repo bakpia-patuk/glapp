@@ -1,9 +1,9 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.akun.newWindow', {
+Ext.define('GlApp.view.akmsakun.newWindow', {
     extend: 'Ext.window.Window',
-    alias: 'widget.newwindow',
+    alias: 'widget.akmsakun.newwindow',
     itemId: 'newwindow',
     modal: true,
     resizable: false,

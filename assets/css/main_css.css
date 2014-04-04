@@ -12,6 +12,10 @@ body, html {
     background: #FFF;
 }
 
+a {
+    text-decoration: none;
+}
+
 .header {
     height: 46px;
     border-bottom: 3px solid #1979CA;

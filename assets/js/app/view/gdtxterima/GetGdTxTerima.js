@@ -5,7 +5,6 @@
 Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.gdtxterima.getgdtxterima',
-    itemId: 'getgdtxpo',
     bodyPadding: '2 0 0 0',
     border: false,
     layout: 'fit',
@@ -18,9 +17,9 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                     xtype: 'tabpanel',
                     deferredRender: false,
                     plain: true,
-                    ui: 'blue-tab',
+                    ui: 'orange-tab',
                     border: false,
-                    itemId: 'poTab',
+                    itemId: 'pottTab',
                     items: [
                         {
                             xtype: 'panel',
@@ -28,11 +27,91 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                             layout: 'border',
                             border: false,
                             bodyPadding: '2 0 0 0',
+                            itemId: 'newttpanel',
                             defaults: {
                                 border: true,
-                                ui: 'blue-panel',
+                                ui: 'orange-panel',
                                 split: true
                             },
+                            tbar: [
+                                {
+                                    xtype: 'button',
+                                    text: 'ADD_NEW',
+                                    ui: 'orange-button',
+                                    action: 'ttNew'
+                                },
+                                '-',
+                                {
+                                    xtype: 'button',
+                                    text: 'SAVE',
+                                    ui: 'orange-button',
+                                    action: 'ttSave'
+                                },
+                                '-',
+                                {
+                                    xtype: 'button',
+                                    text: 'PRINT_TT',
+                                    ui: 'orange-button',
+                                    action: 'ttPrint'
+                                },
+                                {
+                                    xtype: 'button',
+                                    text: 'SENT_PDF',
+                                    ui: 'orange-button',
+                                    hidden: true,
+                                    action: 'poSavePdf'
+                                },
+                                '->',
+                                {
+                                    xtype: 'datefield',
+                                    fieldLabel: 'Filter ',
+                                    labelWidth: 40,
+                                    labelAlign: 'right',
+                                    emptyText: 'Tgl. Awal',
+                                    format: 'd/M/Y',
+                                    submitFormat: 'Y-m-d',
+                                    itemId: 'ttTgl1',
+                                    hidden: true,
+                                    value: new Date()
+                                },
+                                {
+                                    xtype: 'datefield',
+                                    fieldLabel: ' s.d ',
+                                    labelWidth: 30,
+                                    labelAlign: 'right',
+                                    emptyText: 'Tgl. Akhir',
+                                    format: 'd/M/Y',
+                                    submitFormat: 'Y-m-d',
+                                    itemId: 'ttTgl2',
+                                    hidden: true,
+                                    value: new Date()
+                                },
+                                {
+                                    xtype: 'combobox',
+                                    emptyText: 'Supplier',
+                                    width: 180,
+                                    itemId: 'ttSupplier',
+                                    triggerAction: 'all',
+                                    hideTrigger: false,
+                                    mode: 'remote',
+                                    minChars: 2,
+                                    store: 'gdtxterima.SupplierStore',
+                                    displayField: 'ms_name',
+                                    valueField: 'id'
+                                },
+                                {
+                                    text: 'SEARCH',
+                                    ui: 'orange-button',
+                                    action: 'searchTt',
+                                    itemId: 'searchTt'
+                                },
+                                '-',
+                                {
+                                    text: 'REFRESH',
+                                    ui: 'orange-button',
+                                    action: 'refreshTt'
+                                }
+                            ],
                             items: [
                                 {
                                     region: 'west',
@@ -41,11 +120,7 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                                     maxWidth: 325,
                                     collapsible: true,
                                     title: 'FORM PENERIMAAN BARANG',
-                                    items: [
-                                        {
-                                            xtype: 'gdtxterima.txttform'
-                                        }
-                                    ]
+                                    xtype: 'gdtxterima.txttform'
                                 },
                                 {
                                     region: 'center',
@@ -54,7 +129,7 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                                     border: false,
                                     defaults: {
                                         border: true,
-                                        ui: 'blue-panel',
+                                        ui: 'orange-panel',
                                         split: true
                                     },
                                     items: [

@@ -6,12 +6,10 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
     alias: 'widget.gdtxterima.txttgrid',
     itemId: 'txttgrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxterima.PoDetailStore',
     autoScroll: true,
     forceFit: false,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
-    }),
 
     initComponent: function () {
         var me = this;
@@ -19,55 +17,15 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
         Ext.applyIf(me, {
             viewConfig: {
                 autoScroll: true,
-                emptyText: 'Tidak ada data Pengadaan',
+                emptyText: 'Tidak ada data Po',
                 deferEmptyText: false
             },
-            tbar: [
-                {
-                    xtype: 'datefield',
-                    fieldLabel: 'Filter ',
-                    labelWidth: 40,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Awal',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'datefield',
-                    fieldLabel: ' s.d ',
-                    labelWidth: 30,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Akhir',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'combobox',
-                    emptyText: 'Supplier',
-                    allowBlank: false
-                },
-                {
-                    text: 'SEARCH'
-                },
-                '->',
-                {
-                    text: 'REFRESH'
-                }
-            ],
             features: [
                 {
                     startCollapsed: false,
                     id: 'poPengGroup',
                     ftype: 'grouping',
-                    groupHeaderTpl: 'No Pengadaan : {name}',
+                    groupHeaderTpl: 'No Po : {name}',
                     hideGroupedHeader: false,
                     //remoteRoot: 'summaryData',
                     enableGroupingMenu: true
@@ -75,13 +33,20 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
             ],
             columns: [
                 {
+                    xtype: 'checkcolumn',
+                    flex: 0.25,
+                    align: 'center',
+                    dataIndex: 'tt_status',
+                    itemId: 'setTt'
+                },
+                {
                     xtype: 'gridcolumn',
                     width: 300,
                     text: 'NAMA BARANG',
-                    dataIndex: 'ttBarangName',
+                    dataIndex: 'barang_name',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -94,10 +59,10 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     align: 'center',
                     text: 'QTY PESAN',
                     format: '000',
-                    dataIndex: 'ttBarangPo',
+                    dataIndex: 'barang_qty',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -110,10 +75,10 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     align: 'center',
                     text: 'QTY DITERIMA',
                     format: '000',
-                    dataIndex: 'ttBarangTerima',
+                    dataIndex: 'tt_qty_kirim',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -131,10 +96,10 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     align: 'center',
                     text: 'QTY TERKIRIM',
                     format: '000',
-                    dataIndex: 'ttBarangKirim',
+                    dataIndex: 'tt_qty_sisa',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
-                        if (status !== 0) {
+                        var status = record.get('tt_status');
+                        if (status) {
                             return value;
                         } else {
                             return '<span style="color:red;">' + value + '</span>';
@@ -145,17 +110,17 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     xtype: 'gridcolumn',
                     width: 150,
                     text: 'MERK',
-                    dataIndex: 'ttBarangMerk',
+                    dataIndex: 'merk_name',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
+                        var status = record.get('tt_status');
                         if (value === 0) {
-                            if(status !== 0) {
+                            if(status) {
                                 return '-';
                             } else {
                                 return '<span style="color:red;">-</span>';
                             }
                         } else {
-                            if(status !== 0) {
+                            if(status) {
                                 return value;
                             } else {
                                 return '<span style="color:red;">' + value + '</span>';
@@ -167,17 +132,17 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     xtype: 'gridcolumn',
                     width: 150,
                     text: 'KATALOG',
-                    dataIndex: 'ttBarangKatalog',
+                    dataIndex: 'barang_katalog',
                     renderer: function (value, meta, record) {
-                        var status = record.get('SimpanStatus');
+                        var status = record.get('tt_status');
                         if (value === 0) {
-                            if(status !== 0) {
+                            if(status) {
                                 return '-';
                             } else {
                                 return '<span style="color:red;">-</span>';
                             }
                         } else {
-                            if(status !== 0) {
+                            if(status) {
                                 return value;
                             } else {
                                 return '<span style="color:red;">' + value + '</span>';

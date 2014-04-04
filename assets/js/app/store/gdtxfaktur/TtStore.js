@@ -2,7 +2,7 @@ var Tt = Ext.define('GlApp.model.TtModel', {
     extend: 'Ext.data.Model',
     fields: [
         // tt_supp_id   tt_penerima           tt_urlsign2       faktur_id  tt_faktur_show
-        {name: 'id', type: 'int'},
+        {name: 'id', type: 'string'},
         {name: 'tt_tgltrx', type: 'date'},
         {name: 'tt_cabang', type: 'int'},
         {name: 'tt_no', type: 'string'},
@@ -25,7 +25,7 @@ Ext.define('GlApp.store.gdtxfaktur.TtStore', {
     alias: 'store.gdtxfaktur.ttstore',
     model: Tt,
     storeId: 'TrxFakturStore',
-    autoLoad: true,
+    autoLoad: false,
     remoteFilter: true,
     proxy: {
         success: true,

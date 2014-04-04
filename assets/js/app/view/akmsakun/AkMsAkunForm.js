@@ -26,24 +26,24 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    disabled: userCabang === '14' ? false : true,
-//                    action: 'akunSave'
+                   disabled: CABANG_ID === '1' ? true : false,
+                   action: 'akunSave'
                 },
                 {
                     xtype: 'button',
                     ui: 'blue-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
-//                    disabled: userCabang === '14' ? false : true,
-//                    action: 'akunNew'
+                   disabled: CABANG_ID === '1' ? true : false,
+                   action: 'akunNew'
                 },
                 {
                     xtype: 'button',
                     ui: 'blue-button',
                     text: 'Hapus',
                     iconCls: 'icon-btn-delete',
-//                    disabled: userCabang === '14' ? false : true,
-//                    action: 'akunDelete'
+                   disabled: CABANG_ID === '1' ? true : false,
+                   action: 'akunDelete'
                 }
             ],
             items: [
@@ -58,6 +58,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     xtype: 'radiogroup',
                     fieldLabel: 'Berlaku ',
                     itemId: 'statusAkunBerlaku',
+                    hidden:true,
                     items: [
                         {
                             boxLabel: 'Nasional',
@@ -180,36 +181,36 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     valueField: 'kodeGroupAkun',
                     queryMode: 'remote',
                     name: 'groupAkun',
-//                    store: 'GroupAkunStore',
+                   store: 'akmsakun.GroupAkunStore',
                     triggerAction: 'all',
                     forceSelection: true,
                     typeAhead: true,
                     allowBlank: false,
                     valueNotFoundText: 'Tidak ada Data',
-//                    listeners: {
-//                        change: function() {
-//                            this.up('form').getForm().findField('codeAkunchild').enable();
-//                            var store = Ext.StoreMgr.lookup('AkunStore');
-//                            var filterCollection = [];
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'akun_group',
-//                                value: this.getValue()
-//                            });
-//
-//                            filterCollection.push(statusFilter);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'akun_head_status',
-//                                value: 0
-//                            });
-//
-//                            filterCollection.push(statusFilter);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       change: function() {
+                           this.up('form').getForm().findField('codeAkunchild').enable();
+                           var store = Ext.StoreMgr.lookup('akmsakun.AkunStore');
+                           var filterCollection = [];
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'akun_group',
+                               value: this.getValue()
+                           });
+
+                           filterCollection.push(statusFilter);
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'akun_head_status',
+                               value: 0
+                           });
+
+                           filterCollection.push(statusFilter);
+
+                           store.clearFilter(true);
+                           store.filter(filterCollection);
+                       }
+                   }
                 },
                 {
                     xtype: 'combogrid',
@@ -225,7 +226,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     renderer: 'uppercase',
                     queryMode: 'remote',
                     minChar: 2,
-//                    store: 'AkunStore',
+                   store: 'akmsakun.AkunStore',
                     triggerAction: 'all',
                     allowBlank: false,
                     disabled: true,
@@ -292,6 +293,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     xtype: 'fieldcontainer',
                     width: 350,
                     layout: 'hbox',
+                    disabled:true,
                     defaultType: 'textfield',
                     items: [
                         {
@@ -335,7 +337,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     valueField: 'id',
                     queryMode: 'remote',
                     name: 'akunCurr',
-//                    store: 'MataUangStore',
+                   store: 'akmsakun.MataUangStore',
                     triggerAction: 'all',
                     forceSelection: true,
                     typeAhead: true,
@@ -357,7 +359,7 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                     keyNavEnabled: false,
                     mouseWheelEnabled: false,
                     allowBlank: false,
-                    disabled: true
+                    hidden:true,
                 }),
                 {
                     xtype: 'fieldcontainer',
@@ -372,20 +374,20 @@ Ext.define('GlApp.view.akmsakun.AkMsAkunForm', {
                             name: 'isAkunKas',
                             inputValue: 1,
                             uncheckedValues: 0,
-//                            handler: function(ctl, val) {
-//                                if (val === true) {
-//                                    this.up('form').getForm().findField('fungsiAkun').enable();
-////                                    this.up('form').getForm().findField('fungsiAkun').setValue('');
-//
-////                                    this.up('form').down('#akunTujuan').show();
-//                                } else {
-//                                    this.up('form').getForm().findField('fungsiAkun').disable();
-////                                    this.up('form').getForm().findField('fungsiAkun').clearValue();
-//                                    this.up('form').getForm().findField('noRek').hide();
-//
-////                                    this.up('form').down('#akunTujuan').hide();
-//                                }
-//                            }
+                           handler: function(ctl, val) {
+                               if (val === true) {
+                                   this.up('form').getForm().findField('fungsiAkun').enable();
+//                                    this.up('form').getForm().findField('fungsiAkun').setValue('');
+
+//                                    this.up('form').down('#akunTujuan').show();
+                               } else {
+                                   this.up('form').getForm().findField('fungsiAkun').disable();
+//                                    this.up('form').getForm().findField('fungsiAkun').clearValue();
+                                   this.up('form').getForm().findField('noRek').hide();
+
+//                                    this.up('form').down('#akunTujuan').hide();
+                               }
+                           }
                         },
                         {
                             xtype: 'combobox',

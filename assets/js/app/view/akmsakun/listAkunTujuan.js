@@ -1,6 +1,6 @@
-Ext.define('eTrav.view.akun.listAkunTujuan', {
+Ext.define('GlApp.view.akmsakun.listAkunTujuan', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.listakuntujuan',
+    alias: 'widget.akmsakun.listakuntujuan',
     itemId: 'listakuntujuan',
     id: 'listAkunTujuan',
     border: false,

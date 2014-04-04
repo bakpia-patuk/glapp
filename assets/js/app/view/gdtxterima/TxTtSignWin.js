@@ -14,13 +14,13 @@ Ext.define('GlApp.view.gdtxterima.TxTtSignWin', {
     autoShow: true,
     initComponent: function() {
         var me = this;
-
         Ext.applyIf(me, {
             items: [
                 {
                     xtype: 'form',
                     bodyPadding: 10,
                     layout: 'auto',
+                    itemId: 'formttd',
                     fieldDefaults: {
                         labelAlign: 'right',
                         labelWidth: 110,
@@ -28,6 +28,12 @@ Ext.define('GlApp.view.gdtxterima.TxTtSignWin', {
                         width: 300
                     },
                     items: [
+                        {
+                            xtype:'textfield',
+                            name: 'idTt',
+                            itemId: 'idTt',
+                            hidden: true
+                        },
                         {
                             xtype: 'fieldcontainer',
                             width: 300,
@@ -49,11 +55,13 @@ Ext.define('GlApp.view.gdtxterima.TxTtSignWin', {
                                     buttonText: 'Verifikasi TTD',
                                     margins: '10 0 0 5',
                                     itemId: 'preTtdAppr',
-                                    name: 'fileSgn',
+                                    name: 'ttSign',
                                     onChange: function(value) {
-                                        var form = this.up('form').getForm();
-                                        form.submit({
-                                            url: BASE_URL + 'data/upload_sgnTt1',
+                                        var form = this.up('form'),
+                                                idtt = form.down('#idTt').getValue(),
+                                                name = this.getName();
+                                        form.getForm().submit({
+                                            url: BASE_URL + 'shared/upload_ttd_trx/' + name + '/' + idtt,
                                             waitMsg: 'Verifikasi Tanda Tangan ..',
                                             clientValidation: false,
                                             success: function(form, action) {
@@ -78,7 +86,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtSignWin', {
             buttons: [
                 {
                     text: 'Save',
-                    action: 'satuanSave'
+                    action: 'ttSave'
                 },
                 {
                     text: 'Cancel',

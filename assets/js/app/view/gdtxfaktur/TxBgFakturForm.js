@@ -28,7 +28,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturForm', {
                     text: 'SIMPAN',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-save',
-                    action: 'suppSave'
+                    action: 'fktBgSave'
                 }
             ],
             items: [
@@ -60,7 +60,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturForm', {
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'BankStore',
+                   store: 'gdtxfaktur.BankStore',
                     displayField: 'bankAlias',
                     valueField: 'id',
                     emptyText: 'ketik nama bank',
@@ -70,7 +70,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturForm', {
                             var store = cmb.getStore();
                             
                             store.clearFilter(true);
-//                            store.filter('bank_cabang', userCabang);
+                           store.filter('bank_cabang', CABANG_ID);
                         }
                     }
                 },

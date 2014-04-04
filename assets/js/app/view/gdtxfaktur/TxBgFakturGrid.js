@@ -10,7 +10,8 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
     autoScroll: true,
     forceFit: false,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
+    selModel: Ext.create('Ext.ux.selection.CheckboxModel', {
+        header: false
     }),
     initComponent: function() {
         var me = this;
@@ -47,9 +48,9 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
             features: [
                 {
                     startCollapsed: false,
-                    id: 'poPengGroup',
+                    id: 'tbTfBgGroup',
                     ftype: 'grouping',
-                    groupHeaderTpl: 'No Pengadaan : {name}',
+                    groupHeaderTpl: 'Nama Supplier : {name}',
                     hideGroupedHeader: false,
                     //remoteRoot: 'summaryData',
                     enableGroupingMenu: true
@@ -57,32 +58,17 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
             ],
             columns: [
                 {
-                    xtype: 'datecolumn',
+                    xtype: 'gridcolumn',
                     flex: 0.7,
                     text: 'NO FAKTUR',
-                    dataIndex: 'faktur_tgl',
-                    renderer: function(value, meta, record) {
-                        var status = record.get('ttFakturStatus');
-                        if (status !== 0) {
-                            return Ext.util.Format.date(value, 'd/M/Y');
-                        } else {
-                            return '<span style="color:red;">' + Ext.util.Format.date(value, 'd/M/Y') + '</span>';
-                        }
-                    }
+                    dataIndex: 'fktNo'
                 },
                 {
-                    xtype: 'gridcolumn',
-                    flex: 0.2,
+                    xtype: 'numbercolumn',
+                    flex: 0.3,
+                    align: 'right',
                     text: 'NOMINAL',
-                    dataIndex: 'faktur_no',
-                    renderer: function(value, meta, record) {
-                        var status = record.get('ttFakturStatus');
-                        if (status !== 0) {
-                            return value;
-                        } else {
-                            return '<span style="color:red;">' + value + '</span>';
-                        }
-                    }
+                    dataIndex: 'fktTotal'
                 }
             ]
         });

@@ -1,7 +1,7 @@
 var Faktur = Ext.define('GlApp.model.FakturModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'id', type: 'int'},
+        {name: 'id', type: 'string'},
         {name: 'faktur_tgl', type: 'date'},
         {name: 'faktur_suppid', type: 'int'},
 //        {name: 'fktSuppNama', type: 'string'},

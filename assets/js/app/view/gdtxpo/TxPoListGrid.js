@@ -6,16 +6,14 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
     alias: 'widget.gdtxpo.txpolistgrid',
     itemId: 'txpolistgrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxpo.PoStore',
     autoScroll: true,
     forceFit: true,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
-    }),
-
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
-
+        
+        var grid = me;
         Ext.applyIf(me, {
             viewConfig: {
                 autoScroll: true,
@@ -24,17 +22,26 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
             },
             tbar: [
                 {
+                    text: 'PRINT_PO',
+                    ui: 'orange-button',
+                    action: 'printPoCopy'
+                },
+                {
+                    text: 'SEND_PDF',
+                    ui: 'orange-button',
+                    action: 'sentPoPdf'
+                },
+                '->',
+                {
                     xtype: 'datefield',
                     fieldLabel: 'Filter ',
                     labelWidth: 40,
                     labelAlign: 'right',
                     emptyText: 'Tgl. Awal',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
+                    format: 'd/M/Y',
+                    submitFormat: 'Y-m-d',
+                    itemId: 'poListTgl1',
+                    value: new Date()
                 },
                 {
                     xtype: 'datefield',
@@ -42,60 +49,86 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
                     labelWidth: 30,
                     labelAlign: 'right',
                     emptyText: 'Tgl. Akhir',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
+                    format: 'd/M/Y',
+                    submitFormat: 'Y-m-d',
+                    itemId: 'poListTgl2',
+                    value: new Date()
                 },
                 {
                     xtype: 'combobox',
                     emptyText: 'Cabang',
-                    allowBlank: false
+                    width: 150,
+                    itemId: 'poListCabang',
+                    triggerAction: 'all',
+                    hideTrigger: false,
+                    mode: 'remote',
+                    minChars: 2,
+                    store: 'gdtxpo.CabangStore',
+                    displayField: 'cabang_alias',
+                    valueField: 'id'
                 },
                 {
-                    text: 'SEARCH'
+                    text: 'SEARCH',
+                    ui: 'orange-button',
+                    action: 'searchPo'
                 },
-                '->',
+                '-',
                 {
-                    text: 'PRINT_PO'
+                    text: 'REFRESH',
+                    ui: 'orange-button',
+                    handler: function() {
+                        grid.getStore().load();
+                    }
                 },
+                '-',
                 {
-                    text: 'SEND_PDF'
-                },
-                {
-                    text: 'REFRESH'
-                },
-                {
-                    text: 'ALL'
+                    text: 'ALL',
+                    ui: 'orange-button',
+                    action: 'allPo'
                 }
-                
+
             ],
             columns: [
+                Ext.create('Ext.grid.RowNumberer'),
                 {
                     xtype: 'gridcolumn',
-                    width: 120,
-                    text: 'NO PENGADAAN',
-                    dataIndex: 'namams'
+                    flex: 0.25,
+                    text: 'NO. PO',
+                    dataIndex: 'po_no'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'TGL. PENGADAAN',
-                    dataIndex: 'alamatms'
+                    flex: 0.5,
+                    text: 'SUPPLIER',
+                    dataIndex: 'supp_name',
+                    renderer: 'uppercase'
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 150,
-                    text: 'CABANG',
-                    dataIndex: 'namakotams'
+                    xtype: 'datecolumn',
+                    flex: 0.2,
+                    text: 'TGL. PO',
+                    dataIndex: 'tgl_trx',
+                    renderer: Ext.util.Format.dateRenderer('d/M/Y')
                 },
                 {
-                    xtype: 'gridcolumn',
-                    width: 150,
-                    text: 'DIVISI',
-                    dataIndex: 'tlpms'
+                    xtype: 'datecolumn',
+                    flex: 0.2,
+                    text: 'JTH. TEMPO PO',
+                    dataIndex: 'po_ed',
+                    renderer: Ext.util.Format.dateRenderer('d/M/Y'),
+                    editor: {
+                        xtype: 'datefield',
+                        format: 'd/M/Y',
+                        submitFormat: 'Y-m-d',
+                        allowBlank: false
+                    }
+                },
+                {
+                    xtype: 'numbercolumn',
+                    flex: 0.3,
+                    text: 'NILAI PO',
+                    align: 'right',
+                    dataIndex: 'po_value'
                 }
             ]
         });
