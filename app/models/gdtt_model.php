@@ -13,6 +13,57 @@ class Gdtt_model extends MY_Model {
         parent::__construct();
     }
 
+    public function gets_all_tt($params, $options) {
+        $result = $this->__tt_all($params, $options);
+        $no = 0;
+
+        if ($result != NULL) {
+            foreach ($result as $row) {
+                $result[$no]->tgl_trx = explode(' ', $row->tt_tgltrx)[0];
+                $result[$no]->cabang_name = $this->get_detail('id', $row->tt_cabang, 'dt_cabang')->cabang_alias;
+                $result[$no]->barang_name = $this->get_item_detail($row->tt_barang_id)->mi_name;
+                $no++;
+            }
+        }
+
+        return $result;
+    }
+
+    private function __tt_all($params, $options) {
+        $this->db->select('trx_tt_detail.no AS no, trx_tt_detail.id AS id, tt_id, tt_no, tt_tgltrx, tt_cabang, trx_tt.tt_supp_id, tt_barang_id, tt_qty_kirim');
+        $this->db->from('trx_tt_detail');
+        $this->db->join('trx_tt', 'trx_tt.id = trx_tt_detail.tt_id');
+        if ($params != NULL) {
+            foreach ($params as $data) {
+                $this->db->$data['param']($data['field'] . $data['operator'], $data['value']);
+            }
+        }
+        // If limit / offset are declared (usually for pagination) then we need to take them into account
+        if (isset($options['limit']) && isset($options['offset'])) {
+            $this->db->limit($options['limit'], $options['offset']);
+        } else if (isset($options['limit'])) {
+            $this->db->limit($options['limit']);
+        }
+
+        // sort
+        if (isset($options['sortBy'])) {
+            $this->db->order_by($options['sortBy'], $options['sortDirection']);
+        }
+
+        // group
+        if (isset($options['groupBy'])) {
+            $this->db->group_by($options['groupBy']);
+        }
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
     public function get_tt_sisa($id_po, $id_peng, $id_barang) {
         $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => ' <=', 'value' => $id_po);
         $params[] = array('field' => 'tt_peng_id', 'param' => 'where', 'operator' => ' <=', 'value' => $id_peng);

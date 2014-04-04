@@ -276,27 +276,14 @@ class Gd_tt extends Auth_Controller {
         if ($records) {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
-        } else {
-            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d 00:00:00", now()));
-            $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d 23:59:59", now()));
-            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => ' <=', 'value' => $this->user->cabang_id);
         }
 
-        $tablename = 'trx_po';
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
-        $result = $this->Gdtt_model->gets($params, $opt, $tablename);
-        $no = 0;
+        $result = $this->Gdtt_model->gets_all_tt($params, $opt);
 
         if ($result != NULL) {
-            foreach ($result as $row) {
-                $result[$no]->tgl_trx = explode(' ', $row->tgl_trx)[0];
-                $result[$no]->cabang_name = $this->Gdpengadaan_model->get_detail('id', $row->cabang_id, 'dt_cabang')->cabang_alias;
-                $result[$no]->divisi_name = $this->Gdpengadaan_model->get_detail('id', $row->divisi, 'dt_divisi')->divisi_name;
-                $result[$no]->peng_class_row = $this->__return_csspeng($row->id);
-                $no++;
-            }
             echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));

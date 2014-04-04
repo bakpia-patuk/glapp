@@ -9,7 +9,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     stores: [
         'gdtxterima.SupplierStore',
         'gdtxterima.PoDetailStore',
-        'gdtxterima.TtLotStore'
+        'gdtxterima.TtLotStore',
+        'gdtxterima.TtListStore'
     ],
     views: [
         'gdtxterima.GetGdTxTerima',
