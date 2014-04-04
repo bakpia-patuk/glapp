@@ -31,7 +31,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtSignWin', {
                         {
                             xtype:'textfield',
                             name: 'idTt',
-                            itemId: 'idTt'
+                            itemId: 'idTt',
+                            hidden: true
                         },
                         {
                             xtype: 'fieldcontainer',

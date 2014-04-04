@@ -314,10 +314,32 @@ class Gd_tt extends Auth_Controller {
         }
 
         if (!in_array(0, $penampung)) {
-            return FALSE;
+            return TRUE;
         }
-        
-        return TRUE;
+
+        return FALSE;
+    }
+
+    private function __check_lot($id) {
+        $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $po_all = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
+        $penampung = array();
+
+        foreach ($po_all as $row) {
+            $barang_lot = $this->Gdtt_model->get_item_detail($row->barang_id)->mi_nolot;
+            if ($barang_lot == 0) {
+                array_push($penampung, 1);
+            } else {
+                $data = $this->Gdtt_model->check_trx_lot($this->user, $row->barang_id, $id, NULL, NULL, NULL);
+                array_push($penampung, $data);
+            }
+        }
+
+        if (!in_array(0, $penampung)) {
+            return TRUE;
+        }
+
+        return FALSE;
     }
 
 }
