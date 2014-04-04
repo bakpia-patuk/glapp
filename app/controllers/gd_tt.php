@@ -57,34 +57,33 @@ class Gd_tt extends Auth_Controller {
             return;
         }
 
-        $data = array(
-            'po_ed' => mdate('%Y-%m-%d', strtotime($insert['po_ed'])),
-            'po_suppid' => $insert['po_suppid'],
-            'po_supp_email' => $insert['po_supp_email'],
-            'po_value' => $this->Gdtt_model->standard_money($insert['po_value']),
-            'po_isangsuran' => $insert['po_isangsuran'],
-            'po_angdp' => 0,
-            'po_angqty' => 0,
-            'po_angvalue' => 0,
-            'po_usersign' => $this->user->ttd_url,
-            'po_ttstatus' => 0,
-            'po_tfstatus' => 0,
-            'po_simpanstatus' => 1
-        );
-
-        $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-        if (!$this->Gdtt_model->update($data, $params1, NULL, 'trx_po')) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+        if (!$this->__check_ttd($insert['id'])) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Belum ada Ttd Pengirim'));
             return;
         }
 
-        if (!$this->__set_tt($insert['id'])) {
-            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+        if (!$this->__check_null($insert['id'])) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Barang yang di kirim tidak boleh 0'));
             return;
         }
 
-        $this->Gdtt_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_P0');
-        echo json_encode(array('success' => 'true', 'data' => $insert['id'], 'title' => 'Info', 'msg' => 'Insert PO Success'));
+        if (!$this->__check_lot($insert['id'])) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Jika barang mempunyai status LOT, harus di isi'));
+            return;
+        }
+//        $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+//        if (!$this->Gdtt_model->update($data, $params1, NULL, 'trx_po')) {
+//            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+//            return;
+//        }
+//
+//        if (!$this->__set_tt($insert['id'])) {
+//            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+//            return;
+//        }
+//
+//        $this->Gdtt_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_P0');
+        echo json_encode(array('success' => 'true', 'data' => $insert['id'], 'title' => 'Info', 'msg' => 'Insert Tt Success'));
     }
 
     private function __set_tt($id_po) {
@@ -291,5 +290,34 @@ class Gd_tt extends Auth_Controller {
 
         $this->load->view('po_invoice', $data);
     }
-    
+
+    private function __check_ttd($id) {
+        $filename = 'assets/ttd_tx/ttSign' . $id . 'NULL_.png';
+
+        if (!file_exists($filename)) {
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    private function __check_null($id) {
+        $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $po_all = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
+        $penampung = array();
+        foreach ($po_all as $row) {
+            if ($row->tt_qty_kirim == 0) {
+                array_push($penampung, 0);
+            } else {
+                array_push($penampung, 1);
+            }
+        }
+
+        if (!in_array(0, $penampung)) {
+            return FALSE;
+        }
+        
+        return TRUE;
+    }
+
 }

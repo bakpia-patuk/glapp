@@ -50,6 +50,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtForm', {
                     itemId: 'tt_no',
                     emptyText: 'auto-generate',
                     readOnly: true,
+                    allowBlank: false,
                     fieldCls: 'x-item-readonly'
                 },
                 {

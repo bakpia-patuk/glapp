@@ -33,7 +33,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                     click: this.resetTt
                 },
                 '#newttpanel button[action=ttSave]': {
-                    click: this.showListPo
+                    click: this.saveTt
                 },
                 '#newttpanel button[action=ttPrintWindow]': {
                     click: this.showListPo
@@ -146,6 +146,13 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             return false;
         }
     },
+    saveTt: function(btn) {
+        var form = this.getTtForm();
+
+        if (form.getForm().isValid()) {
+            this.ajaxReq('gd_tt/save', form.getForm().getValues(), 4);
+        }
+    },
     setItemTt: function(column, recordIndex, checked) {
         var form = this.getTtForm(),
                 grid = this.getTtPoGrid(),
@@ -192,12 +199,13 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
         } else if (idForm === 3) {
             Ext.StoreMgr.lookup('gdtxpo.SupplierEmailStore').load();
         } else if (idForm === 4) {
-            poPanel.down('#searchPo').enable();
-            poPanel.down('#poCabang').setReadOnly(false);
-            poPanel.down('#poCabang').reset();
+            poPanel.down('#searchTt').enable();
+            poPanel.down('#ttSupplier').setReadOnly(false);
+            poPanel.down('#ttSupplier').reset();
             form.getForm().reset();
             form.saved = true;
             gridPo.getStore().removeAll();
+            form.down('#imageTtdTb1').setSrc('assets/appdata/signBlank.png');
 
             Ext.MessageBox.show({
                 title: resp.title,
