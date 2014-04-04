@@ -469,7 +469,58 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
                 });
             }
         }
-    }
+    },
+    showPrintTf: function(btn, e, opt) {
+        var win = new Ext.widget('newwindow', {
+            layout: 'fit',
+            modal: true,
+            title: 'Data Faktur',
+            autoScroll: false,
+            width: 600,
+            height: 300,
+            border: true,
+            items: [
+                {
+                    xtype: 'tfprintgrid',
+                    layout: 'fit',
+                    region: 'center'
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Tutup',
+                    handler: function() {
+                        this.up('window').destroy();
+                    }
+                }
+            ]
+        });
+        win.show();
+    },
+    printTf: function(btn, e, opt) {
+        var form = this.getTfTtdForm().getForm(),
+                fkt = form.findField('fktList').getValue(),
+                pengirim = form.findField('pengirim').getValue();
+
+        if (form.isValid()) {
+            Ext.Ajax.request({
+                url: BASE_PATH + 'persediaan/set_cetak_tf',
+                method: 'POST',
+                params: form.getValues(),
+                scope: this,
+                callback: function(options, success, response) {
+                    var resp = Ext.decode(response.responseText);
+
+                    if (resp.success === 'true') {
+                        window.open(BASE_PATH + 'persediaan/printTf/0/' + resp.data, "Print Preview", "scrollbars=1,height=" + screen.height + ",width=950");
+                        btn.up('window').destroy();
+                        this.getTfListFkt().getStore().load();
+                    }
+                }
+            });
+        }
+    },
+
 });
 
 /* End of file Base.js */
