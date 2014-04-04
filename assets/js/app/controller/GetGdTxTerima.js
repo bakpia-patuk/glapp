@@ -8,7 +8,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     ],
     stores: [
         'gdtxterima.SupplierStore',
-        'gdtxterima.PoDetailStore'
+        'gdtxterima.PoDetailStore',
+        'gdtxterima.TtLotStore'
     ],
     views: [
         'gdtxterima.GetGdTxTerima',
@@ -22,7 +23,10 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     refs: [
         {ref: 'PanelTerima', selector: '#newttpanel'},
         {ref: 'TtPoGrid', selector: '#txttgrid'},
-        {ref: 'TtForm', selector: '#txttform'}
+        {ref: 'TtLotGrid', selector: '#txttgriddt'},
+        {ref: 'TtForm', selector: '#txttform'},
+        {ref: 'WindowLot', selector: '#gridLot'}
+        
     ],
     init: function() {
         this.listen({
@@ -72,6 +76,35 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                         btn.up('window').close();
                     }
                 },
+                '#txttgrid': {
+                    selectionchange: function(m, r) {
+                        var form = this.getTtForm(),
+                                gridLot = this.getTtLotGrid(),
+                                store = gridLot.getStore(), filterCollection = [];
+
+                        if (form.down('#id').getValue() !== '0') {
+                            if (r[0]) {
+                                var statusFilter = new Ext.util.Filter({
+                                    property: 'stk_trxreftype',
+                                    value: 'ttgudang'
+                                });
+                                filterCollection.push(statusFilter);
+                                var statusFilter = new Ext.util.Filter({
+                                    property: 'stk_trxref',
+                                    value: form.down('#id').getValue()
+                                });
+                                filterCollection.push(statusFilter);
+                                var statusFilter = new Ext.util.Filter({
+                                    property: 'stl_barangid',
+                                    value: r[0].get('barang_id')
+                                });
+                                filterCollection.push(statusFilter);
+                                store.clearFilter(true);
+                                store.filter(filterCollection);
+                            }
+                        }
+                    }
+                },
                 '#txttgriddt button[action=ttLotAdd]': {
                     click: function(btn) {
                         var form = this.getTtForm();
@@ -81,12 +114,37 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                         }
 
                         var grid = this.getTtPoGrid(),
-                                sel = grid.getSelectionModel().getSelection();
+                                sel = grid.getSelectionModel().getSelection(),
+                                gridLot = this.getTtLotGrid(),
+                                store = gridLot.getStore();
                         if (!sel.length) {
                             Ext.Msg.alert('Warning', 'Pilih barang yang akan di buat lot');
                             return;
                         }
-                        var win = Ext.widget('gdtxterima.txttlotwin');
+
+                        if (sel[0].get('tt_id') === '0') {
+                            Ext.Msg.alert('Warning', 'Barang belum dimasukkan ke transaksi');
+                            return;
+                        }
+
+                        var win = Ext.widget('gdtxterima.txttlotwin'),
+                                formLot = win.down('#formLot');
+
+                        formLot.down('#stk_trxref').setValue(sel[0].get('tt_id'));
+                        formLot.down('#stl_barangid').setValue(sel[0].get('barang_id'));
+                        formLot.down('#stl_barangname').setValue(sel[0].get('barang_name'));
+                        formLot.down('#qty_tt').setValue(sel[0].get('tt_qty_kirim'));
+                        formLot.down('#qty_tt_old').setValue(sel[0].get('barang_qty'));
+                        store.load();
+                    }
+                },
+                '#formLot button[action=lotSave]': {
+                    click: function(btn) {
+                        var form = btn.up('form');
+
+                        if (form.getForm().isValid()) {
+                            this.ajaxReq('gd_tt/save_lot', form.getForm().getValues(), 9);
+                        }
                     }
                 }
             },
@@ -178,6 +236,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
     onSuccess: function(resp, idForm) {
         var form = this.getTtForm(),
                 poPanel = this.getPanelTerima(),
+                gridLot = this.getTtLotGrid(),
                 gridPo = this.getTtPoGrid();
         if (idForm === 1) {
             //SET TT INIT
@@ -187,6 +246,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             form.down('#tt_supp_name').setValue(poPanel.down('#ttSupplier').getRawValue());
             form.down('#tt_no').setValue(resp.data.tt_no);
             form.saved = false;
+            gridPo.getSelectionModel().clearSelections();
             gridPo.getStore().load();
         } else if (idForm === 2) {
             poPanel.down('#searchTt').enable();
@@ -195,6 +255,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             form.getForm().reset();
             form.saved = true;
             gridPo.getStore().removeAll();
+            gridLot.getStore().removeAll();
             form.down('#imageTtdTb1').setSrc('assets/appdata/signBlank.png');
         } else if (idForm === 3) {
             Ext.StoreMgr.lookup('gdtxpo.SupplierEmailStore').load();
@@ -205,6 +266,7 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             form.getForm().reset();
             form.saved = true;
             gridPo.getStore().removeAll();
+            gridLot.getStore().removeAll();
             form.down('#imageTtdTb1').setSrc('assets/appdata/signBlank.png');
 
             Ext.MessageBox.show({
@@ -221,14 +283,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             form.saved = true;
             gridPo.getStore().removeAll();
             this.printPo(0, resp.data);
-        } else {
-            poPanel.down('#searchPo').enable();
-            poPanel.down('#poCabang').setReadOnly(false);
-            poPanel.down('#poCabang').reset();
-            form.getForm().reset();
-            form.saved = true;
-            gridPo.getStore().removeAll();
-            this.pdfPo(resp.data);
+        } else if(idForm === 9){
+            this.getWindowLot().getStore().load();
         }
     },
     onFailure: function(resp, idForm) {

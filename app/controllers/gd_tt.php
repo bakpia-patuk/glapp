@@ -71,27 +71,26 @@ class Gd_tt extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Jika barang mempunyai status LOT, harus di isi'));
             return;
         }
-//        $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-//        if (!$this->Gdtt_model->update($data, $params1, NULL, 'trx_po')) {
-//            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
-//            return;
-//        }
-//
-//        if (!$this->__set_tt($insert['id'])) {
-//            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
-//            return;
-//        }
-//
-//        $this->Gdtt_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_P0');
+        if (!$this->__final_tt($insert)) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        if (!$this->__set_tt($insert['id'])) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        $this->Gdtt_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_TT');
         echo json_encode(array('success' => 'true', 'data' => $insert['id'], 'title' => 'Info', 'msg' => 'Insert Tt Success'));
     }
 
-    private function __set_tt($id_po) {
-        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id_po);
-        $data_pengadaan = $this->Gdtt_model->gets($params, NULL, 'trx_pengadaan_detail');
+    private function __set_tt($id_tt) {
+        $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $id_tt);
+        $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
 
-        foreach ($data_pengadaan as $row) {
-            $this->Gdtt_model->insert_po_item($row->id);
+        foreach ($data_po as $row) {
+            $this->Gdtt_model->insert_tt_item($row->id);
         }
 
         return TRUE;
@@ -150,6 +149,33 @@ class Gd_tt extends Auth_Controller {
         }
     }
 
+    private function __final_tt($insert) {
+        $filename = 'assets/ttd_tx/ttSign'.$insert['id'].'NULL_.png';
+        $newfile2 = 'assets/ttd_tx/tt/tt_' .$insert['id']. "_sign.png";
+
+        $data = array(
+            'tt_penerima' => $insert['tt_penerima'],
+            'tt_urlsign2' => $newfile2,
+            'tt_desc' => $insert['tt_desc'],
+            'simpan_status' => 1
+        );
+
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        if (!$this->Gdtt_model->update($data, $params, NULL, 'trx_tt')) {
+            return FALSE;
+        }
+        
+        if (!copy($filename, $newfile2)) {
+            return FALSE;
+        }
+       
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+
+        return TRUE;
+    }
+
     public function edit_peng_tt() {
         $insert = $this->input->post(NULL, TRUE);
 
@@ -166,6 +192,41 @@ class Gd_tt extends Auth_Controller {
         $this->Gdtt_model->update($data, $opt, NULL, 'trx_pengadaan_detail');
         $id_po = $this->Gdtt_model->get_detail('id', $insert['id'], 'trx_pengadaan_detail')->po_id;
         echo json_encode(array('success' => 'true', 'data' => $this->Gdtt_model->total_po($id_po)));
+    }
+
+    public function save_lot() {
+        $insert = $this->input->post(NULL, TRUE);
+        $last_no = $this->Gdtt_model->get_last('trx_tt');
+
+        $data = array(
+            'id' => $last_no . '.' . $this->user->cabang_id,
+            'stl_date' => mdate("%Y-%m-%d %H:%i:%s", time()),
+            'stl_cabangid' => $this->user->cabang_id,
+            'stl_divisiid' => $this->user->divisi_id,
+            'stl_ruangid' => $this->Gdtt_model->__gudang_pusat($this->user->cabang_id),
+            'stl_barangid' => $insert['stl_barangid'],
+            'stl_nolot' => $insert['stl_nolot'],
+            'stl_qty' => $insert['stl_qty'],
+            'stl_qtylast' => $insert['stl_qty'],
+            'stl_baranged' => mdate("%Y-%m-%d", strtotime($insert['stl_baranged'])),
+            'stk_trxreftype' => $insert['stk_trxreftype'],
+            'stk_trxref' => $insert['stk_trxref'],
+            'stl_barcode' => $insert['stl_barcode'],
+            'simpan_status' => 0
+        );
+
+        if (!$this->Gdtt_model->insert($data, 'trx_stock_lot')) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        $return = array(
+            'barang_id' => $insert['stl_barangid'],
+            'stk_trxref' => $insert['stk_trxref'],
+            'barang_name' => $insert['stl_barangname'],
+            'qty_tt' => $insert['qty_tt'],
+        );
+        echo json_encode(array('success' => 'true', 'data' => $return, 'title' => 'Info', 'msg' => 'Insert Lot Success'));
     }
 
     public function list_po_all() {
@@ -266,6 +327,28 @@ class Gd_tt extends Auth_Controller {
         }
     }
 
+    public function list_tt_lot() {
+        $records = $this->input->get('filter');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        $tablename = 'trx_stock_lot';
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Gdtt_model->gets($params, $opt, $tablename);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan Detail'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+
     public function print_tt($type, $id) {
         $po = $this->Gdtt_model->get_detail('id', $id, 'trx_po');
         $data['type'] = $type == 0 ? 'ASLI' : 'COPY';
@@ -327,10 +410,11 @@ class Gd_tt extends Auth_Controller {
 
         foreach ($po_all as $row) {
             $barang_lot = $this->Gdtt_model->get_item_detail($row->barang_id)->mi_nolot;
+
             if ($barang_lot == 0) {
                 array_push($penampung, 1);
             } else {
-                $data = $this->Gdtt_model->check_trx_lot($this->user, $row->barang_id, $id, NULL, NULL, NULL);
+                $data = $this->Gdtt_model->check_trx_lot($this->user, $row->barang_id, $id, NULL, NULL, 'ttgudang');
                 array_push($penampung, $data);
             }
         }

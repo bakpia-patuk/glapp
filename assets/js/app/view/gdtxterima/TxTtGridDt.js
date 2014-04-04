@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtGridDt', {
     alias: 'widget.gdtxterima.txttgriddt',
     itemId: 'txttgriddt',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxterima.TtLotStore',
     autoScroll: true,
     forceFit: false,
     columnLines: true,
@@ -33,19 +33,21 @@ Ext.define('GlApp.view.gdtxterima.TxTtGridDt', {
                     xtype: 'gridcolumn',
                     flex: 0.5,
                     text: 'NO LOT',
-                    dataIndex: 'noLot'
+                    dataIndex: 'stl_nolot'
                 },
                 {
                     xtype: 'datecolumn',
                     flex: 0.3,
                     text: 'TGL. EXPIRED',
-                    dataIndex: 'tglEd'
+                    dataIndex: 'stl_baranged',
+                    format: 'd/M/Y'
                 },
                 {
                     xtype: 'numbercolumn',
                     flex: 0.15,
                     text: 'JUMLAH',
-                    dataIndex: 'qtyLot'
+                    format: '000',
+                    dataIndex: 'stl_qtylast'
                 }
             ]
         });
