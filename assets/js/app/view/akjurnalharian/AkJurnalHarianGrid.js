@@ -8,7 +8,7 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianGrid', {
     itemId: 'akjurnalhariangrid',
     autoScroll: true,
     forceFit: false,
-    ui: 'red-panel',
+    ui: 'blue-panel',
 //    store: 'JurnalHarianStore',
     columnLines: true,
     stripeRows: true,

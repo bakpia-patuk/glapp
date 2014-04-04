@@ -1,5 +1,5 @@
 /**
- * @author Isht Ae
+ * @author Isht Ae, Coepoe
  **/
 
 Ext.define('GlApp.controller.GetBkAnggaran', {
@@ -7,6 +7,13 @@ Ext.define('GlApp.controller.GetBkAnggaran', {
     models: [
     ],
     stores: [
+        'bkanggaran.DaStoreTree',
+        'bkanggaran.CabangStore',
+        'bkanggaran.DaNonStoreTree',
+        'bkanggaran.CabangNonStore',
+        'bkanggaran.AgrSuppStore',
+        'bkanggaran.BankPusatStore',
+        'bkanggaran.BankDebetDariStore'
     ],
     views: [
         'bkanggaran.GetBkAnggaran',
@@ -32,6 +39,24 @@ Ext.define('GlApp.controller.GetBkAnggaran', {
     ],
     init: function() {
         this.control({
+            '#bkanggarangrid':{
+                selectionchange: function(model, records) {
+                    var grid = this.getBkAnggaranGrid(),
+                        btnListFkt = grid.down('#ListFakturBgAgr');
+
+                    if (records[0]) {
+                        var jenis = records[0].get('jenisBayar');
+                        if (jenis == 1000) {
+                            btnListFkt.enable();
+                        } else {
+                            btnListFkt.disable();
+                        }
+                    }
+                },
+            },
+            '#bkanggarannongrid':{
+                
+            }
         });
     },
 });
