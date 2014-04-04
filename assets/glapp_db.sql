@@ -494,6 +494,7 @@ CREATE TABLE `trx_stock` (
   `stk_cabangid` int(11) NOT NULL,
   `stk_divisiid` int(11) NOT NULL,
   `stk_ruangid` int(11) NOT NULL,
+  `stk_usercreate` int(11) NOT NULL,
   `stk_trxtype` int(11) NOT NULL,
   `stk_trxreftype` varchar(50) NOT NULL,
   `stk_trxref` varchar(200) NOT NULL,
@@ -507,7 +508,7 @@ CREATE TABLE `trx_stock` (
 
 /*Data for the table `trx_stock` */
 
-insert  into `trx_stock`(`no`,`id`,`stk_date`,`stk_cabangid`,`stk_divisiid`,`stk_ruangid`,`stk_trxtype`,`stk_trxreftype`,`stk_trxref`,`stk_barangid`,`stk_qty`,`stk_qtylast`,`simpan_status`) values (1927,'1.1','2014-04-04 11:28:32',1,1,0,1,'ttgudang','1.1','24.1',15,15,1);
+insert  into `trx_stock`(`no`,`id`,`stk_date`,`stk_cabangid`,`stk_divisiid`,`stk_ruangid`,`stk_usercreate`,`stk_trxtype`,`stk_trxreftype`,`stk_trxref`,`stk_barangid`,`stk_qty`,`stk_qtylast`,`simpan_status`) values (1927,'1.1','2014-04-04 11:28:32',1,1,283,1,1,'ttgudang','1.1','24.1',15,15,1);
 
 /*Table structure for table `trx_stock_lot` */
 
@@ -520,6 +521,7 @@ CREATE TABLE `trx_stock_lot` (
   `stl_cabangid` int(11) NOT NULL,
   `stl_divisiid` int(11) NOT NULL,
   `stl_ruangid` int(11) NOT NULL,
+  `stl_usercreate` int(11) NOT NULL,
   `stl_barangid` varchar(100) NOT NULL,
   `stl_nolot` varchar(100) NOT NULL,
   `stl_qty` int(11) NOT NULL,
@@ -535,7 +537,7 @@ CREATE TABLE `trx_stock_lot` (
 
 /*Data for the table `trx_stock_lot` */
 
-insert  into `trx_stock_lot`(`no`,`id`,`stl_date`,`stl_cabangid`,`stl_divisiid`,`stl_ruangid`,`stl_barangid`,`stl_nolot`,`stl_qty`,`stl_qtylast`,`stl_baranged`,`stk_trxreftype`,`stk_trxref`,`stl_barcode`,`simpan_status`) values (1,'32.1','2014-04-04 11:27:12',1,1,283,'24.1','3120080',15,15,'2014-04-30','ttgudang','1.1','123.00909.073',1);
+insert  into `trx_stock_lot`(`no`,`id`,`stl_date`,`stl_cabangid`,`stl_divisiid`,`stl_ruangid`,`stl_usercreate`,`stl_barangid`,`stl_nolot`,`stl_qty`,`stl_qtylast`,`stl_baranged`,`stk_trxreftype`,`stk_trxref`,`stl_barcode`,`simpan_status`) values (1,'32.1','2014-04-04 11:27:12',1,1,283,1,'24.1','3120080',15,15,'2014-04-30','ttgudang','1.1','123.00909.073',1);
 
 /*Table structure for table `trx_tt` */
 
