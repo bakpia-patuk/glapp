@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtListGrid', {
     alias: 'widget.gdtxterima.tsxttlistgrid',
     itemId: 'tsxttlistgrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdtxterima.TtListStore',
     autoScroll: true,
     forceFit: true,
     columnLines: true,
@@ -17,7 +17,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtListGrid', {
         Ext.applyIf(me, {
             viewConfig: {
                 autoScroll: true,
-                emptyText: 'Tidak ada data Pengadaan',
+                emptyText: 'Tidak ada data Penerimaan Barang',
                 deferEmptyText: false
             },
             tbar: [
@@ -78,13 +78,13 @@ Ext.define('GlApp.view.gdtxterima.TxTtListGrid', {
                     xtype: 'gridcolumn',
                     flex: 0.5,
                     text: 'Nama Barang',
-                    dataIndex: 'tt_barang_name'
+                    dataIndex: 'barang_name'
                 },
                 {
                     xtype: 'datecolumn',
                     flex: 0.3,
                     text: 'TGL. TT',
-                    dataIndex: 'tt_tgl',
+                    dataIndex: 'tgl_trx',
                     renderer: Ext.util.Format.dateRenderer('d/M/Y')
                 },
                 {

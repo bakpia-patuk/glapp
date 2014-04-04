@@ -35,6 +35,7 @@ Created by Roan Lavery
 #client-details{padding-top:10px; float:left;margin:0px 0 20px 10px; width:330px}
 #invoice-info {clear:both; float:right;margin:-7px 0 20px 0 }
 #invoice-title {width:150px;clear:both; margin:0 auto;}
+#invoice-title.tt {width:200px;clear:both; margin:0 auto;}
 #invoice-ket {clear:both;}
 #invoice-ket2 {clear:both;}
 #invoice-info th{text-align:right}
@@ -80,8 +81,12 @@ Created by Roan Lavery
 #invoice-amount .unitprice_th{width:10%; text-align:right}
 #invoice-amount .desc_th{width:11%}
 
+#invoice-amount ul{margin :0px;padding: 0px 0px 0px 10px}
+#invoice-amount ul li{margin :0px; padding:0px;list-style: square}
+                           
 #invoice-sign td {margin: 0;padding: 5px 5px 5px 5px; vertical-align: top; font-size: 9pt}
 #invoice-sign div.hr {border-top: none;border-bottom: 1px solid #666;border-left: none;border-right: none; width: 70%; margin:3px 0px;}
+#invoice-sign div.hr2 {border-top: none;border-bottom: 1px solid #666;border-left: none;border-right: none; width: 50%; margin:3px 0px;}
 
 .section_footer {
     margin-top: 20px;
