@@ -25,7 +25,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
         {ref: 'TtPoGrid', selector: '#txttgrid'},
         {ref: 'TtLotGrid', selector: '#txttgriddt'},
         {ref: 'TtForm', selector: '#txttform'},
-        {ref: 'WindowLot', selector: '#gridLot'}
+        {ref: 'WindowLot', selector: '#gridLot'},
+        {ref: 'FormLot', selector: '#formLot'}
         
     ],
     init: function() {
@@ -294,6 +295,12 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
 
             this.printTt(0, resp.data);
         } else if(idForm === 9){
+            var form = this.getFormLot();
+            form.getForm().reset();
+            form.down('#stk_trxref').setValue(resp.data.stk_trxref);
+            form.down('#stl_barangid').setValue(resp.data.barang_id);
+            form.down('#stl_barangname').setValue(resp.data.barang_name);
+            form.down('#qty_tt').setValue(resp.data.qty_tt);
             this.getWindowLot().getStore().load();
         }
     },
