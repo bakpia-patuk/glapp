@@ -53,16 +53,16 @@ class Gdtt_model extends MY_Model {
         $params[] = array('field' => 'stl_barangid', 'param' => 'where', 'operator' => '', 'value' => $barang);
         $params[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => $reftype);
         $params[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $ref);
-        
+
         $result = $this->gets($params, NULL, 'trx_stock_lot');
-        
-        if($result != NULL) {
+
+        if ($result != NULL) {
             return 1;
         } else {
             return 0;
         }
     }
-    
+
     public function __gudang_pusat($id) {
         $params[] = array('field' => 'divisi_id', 'param' => 'where', 'operator' => '', 'value' => 3);
         $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $id);
@@ -70,7 +70,7 @@ class Gdtt_model extends MY_Model {
         $result = $this->get($params, NULL, 'dt_ruang');
         return $result->id;
     }
-    
+
     public function insert_tt_item($id) {
         $dtpo = $this->get_detail('id', $id, 'trx_po_detail');
         $dtt = $this->get_detail('id', $dtpo->tt_id, 'trx_tt');
@@ -89,11 +89,11 @@ class Gdtt_model extends MY_Model {
             'tt_harga' => $dtpo->barang_harga,
             'tt_disc' => $dtpo->barang_disc,
             'tt_ppn' => $dtpo->barang_ppn,
-            'tt_faktur_status' =>0,
+            'tt_faktur_status' => 0,
             'tt_faktur_show' => 0,
             'faktur_id' => 0,
             'tt_set' => 0,
-            'simpan_status'=> 1
+            'simpan_status' => 1
         );
 
         $this->insert($data, 'trx_tt_detail');
@@ -110,12 +110,12 @@ class Gdtt_model extends MY_Model {
         $this->__set_stock($id);
         return TRUE;
     }
-    
+
     private function __set_stock($id) {
         $user = $this->ion_auth->user()->row();
         $dtpo = $this->get_detail('id', $id, 'trx_po_detail');
         $get_last_item = $this->get_detail('id', $dtpo->barang_id, 'dt_item_cabang')->stock_last;
-        
+
         $data = array(
             'id' => $this->get_last('trx_stock') . '.' . $user->cabang_id,
             'stk_date' => mdate("%Y-%m-%d %H:%i:%s", time()),
@@ -125,7 +125,7 @@ class Gdtt_model extends MY_Model {
             'stk_usercreate' => $user->id,
             'stk_trxtype' => 1,
             'stk_trxreftype' => 'ttgudang',
-            'stk_trxref' => $id,
+            'stk_trxref' => $dtpo->tt_id,
             'stk_barangid' => $dtpo->barang_id,
             'stk_qty' => $dtpo->tt_qty_kirim,
             'stk_qtylast' => $dtpo->tt_qty_kirim + $get_last_item,
@@ -139,5 +139,41 @@ class Gdtt_model extends MY_Model {
         return TRUE;
     }
 
+    public function get_tt_detail($id) {
+        $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data = $this->gets($params, NULL, 'trx_tt_detail');
+        $no = 1;
+        foreach ($data as $row) {
+            $return[] = array(
+                'no' => $no,
+                'barang_name' => $this->get_item_detail($row->tt_barang_id)->mi_name,
+                'barang_qty' => $row->tt_qty_kirim,
+                'barang_po' => $this->get_detail('id', $row->tt_po_id, 'trx_po')->po_no,
+                'no_lot' => $this->__list_lot($row->tt_barang_id, 'ttgudang', $id)
+            );
+            $no++;
+        }
+
+        return $return;
+    }
+
+    private function __list_lot($barang, $params, $id) {
+        $par[] = array('field' => 'stl_barangid', 'param' => 'where', 'operator' => '', 'value' => $barang);
+        $par[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => $params);
+        $par[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $result = $this->gets($par, NULL, 'trx_stock_lot');
+        if ($result != NULL) {
+            $out = '<ul>';
+            foreach ($result as $row) {
+                $out.= '<li>';
+                $out.= 'No '.$row->stl_nolot. ', Jumlah : '.$row->stl_qty;
+               $out.= '</li>';
+            }
+            $out.= '</ul>';
+            return $out;
+        } else {
+            return 'Tidak Ada Lot';
+        }
+    }
 
 }

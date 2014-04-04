@@ -200,7 +200,7 @@ class Gd_tt extends Auth_Controller {
 
     public function save_lot() {
         $insert = $this->input->post(NULL, TRUE);
-        $last_no = $this->Gdtt_model->get_last('trx_tt');
+        $last_no = $this->Gdtt_model->get_last('trx_stock_lot');
 
         $data = array(
             'id' => $last_no . '.' . $this->user->cabang_id,
@@ -331,16 +331,13 @@ class Gd_tt extends Auth_Controller {
         $data['tt_no'] = $tt->tt_no;
         $data['tt_tgl'] = mdate('%d %F %Y', strtotime($tt->tt_tgltrx));
         $data['tt_company'] = $this->Gdtt_model->get_detail('id', $tt->tt_supp_id, 'dt_supplier')->ms_name;
-//        $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
-        $user_create = $this->Gdtt_model->get_detail('id', $po->po_usercreate, 'users');
-        $user_app = $this->Gdtt_model->get_detail('id', 76, 'users');
-//
-//        $data['create_ttd'] = $user_create->ttd_url;
-//        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
-//
-//        $data['app_ttd'] = $user_app->ttd_url;
-//        $data['app_name'] = strtoupper($user_app->first_name . ' ' . $user_app->last_name);
-//        $data['detail_po'] = $this->Gdtt_model->get_po_detail($id);
+        $user_create = $this->Gdtt_model->get_detail('id', $tt->tt_petugas, 'users');
+
+        $data['create_ttd'] = $user_create->ttd_url;
+        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
+        $data['app_ttd'] = $tt->tt_urlsign2;
+        $data['app_name'] = strtoupper($tt->tt_penerima);
+        $data['detail_tt'] = $this->Gdtt_model->get_tt_detail($id);
 
         $this->load->view('tt_invoice', $data);
     }
