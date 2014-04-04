@@ -102,11 +102,11 @@ Ext.define('GlApp.view.gdtxfaktur.GetGdTxFaktur', {
                                     ]
                                 },
                                 {
-                                    region: 'center',
-                                    xtype: 'gdtxfaktur.txbgfakturgrid',
-                                    title: 'DAFTAR BG FAKTUR',
-                                    layout: 'fit',
-                                    border: true
+                                  region: 'center',
+                                  xtype: 'gdtxfaktur.txbgfakturgrid',
+                                  title: 'DAFTAR BG FAKTUR',
+                                  layout: 'fit',
+                                  border: true
                                 }
                             ]
                         },

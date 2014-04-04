@@ -137,7 +137,22 @@ class Auth_Controller extends MY_Controller {
             return FALSE;
         }
     }
+    public function value_reader($record) {
+        $param = NULL;
 
+        if (isset($record)) {
+            $parse = substr($record, -2);
+            if ($parse == 'LT' || $parse == 'GT' || $parse == 'EQ' || $parse == 'NE' || $parse == 'LL' || $parse == 'GG') {
+                $param = substr($record, 0, -2);
+            } else {
+                $param = $record;
+            }
+
+            return $param;
+        } else {
+            return FALSE;
+        }
+    }
     private function __property_reader($record) {
         $param = NULL;
 

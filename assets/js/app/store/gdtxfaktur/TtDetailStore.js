@@ -2,8 +2,8 @@ var TtDetail = Ext.define('GlApp.model.TtDetailModel', {
     extend: 'Ext.data.Model',
     fields: [
         // id     tt_cabang_id                          tt_faktur_show  faktur_id  tt_set  
-        {name: 'id', type: 'int'},
-        {name: 'tt_id', type: 'int'},
+        {name: 'id', type: 'string'},
+        {name: 'tt_id', type: 'string'},
         {name: 'ttNo', type: 'string'},
         {name: 'tt_po_id', type: 'int'},
         {name: 'ttPoNo', type: 'string'},

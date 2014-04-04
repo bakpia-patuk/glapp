@@ -292,11 +292,12 @@ class Gd_tt extends Auth_Controller {
     }
 
     private function __check_ttd($id) {
-        $filename = 'assets/ttd_tx/ttSign' . $id . 'NULL_.png';
 
-        if (!file_exists($filename)) {
-            return FALSE;
-        }
+       // $filename = 'assets/ttd_tx/ttSign' . $id . 'NULL_.png';
+        // $filename = 'assets/ttd_tx/ttSignNULL_.png';
+        // if (!file_exists($filename)) {
+        //     return FALSE;
+        // }
 
         return TRUE;
     }
@@ -305,13 +306,19 @@ class Gd_tt extends Auth_Controller {
         $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $po_all = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
         $penampung = array();
-        foreach ($po_all as $row) {
-            if ($row->tt_qty_kirim == 0) {
-                array_push($penampung, 0);
-            } else {
-                array_push($penampung, 1);
+        if($po_all){
+            foreach ($po_all as $row) {
+                if ($row->tt_qty_kirim == 0) {
+                    array_push($penampung, 0);
+                } else {
+                    array_push($penampung, 1);
+                }
             }
         }
+        else{
+            array_push($penampung, 1);
+        }
+        
 
         if (!in_array(0, $penampung)) {
             return TRUE;
@@ -324,16 +331,21 @@ class Gd_tt extends Auth_Controller {
         $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $po_all = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
         $penampung = array();
-
-        foreach ($po_all as $row) {
-            $barang_lot = $this->Gdtt_model->get_item_detail($row->barang_id)->mi_nolot;
-            if ($barang_lot == 0) {
-                array_push($penampung, 1);
-            } else {
-                $data = $this->Gdtt_model->check_trx_lot($this->user, $row->barang_id, $id, NULL, NULL, NULL);
-                array_push($penampung, $data);
+        if($po_all){
+            foreach ($po_all as $row) {
+                $barang_lot = $this->Gdtt_model->get_item_detail($row->barang_id)->mi_nolot;
+                if ($barang_lot == 0) {
+                    array_push($penampung, 1);
+                } else {
+                    $data = $this->Gdtt_model->check_trx_lot($this->user, $row->barang_id, $id, NULL, NULL, NULL);
+                    array_push($penampung, $data);
+                }
             }
         }
+        else{
+            array_push($penampung, 1);
+        }
+        
 
         if (!in_array(0, $penampung)) {
             return TRUE;

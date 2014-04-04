@@ -28,7 +28,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     text: 'SIMPAN',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-save',
-                    action: 'suppSave'
+                    action: 'tfSave'
                 },
                 {
                     xtype: 'button',
@@ -36,7 +36,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     text: 'BARU',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-add',
-                    action: 'suppNew'
+                    action: 'tfNew'
                 },
                 '->',
                 {
@@ -44,20 +44,16 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     text: 'CETAK TT FAKTUR',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-print',
-                    action: 'fakturPrint'
+                    action: 'tfFakturPrint'
                 }
             ],
             items: [
                 {
-                    xtype: 'numberfield',
+                    xtype: 'textfield',
                     fieldLabel: 'ID Faktur ',
                     name: 'id',
                     hidden: false,
-                    listeners: {
-                        change: function(f) {
-                            form.saved = false;
-                        }
-                    }
+                    readOnly:true,
                 },
                 {
                     xtype: 'combobox',
@@ -67,7 +63,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'MasterSupplierStore',
+                   store: 'gdtxfaktur.MasterSupplierStore',
                     displayField: 'suppdisplay',
                     valueField: 'idms',
                     emptyText: 'ketik nama supplier'
@@ -103,6 +99,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     keyNavEnabled: false,
                     mouseWheelEnabled: false,
                     allowBlank: false,
+                    value:0,
                     readOnly: true
                 }),
                 {

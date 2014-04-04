@@ -11,6 +11,8 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGrid', {
     forceFit: false,
     columnLines: true,
     selModel: Ext.create('Ext.selection.CheckboxModel', {
+        header: false,
+        selectOnly: true
     }),
 
     initComponent: function () {
@@ -23,56 +25,46 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGrid', {
                 deferEmptyText: false
             },
             tbar: [
-                {
-                    xtype: 'datefield',
-                    fieldLabel: 'Filter ',
-                    labelWidth: 40,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Awal',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'datefield',
-                    fieldLabel: ' s.d ',
-                    labelWidth: 30,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Akhir',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'combobox',
-                    emptyText: 'Supplier',
-                    allowBlank: false
-                },
-                {
-                    text: 'SEARCH'
-                },
-                '->',
-                {
-                    text: 'REFRESH'
-                }
+                // {
+                //     xtype: 'datefield',
+                //     fieldLabel: 'Filter ',
+                //     labelWidth: 40,
+                //     labelAlign: 'right',
+                //     emptyText: 'Tgl. Awal',
+                //     displayField: 'type',
+                //     valueField: 'typeCode',
+                //     queryMode: 'local',
+                //     forceSelection: true,
+                //     typeAhead: true,
+                //     valueNotFoundText: 'Tidak ada Data'
+                // },
+                // {
+                //     xtype: 'datefield',
+                //     fieldLabel: ' s.d ',
+                //     labelWidth: 30,
+                //     labelAlign: 'right',
+                //     emptyText: 'Tgl. Akhir',
+                //     displayField: 'type',
+                //     valueField: 'typeCode',
+                //     queryMode: 'local',
+                //     forceSelection: true,
+                //     typeAhead: true,
+                //     valueNotFoundText: 'Tidak ada Data'
+                // },
+                // {
+                //     xtype: 'combobox',
+                //     emptyText: 'Supplier',
+                //     allowBlank: false
+                // },
+                // {
+                //     text: 'SEARCH'
+                // },
+                // '->',
+                // {
+                //     text: 'REFRESH'
+                // }
             ],
-            features: [
-                {
-                    startCollapsed: false,
-                    id: 'poPengGroup',
-                    ftype: 'grouping',
-                    groupHeaderTpl: 'No Pengadaan : {name}',
-                    hideGroupedHeader: false,
-                    //remoteRoot: 'summaryData',
-                    enableGroupingMenu: true
-                }
-            ],
+            
             columns: [
                 {
                     xtype: 'datecolumn',
