@@ -52,7 +52,7 @@ Ext.define('GlApp.view.gdtxterima.GetGdTxTerima', {
                                     xtype: 'button',
                                     text: 'PRINT_TT',
                                     ui: 'orange-button',
-                                    action: 'ttPrintWindow'
+                                    action: 'ttPrint'
                                 },
                                 {
                                     xtype: 'button',

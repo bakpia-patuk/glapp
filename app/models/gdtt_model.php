@@ -28,14 +28,6 @@ class Gdtt_model extends MY_Model {
         return $total;
     }
 
-    private function __calc_netto($qty, $harga, $disc, $ppn) {
-        $a = $qty * $harga;
-        $b = 1 - ($disc / 100);
-        $c = 1 + ($ppn / 100);
-
-        return $a * $b * $c;
-    }
-
     public function get_last($table) {
         $opt['sortBy'] = 'no';
         $opt['sortDirection'] = 'DESC';
@@ -115,11 +107,35 @@ class Gdtt_model extends MY_Model {
         $params2[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $dtpo->tt_id);
         $this->update($set_true2, $params2, NULL, 'trx_stock_lot');
 
-        $this->__set_stock();
+        $this->__set_stock($id);
         return TRUE;
     }
     
-    private function __set_stock() {
+    private function __set_stock($id) {
+        $user = $this->ion_auth->user()->row();
+        $dtpo = $this->get_detail('id', $id, 'trx_po_detail');
+        $get_last_item = $this->get_detail('id', $dtpo->barang_id, 'dt_item_cabang')->stock_last;
+        
+        $data = array(
+            'id' => $this->get_last('trx_stock') . '.' . $user->cabang_id,
+            'stk_date' => mdate("%Y-%m-%d %H:%i:%s", time()),
+            'stk_cabangid' => $user->cabang_id,
+            'stk_divisiid' => $user->divisi_id,
+            'stk_ruangid' => $this->__gudang_pusat($user->cabang_id),
+            'stk_usercreate' => $user->id,
+            'stk_trxtype' => 1,
+            'stk_trxreftype' => 'ttgudang',
+            'stk_trxref' => $id,
+            'stk_barangid' => $dtpo->barang_id,
+            'stk_qty' => $dtpo->tt_qty_kirim,
+            'stk_qtylast' => $dtpo->tt_qty_kirim + $get_last_item,
+            'simpan_status' => 1
+        );
+
+        $this->insert($data, 'trx_stock');
+        $set_last = array('stock_last' => $dtpo->tt_qty_kirim + $get_last_item);
+        $params2[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $dtpo->barang_id);
+        $this->update($set_last, $params2, NULL, 'dt_item_cabang');
         return TRUE;
     }
 

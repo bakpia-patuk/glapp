@@ -39,8 +39,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                 '#newttpanel button[action=ttSave]': {
                     click: this.saveTt
                 },
-                '#newttpanel button[action=ttPrintWindow]': {
-                    click: this.showListPo
+                '#newttpanel button[action=ttPrint]': {
+                    click: this.saveTtPrint
                 },
                 '#newttpanel button[action=searchTt]': {
                     click: this.showListPo
@@ -211,6 +211,13 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             this.ajaxReq('gd_tt/save', form.getForm().getValues(), 4);
         }
     },
+    saveTtPrint: function(btn) {
+        var form = this.getTtForm();
+
+        if (form.getForm().isValid()) {
+            this.ajaxReq('gd_tt/save', form.getForm().getValues(), 5);
+        }
+    },
     setItemTt: function(column, recordIndex, checked) {
         var form = this.getTtForm(),
                 grid = this.getTtPoGrid(),
@@ -276,13 +283,16 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                 icon: Ext.MessageBox.INFO
             });
         } else if (idForm === 5) {
-            poPanel.down('#searchPo').enable();
-            poPanel.down('#poCabang').setReadOnly(false);
-            poPanel.down('#poCabang').reset();
+            poPanel.down('#searchTt').enable();
+            poPanel.down('#ttSupplier').setReadOnly(false);
+            poPanel.down('#ttSupplier').reset();
             form.getForm().reset();
             form.saved = true;
             gridPo.getStore().removeAll();
-            this.printPo(0, resp.data);
+            gridLot.getStore().removeAll();
+            form.down('#imageTtdTb1').setSrc('assets/appdata/signBlank.png');
+
+            this.printTt(0, resp.data);
         } else if(idForm === 9){
             this.getWindowLot().getStore().load();
         }
@@ -294,7 +304,11 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
             buttons: Ext.MessageBox.OK,
             icon: Ext.MessageBox.ERROR
         });
+    },
+    printTt: function(type, id) {
+        window.open(BASE_PATH + 'gd_tt/print_tt/' + type + '/' + id, "Print Preview", "height=" + screen.height + ",width=950,modal=yes,alwaysRaised=yes,scrollbars=yes");
     }
+
 });
 
 /* End of file Base.js */

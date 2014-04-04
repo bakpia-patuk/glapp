@@ -37,6 +37,10 @@ class Gd_tt extends Auth_Controller {
                 return;
             }
 
+            $param_del[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => 'ttgudang');
+            $param_del[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            $this->Gdtt_model->delete($param_del, NULL, 'trx_stock_lot');
+
             $filename = 'assets/ttd_tx/ttSign' . $insert['id'] . 'NULL_.png';
 
             if (file_exists($filename)) {
@@ -204,6 +208,7 @@ class Gd_tt extends Auth_Controller {
             'stl_cabangid' => $this->user->cabang_id,
             'stl_divisiid' => $this->user->divisi_id,
             'stl_ruangid' => $this->Gdtt_model->__gudang_pusat($this->user->cabang_id),
+            'stl_usercreate' => $this->user->id,
             'stl_barangid' => $insert['stl_barangid'],
             'stl_nolot' => $insert['stl_nolot'],
             'stl_qty' => $insert['stl_qty'],
@@ -298,35 +303,6 @@ class Gd_tt extends Auth_Controller {
         }
     }
 
-    public function list_tt_detail() {
-        $records = $this->input->get('filter');
-        $params = array();
-
-        if ($records) {
-            $raw_record = json_decode($records, true);
-            $params = $this->generate_db_query($raw_record);
-        }
-
-        $tablename = 'trx_pengadaan_detail';
-        $opt['sortBy'] = 'id';
-        $opt['sortDirection'] = 'ASC';
-
-        $result = $this->Gdtt_model->gets($params, $opt, $tablename);
-        $no = 0;
-
-        if ($result != NULL) {
-            foreach ($result as $row) {
-                $barang = $this->Gdpengadaan_model->get_item_detail($row->barang_id);
-                $result[$no]->barang_name = $barang->mi_name;
-                $result[$no]->merk_name = $this->Gdpengadaan_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
-                $no++;
-            }
-            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Pengadaan Detail'));
-        } else {
-            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
-        }
-    }
-
     public function list_tt_lot() {
         $records = $this->input->get('filter');
         $params = array();
@@ -350,28 +326,23 @@ class Gd_tt extends Auth_Controller {
     }
 
     public function print_tt($type, $id) {
-        $po = $this->Gdtt_model->get_detail('id', $id, 'trx_po');
+        $tt = $this->Gdtt_model->get_detail('id', $id, 'trx_tt');
         $data['type'] = $type == 0 ? 'ASLI' : 'COPY';
-        $data['po_no'] = $po->po_no;
-        $data['po_tgl'] = mdate('%d %F %Y', strtotime($po->trx_date));
-        $data['po_ed'] = mdate('%d %F %Y', strtotime($po->po_ed));
-        $data['po_cabang'] = $this->Gdtt_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_alias;
-        $data['po_add'] = $this->Gdtt_model->get_detail('id', $po->po_cabangid, 'dt_cabang')->cabang_address;
-        $data['po_company'] = $this->Gdtt_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_name;
-        $data['po_company_add'] = $this->Gdtt_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_alamat;
-        $data['po_company_cp'] = $this->Gdtt_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_contact1 . ', Telp. ' . $this->Gdtt_model->get_detail('id', $po->po_suppid, 'dt_supplier')->ms_telp;
-        $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
+        $data['tt_no'] = $tt->tt_no;
+        $data['tt_tgl'] = mdate('%d %F %Y', strtotime($tt->tt_tgltrx));
+        $data['tt_company'] = $this->Gdtt_model->get_detail('id', $tt->tt_supp_id, 'dt_supplier')->ms_name;
+//        $data['pembayaran'] = $po->po_isangsuran == 0 ? 'ANGSURAN' : ($po->po_isangsuran == 1 ? '2 MINGGU' : ($po->po_isangsuran == 2 ? '3 MINGGU' : '1 BULAN'));
         $user_create = $this->Gdtt_model->get_detail('id', $po->po_usercreate, 'users');
         $user_app = $this->Gdtt_model->get_detail('id', 76, 'users');
+//
+//        $data['create_ttd'] = $user_create->ttd_url;
+//        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
+//
+//        $data['app_ttd'] = $user_app->ttd_url;
+//        $data['app_name'] = strtoupper($user_app->first_name . ' ' . $user_app->last_name);
+//        $data['detail_po'] = $this->Gdtt_model->get_po_detail($id);
 
-        $data['create_ttd'] = $user_create->ttd_url;
-        $data['create_name'] = strtoupper($user_create->first_name . ' ' . $user_create->last_name);
-
-        $data['app_ttd'] = $user_app->ttd_url;
-        $data['app_name'] = strtoupper($user_app->first_name . ' ' . $user_app->last_name);
-        $data['detail_po'] = $this->Gdtt_model->get_po_detail($id);
-
-        $this->load->view('po_invoice', $data);
+        $this->load->view('tt_invoice', $data);
     }
 
     private function __check_ttd($id) {

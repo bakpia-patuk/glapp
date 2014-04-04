@@ -35,6 +35,7 @@ Created by Roan Lavery
 #client-details{padding-top:10px; float:left;margin:0px 0 20px 10px; width:330px}
 #invoice-info {clear:both; float:right;margin:-7px 0 20px 0 }
 #invoice-title {width:150px;clear:both; margin:0 auto;}
+#invoice-title.tt {width:200px;clear:both; margin:0 auto;}
 #invoice-ket {clear:both;}
 #invoice-ket2 {clear:both;}
 #invoice-info th{text-align:right}
