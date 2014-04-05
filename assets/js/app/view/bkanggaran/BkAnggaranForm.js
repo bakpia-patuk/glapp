@@ -41,21 +41,21 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Jenis Bayar',
-                    name: 'jenisBayar',
+                    name: 'trx_jenisbayar',
                     hidden: true,
                     allowBlank: false
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Supplier Id',
-                    name: 'suppId',
+                    name: 'trx_supp_id',
                     hidden: true,
                     allowBlank: false
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Faktur',
-                    name: 'idFaktur',
+                    name: 'trx_agrdata',
                     hidden: true,
                     allowBlank: false
                 },
@@ -94,7 +94,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Supplier ',
-                    name: 'suppName',
+                    name: 'supplier',
                     hidden: false,
                     allowBlank: true,
                     readOnly: true,
@@ -102,7 +102,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     fieldLabel: 'Total Nom. Faktur ',
-                    name: 'totalAnggaranTrx',
+                    name: 'trx_totalagr',
                     decimalPrecision: 2,
                     decimalSeparator: ',',
                     alwaysDisplayDecimals: true,
@@ -121,7 +121,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Tanggal Debet ',
-                    name: 'tglTransaksi',
+                    name: 'trx_tgldebet',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     value: new Date(),
@@ -134,7 +134,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                     displayField: 'type',
                     valueField: 'typeCode',
                     queryMode: 'local',
-                    name: 'rekType',
+                    name: 'trx_kreditketype',
                     //forceSelection: true,
                     hidden: false,
                     //typeAhead: true,
@@ -151,34 +151,34 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                             [1, 'Supplier']
                         ]
                     }),
-//                    listeners: {
-//                        change: function(cmb, rec, opt) {
-//                            if (cmb.getValue() == 0) {
-//                                this.up('form').getForm().findField('rekPusatName').show();
-//                                var store = this.up('form').getForm().findField('rekPusatName').getStore();
-//                                this.up('form').getForm().findField('rekSuppName').hide();
-//
-//                                //this.up('form').getForm().findField('tglTransfer').hide();
-//
-//                                this.up('form').getForm().findField('bankDebetAsal').clearValue();
-//                            } else {
-//                                this.up('form').getForm().findField('rekPusatName').hide();
-//                                this.up('form').getForm().findField('rekSuppName').show();
-//
-//                                //this.up('form').getForm().findField('tglTransfer').show();
-//
-//                                this.up('form').getForm().findField('bankDebetAsal').clearValue();
-//                            }
-//                        }
-//                    }
+                    listeners: {
+                        change: function(cmb, rec, opt) {
+                            if (cmb.getValue() === 0) {
+                                this.up('form').getForm().findField('rek_pusat').show();
+//                                var store = this.up('form').getForm().findField('rek_pusat').getStore();
+                                this.up('form').getForm().findField('rek_supp').hide();
+
+                                //this.up('form').getForm().findField('tglTransfer').hide();
+
+                                this.up('form').getForm().findField('bank_debet_dari').clearValue();
+                            } else {
+                                this.up('form').getForm().findField('rek_pusat').hide();
+                                this.up('form').getForm().findField('rek_supp').show();
+
+                                //this.up('form').getForm().findField('tglTransfer').show();
+
+                                this.up('form').getForm().findField('bank_debet_dari').clearValue();
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Bank Pusat ',
-                    name: 'rekPusatName',
+                    name: 'rek_pusat',
                     editable: false,
-//                    store: 'BankStore',
-                    displayField: 'bankAlias',
+                    store: 'bkanggaran.BankPusatStore',
+                    displayField: 'bank_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     hidden: true,
@@ -188,18 +188,18 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                         shadow: 'side',
                         minWidth: 185
                     },
-//                    listeners: {
-//                        focus: function(cmb, rec, opt) {
-//                            var store = cmb.getStore();
-//                            store.clearFilter(true);
-//                            store.filter('bank_cabang', '14');
-//                        }
-//                    }
+                    listeners: {
+                        focus: function(cmb, rec, opt) {
+                            var store = cmb.getStore();
+                            store.clearFilter(true);
+                            store.filter('bank_cabang', '1');
+                        }
+                    }
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Bank Supplier ',
-                    name: 'rekSuppName',
+                    name: 'rek_supp',
                     emptyText: 'Nama Bank Supplier',
                     hidden: true,
                     allowBlank: true
@@ -214,7 +214,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Ke Rek. ',
-                    name: 'bankDebetTujuan',
+                    name: 'bank_debet_ke',
                     id: 'bankDebetTujuanAg',
                     editable: false,
 //                    store: 'BankStore1',
@@ -232,11 +232,11 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Debet dari Bank ',
-                    name: 'bankDebetAsal',
+                    name: 'bank_debet_dari',
                     id: 'bankDebetAsalAg',
                     editable: false,
-//                    store: 'BankStore2',
-                    displayField: 'bankAlias',
+                    store: 'bkanggaran.BankDebetDariStore',
+                    displayField: 'bank_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     hidden: false,
@@ -298,44 +298,44 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Transfer ',
-                            name: 'rekPusatName',
+                            name: 'rek_pusat',
                             allowBlank: true,
                             readOnly: true
                         },
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Tunai ',
-                            name: 'rekPusatName',
+                            name: 'rek_pusat',
                             allowBlank: true,
                             readOnly: true
                         },
                         {
                             xtype: 'textfield',
                             fieldLabel: 'BG ',
-                            name: 'rekPusatName',
+                            name: 'rek_pusat',
                             allowBlank: true,
                             readOnly: true
                         }
                     ]
-                }
-//                {
-//                    xtype: 'fieldcontainer',
-//                    width: 300,
-//                    layout: 'hbox',
-//                    items: [
-//                        {
-//                            html: 'Tanda Tangan :',
-//                            border: false,
-//                            width: 115,
-//                            bodyStyle: bg,
-//                            padding: '3 0 0 27',
-//                            align: 'right'
-//                        },
-//                        {
-//                            xtype: 'button',
-//                            iconCls: 'icon-btn-search',
-//                            text: 'Ambil TTD',
-//                            margins: '0 0 0 5',
+                },
+                {
+                    xtype: 'fieldcontainer',
+                    width: 300,
+                    layout: 'hbox',
+                    items: [
+                        {
+                            html: 'Tanda Tangan :',
+                            border: false,
+                            width: 115,
+                            bodyStyle: FORM_BG,
+                            padding: '3 0 0 27',
+                            align: 'right'
+                        },
+                        {
+                            xtype: 'button',
+                            iconCls: 'icon-btn-search',
+                            text: 'Ambil TTD',
+                            margins: '0 0 0 5',
 //                            handler: function () {
 //                                var win = new Ext.widget('newwindow', {
 //                                    title: 'Capture TTD',
@@ -386,29 +386,29 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
 //                                win.add(form);
 //                                win.show();
 //                            }
-//                        }
-//                    ]
-//                },
-//                {
-//                    xtype: 'fieldcontainer',
-//                    width: 300,
-//                    layout: 'hbox',
-//                    items: [
-//                        {
-//                            html: 'Preview : ',
-//                            border: false,
-//                            width: 120,
-//                            bodyStyle: bg,
-//                            padding: '3 0 0 61',
-//                            align: 'right'
-//                        },
-//                        Ext.create('Ext.Img', {
-//                            baseCls: 'imagefieldthumb',
+                        }
+                    ]
+                },
+                {
+                    xtype: 'fieldcontainer',
+                    width: 300,
+                    layout: 'hbox',
+                    items: [
+                        {
+                            html: 'Preview : ',
+                            border: false,
+                            width: 120,
+                            bodyStyle: FORM_BG,
+                            padding: '3 0 0 61',
+                            align: 'right'
+                        },
+                        Ext.create('Ext.Img', {
+                            baseCls: 'imagefieldthumb',
 //                            src: BASE_PATH + 'assets/img_data/signBlank.png',
 //                            id: 'imageTtdAnggaran'
-//                        })
-//                    ]
-//                }
+                        })
+                    ]
+                }
             ]
         });
 

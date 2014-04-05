@@ -26,7 +26,7 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'mbSave'
+                    itemId: 'MsBankSave'
                 },
                 '-',
                 {
@@ -34,7 +34,7 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                     ui: 'blue-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
-//                    action: 'mbNew'
+                    itemId: 'MsBankNew'
                 },
                 '-',
                 {
@@ -42,24 +42,24 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                     ui: 'blue-button',
                     text: 'Hapus',
                     iconCls: 'icon-btn-delete',
-//                    action: 'mbDel'
+                    itemId: 'MsBankDelete'
                 }
             ],
             items: [
                 {
                     xtype: 'textfield',
                     fieldLabel: 'ID ',
-                    name: 'idmb',
+                    name: 'id',
                     hidden: true
                 },
                 {
                     xtype: 'combobox',
                     emptyText: 'Pilih Cabang',
                     fieldLabel: 'Bank Cabang',
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
-                    name: 'cabang_alias',
+                    name: 'bank_cabang',
                     allowBlank: false,
                     triggerAction: 'all',
                     valueNotFoundText: 'Tidak ada Data',
@@ -95,9 +95,9 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                 {
                     xtype: 'comboboxedit',
                     fieldLabel: 'Nama Bank ',
-                    name: 'bankGroup',
+                    name: 'bank_nama',
                     triggerAction: 'all',
-//                    store: 'BankNasStore',
+                    store: 'bkmsbank.BankNasStore',
                     displayField: 'banknas_name',
                     valueField: 'id',
                     minChars: 2,
@@ -133,30 +133,30 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Nama Alias ',
                     allowBlank: false,
-                    name: 'aliasBank'
+                    name: 'bank_alias'
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Atas Nama ',
                     allowBlank: false,
-                    name: 'reknamaBank'
+                    name: 'bank_reknama'
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Rekening ',
                     allowBlank: false,
-                    name: 'reknoBank'
+                    name: 'bank_rekno'
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Alamat Bank ',
-                    name: 'alamatBank'
+                    name: 'bank_alamat'
                 },
                 {
                     xtype: 'combogrid',
                     fieldLabel: 'Gol. Akun ',
-                    name: 'golAkun',
-                    itemId: 'golAkun',
+                    name: 'bank_akun',
+                    itemId: 'bank_akun',
                     emptyText: '',
                     matchFieldWidth: false,
                     displayField: 'namaAkun',
@@ -182,7 +182,7 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                                 xtype: 'gridcolumn',
                                 width: 100,
                                 header: 'Kode',
-                                dataIndex: 'codeAkun'
+                                dataIndex: 'bank_kodeakun'
                             },
                             {
                                 xtype: 'gridcolumn',
@@ -211,11 +211,11 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                             xtype: 'combobox',
                             fieldLabel: 'Group Akun ',
                             emptyText: '',
-                            displayField: 'namaGroupAkun',
-                            valueField: 'kodeGroupAkun',
+                            displayField: 'bank_golakun',
+                            valueField: 'bank_golakun',
                             queryMode: 'remote',
                             disabled: true,
-                            name: 'groupAkun',
+                            name: 'bank_golakun',
 //                            store: 'GroupAkunStore',
                             triggerAction: 'all',
                             forceSelection: true,
@@ -254,7 +254,7 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
                     fieldLabel: 'Active ',
                     boxLabel: 'Ya',
                     hidden: true,
-                    name: 'aktifBank',
+                    name: 'bank_active',
                     inputValue: '1',
                     uncheckedValues: '0',
                     checked: true

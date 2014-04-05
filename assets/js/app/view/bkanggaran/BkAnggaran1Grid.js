@@ -9,7 +9,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
     autoScroll: true,
     forceFit: true,
     ui: 'orange-panel',
-//    store: 'AgrSuppStore',
+    store: 'bkanggaran.AgrSuppStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -67,7 +67,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
                 {
                     width: 200,
                     text: 'NO FAKTUR',
-                    dataIndex: 'fakturNo'
+                    dataIndex: 'faktur_no'
                 },
                 {
                     text: 'CABANG',
@@ -82,7 +82,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
                     xtype: 'numbercolumn',
                     width: 150,
                     align: 'right',
-                    dataIndex: 'fakturNominal',
+                    dataIndex: 'faktur_nototal',
                     summaryType: 'sum',
                     renderer: function (value, meta, record) {
                         return Ext.util.Format.number(value, '0.000,00/i');

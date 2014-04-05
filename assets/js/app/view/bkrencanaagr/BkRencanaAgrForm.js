@@ -24,26 +24,26 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
             tbar: [
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'orange-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'maSave'
+                    itemId: 'BkRaSave'
                 },
                 '-',
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'orange-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
-//                    action: 'anggaranNew'
+                    itemId: 'BkRaNew'
                 },
                 '-',
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'orange-button',
                     text: 'Hapus',
                     iconCls: 'icon-btn-delete',
-//                    action: 'anggaranDelete',
+                    itemId: 'BkRaDelete',
                     disabled: false
                 }
             ],
@@ -63,7 +63,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                     items: [
                         {
                             boxLabel: 'Supplier',
-                            name: 'jenisSup',
+                            name: 'trsx_suppjenis',
                             inputValue: 0,
                             width: 70,
                             listeners: {
@@ -86,7 +86,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                         },
                         {
                             boxLabel: 'Non-Supplier',
-                            name: 'jenisSup',
+                            name: 'trsx_suppjenis',
                             inputValue: 1,
                             width: 100,
                             margin: '0 0 0 5',
@@ -148,9 +148,9 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                     triggerAction: 'all',
                     hidden: true,
                     minChars: 2,
-//                    store: 'MasterSupplierStore',
-                    displayField: 'namams',
-                    valueField: 'idms',
+                    store: 'bkrencanaagr.SupplierStore',
+                    displayField: 'ms_name',
+                    valueField: 'id',
                     emptyText: 'Ketik nama supplier...',
 //                    listeners: {
 //                        select: function(combo, rec, e) {
@@ -219,20 +219,20 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 {
                     xtype: 'comboboxedit',
                     fieldLabel: 'Keperluan ',
-                    name: 'namaGrk',
+                    name: 'keperluan',
                     hidden: false,
                     triggerAction: 'all',
                     minChars: 2,
-//                    store: 'GrkStoreBkr',
+                    store: 'bkrencanaagr.GrkBkStore',
                     readOnly: false,
-                    displayField: 'grkName',
+                    displayField: 'grk_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
-//                    listeners: {
-//                        afterrender: function(combo, rec, eOpt) {
-//                            combo.getStore().clearFilter(true);
-//                            combo.getStore().filter('form_id', 'mintabayar');
-//                        },
+                    listeners: {
+                        afterrender: function(combo, rec, eOpt) {
+                            combo.getStore().clearFilter(true);
+                            combo.getStore().filter('form_id', 'mintabayar');
+                        },
 //                        select: function(combo, rec, eOpt) {
 //                            var store = this.up('form').getForm().findField('namaKd').getStore();
 //                            this.up('form').getForm().findField('namaKd').show();
@@ -242,7 +242,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
 //                            store.filter('kp_id', combo.getValue());
 //                            store.load();
 //                        }
-//                    },
+                    },
 //                    onTrigger2Click: function() {
 //                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
 //                            border: true,
@@ -284,7 +284,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Dtl. Keperluan ',
-                    name: 'namaKd',
+                    name: 'dtl_keperluan',
                     hidden: true,
                     triggerAction: 'all',
                     minChars: 2,
@@ -407,7 +407,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'pemeriksaan',
+                    name: 'mkr_pemeriksaan',
                     itemId: 'pemeriksaan',
                     fieldLabel: 'Nama Pmriksaan ',
                     hidden: true,
@@ -416,7 +416,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'namaPasien',
+                    name: 'mkr_namapasien',
                     itemId: 'namapasien',
                     fieldLabel: 'Nama Pasien ',
                     hidden: true,
@@ -425,7 +425,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'rujukan',
+                    name: 'mkr_rujukanke',
                     itemId: 'rujukan',
                     fieldLabel: 'Di Rujuk Ke ',
                     hidden: true,
@@ -458,7 +458,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                     displayField: 'type',
                     valueField: 'typeCode',
                     queryMode: 'local',
-                    name: 'caraBayar',
+                    name: 'cara_bayar',
                     forceSelection: true,
                     hidden: false,
                     typeAhead: true,
@@ -476,61 +476,61 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                             [2, 'Transfer']
                         ]
                     }),
-//                    listeners: {
-//                        change: function() {
-//                            if (this.getValue() === 2) {
-//                                this.up('form').getForm().findField('rekNo').show();
-//                                this.up('form').getForm().findField('rekBank').show();
-//                                this.up('form').getForm().findField('atasNama').show();
-//
-//                                this.up('form').getForm().findField('bgNo').hide();
-//                                this.up('form').getForm().findField('bgEd').hide();
-//                            } else if (this.getValue() === 0) {
-//                                this.up('form').getForm().findField('rekNo').hide();
-//                                this.up('form').getForm().findField('rekBank').hide();
-//                                this.up('form').getForm().findField('atasNama').hide();
-//
-//                                this.up('form').getForm().findField('bgNo').show();
-//                                this.up('form').getForm().findField('bgEd').show();
-//                            } else {
-//                                this.up('form').getForm().findField('rekNo').hide();
-//                                this.up('form').getForm().findField('rekBank').hide();
-//                                this.up('form').getForm().findField('atasNama').hide();
-//
-//                                this.up('form').getForm().findField('bgNo').hide();
-//                                this.up('form').getForm().findField('bgEd').hide();
-//                            }
-//                        }
-//                    }
+                    listeners: {
+                        change: function() {
+                            if (this.getValue() === 2) {
+                                this.up('form').getForm().findField('rek_no').show();
+                                this.up('form').getForm().findField('rek_bank').show();
+                                this.up('form').getForm().findField('atas_nama').show();
+
+                                this.up('form').getForm().findField('bg_no').hide();
+                                this.up('form').getForm().findField('bg_ed').hide();
+                            } else if (this.getValue() === 0) {
+                                this.up('form').getForm().findField('rek_no').hide();
+                                this.up('form').getForm().findField('rek_bank').hide();
+                                this.up('form').getForm().findField('atas_nama').hide();
+
+                                this.up('form').getForm().findField('bg_no').show();
+                                this.up('form').getForm().findField('bg_ed').show();
+                            } else {
+                                this.up('form').getForm().findField('rek_no').hide();
+                                this.up('form').getForm().findField('rek_bank').hide();
+                                this.up('form').getForm().findField('atas_nama').hide();
+
+                                this.up('form').getForm().findField('bg_no').hide();
+                                this.up('form').getForm().findField('bg_ed').hide();
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No BG ',
-                    name: 'bgNo',
+                    name: 'bg_no',
                     hidden: true
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Nama Bank ',
-                    name: 'rekBank',
+                    name: 'rek_bank',
                     hidden: true
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Rekening ',
-                    name: 'rekNo',
+                    name: 'rek_no',
                     hidden: true
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Atas Nama ',
-                    name: 'atasNama',
+                    name: 'atas_nama',
                     hidden: true
                 },
                 {
                     xtype: 'datefield',
                     fieldLabel: 'Jatuh Tempo ',
-                    name: 'bgEd',
+                    name: 'bg_ed',
                     format: 'd/M/Y',
                     //value: new Date(),
                     submitFormat: 'Y-m-d',
@@ -540,8 +540,8 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'apprStatus ',
-                    name: 'apprStatus',
-                    itemId: 'apprStatus',
+                    name: 'app_status',
+                    itemId: 'app_status',
                     hidden: true
                 }
             ]

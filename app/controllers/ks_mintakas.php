@@ -48,9 +48,9 @@ class Ks_mintakas extends Auth_Controller {
         $time = date('H:i:s');
         $input['tgl_trx'] = mdate($datestring, strtotime($input['tgl_trx'] . ' ' . $time));
         $input['trx_value'] = $this->Ksmintakas_model->money_formatter($input['trx_value']);
-        
+        //sementara yg rujukan tidak bisa krn belum ada akun
         if ($input['mk_keperluan'] == 6) {
-            $input['trx_desc'] = "Rujukan a.n. " . $input['mkr_namapasien'] . " ke " . $input['mkr_rujukanke'];
+            $input['trx_desc'] = "Rujukan a.n. " ;//. $input['mkr_namapasien'] . " ke " . $input['mkr_rujukanke'];
         } else {
             $input['mkr_namapasien'] = 0;
             $input['mkr_pemeriksaan'] = 0;
