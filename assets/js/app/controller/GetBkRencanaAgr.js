@@ -18,28 +18,14 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         'bkrencanaagr.BkRencanaAgrForm',
         'bkrencanaagr.BkRencanaAgrGrid',
         'bkrencanaagr.BkRencanaAgrNonGrid',
-//        'bkrencanaagr.BkRencanaAgrDetailGrid',
-//        'bkrencanaagr.BkRencanaAgrDetailNonGrid',
-//        'bkrencanagr.newWindow',
-//        'bkrencanagr.newSuppForm',
-//        'bkrencanagr.listFaktur',
-//        'bkrencanagr.fakturWindow',
-        //shared Window
-//        'shared.newWindow',
-//        'shared.GkMasterGrid',
-//        'shared.GkMasterAkunGrid',
-//        'shared.GkMasterDetailGrid'
+        'bkrencanaagr.BkGroupKpWin',
+        'bkrencanaagr.BkListAkunWin'
     ],
     refs: [
         {ref: 'BkRencanaAgrTab', selector: '#bkrencanaagrtab'},
         {ref: 'BkRencanaAgrForm', selector: '#bkrencanaagrform'},
         {ref: 'BkRencanaAgrGrid', selector: '#bkrencanaagrgrid'},
         {ref: 'BkRencanaAgrNonGrid', selector: '#bkrencanaagrnongrid'},
-//        {ref: 'BkRencanaAgrDetailGrid', selector: '#bkrencanaagrdetailgrid'},
-//        {ref: 'suppForm', selector: '#newsuppform'},
-//        {ref: 'GridKeperluan', selector: '#gkmastergrid'},
-//        {ref: 'GridAkunKeperluan', selector: '#gkmasterakungrid'},
-//        {ref: 'GridAkunDetail', selector: '#gkmasterdetailgrid'}
     ],
     init: function() {
         this.control({
@@ -177,9 +163,14 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
             //            }
             //        }
                 }
+            },
+            '#setAkunGk': {
+                click: function(){
+                    var win = Ext.widget('bkrencanaagr.bklistakunwin');
+                }
             }
         });
-    },
+    }
 });
 
 /* End of file SystemMenu.js */

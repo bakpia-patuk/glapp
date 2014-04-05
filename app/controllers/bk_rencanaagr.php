@@ -92,7 +92,7 @@ class Bk_rencanaagr extends Auth_Controller {
                         foreach ($data as $row) {
                             $detail_supp = $this->Bkrencanaagr_model->get_detail('id', $row->faktur_suppid, 'dt_supplier');
                             $get_ma = $this->Bkrencanaagr_model->get_detail('faktur_id', $row->id, 'trx_anggaran_faktur');
-                            $detail_ma = $this->Bkrencanaagr_model->get_detail('id', $get_ma->minta_anggaranid, 'trx_rencana_anggaran');
+                            $detail_ma = $this->Bkrencanaagr_model->get_detail('id', $get_ma->minta_anggaranid, 'trx_agrplan');
 
                             $detail_anggaran[] = array(
                                 'idCabang' => $pd . $row->id,
@@ -120,7 +120,7 @@ class Bk_rencanaagr extends Auth_Controller {
                         foreach ($data as $row) {
                             $detail_supp = $this->Bkrencanaagr_model->get_divisi($row->divisi);
                             $get_ma = $this->Bkrencanaagr_model->get_detail('faktur_id', $row->id, 'trx_anggaran_faktur');
-                            $detail_ma = $this->Bkrencanaagr_model->get_detail('id', $row->ma_id, 'trx_rencana_anggaran');
+                            $detail_ma = $this->Bkrencanaagr_model->get_detail('id', $row->ma_id, 'trx_agrplan');
                             if ($detail_ma->gr_keperluan != 0) {
                                 $keperluan = $this->Bkrencanaagr_model->get_detail('id', $detail_ma->gr_keperluan, 'ms_group_keperluan')->grk_name;
                             } else {
@@ -324,7 +324,7 @@ class Bk_rencanaagr extends Auth_Controller {
             'app_status' => 1
         );
         $upd[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $this->Bkrencanaagr_model->update($update, $upd, NULL, 'trx_rencana_anggaran');
+        $this->Bkrencanaagr_model->update($update, $upd, NULL, 'trx_agrplan');
 
         $ma_detail = $this->Bkrencanaagr_model->get_detail('ma_id', $id, 'trx_data_nonfaktur');
 
@@ -339,7 +339,7 @@ class Bk_rencanaagr extends Auth_Controller {
     }
     
     function add_permintaan_divisi($id) {
-        $dt_ma = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_rencana_anggaran');
+        $dt_ma = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_agrplan');
 //        var_dump($dt_ma->gr_keperluan);
         $dt_nonfkt = $this->Bkrencanaagr_model->get_detail('ma_id', $id, 'trx_data_nonfaktur');
         $datestring = '%Y-%m-%d %H:%i:%s';
@@ -381,7 +381,7 @@ class Bk_rencanaagr extends Auth_Controller {
         $id = $this->input->post('id');
 
         $del1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $this->Bkrencanaagr_model->delete($del1, NULL, 'trx_rencana_anggaran');
+        $this->Bkrencanaagr_model->delete($del1, NULL, 'trx_agrplan');
 
         $del2[] = array('field' => 'minta_anggaranid', 'param' => 'where', 'operator' => '', 'value' => $id);
         $del2[] = array('field' => 'tipe_faktur', 'param' => 'where', 'operator' => '', 'value' => 1);

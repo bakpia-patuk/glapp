@@ -25,15 +25,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 {
                     xtype: 'button',
                     ui: 'orange-button',
-                    text: 'Simpan',
-                    iconCls: 'icon-btn-save',
-                    itemId: 'BkRaSave'
-                },
-                '-',
-                {
-                    xtype: 'button',
-                    ui: 'orange-button',
-                    text: 'Baru',
+                    text: 'ADD_NEW',
                     iconCls: 'icon-btn-add',
                     itemId: 'BkRaNew'
                 },
@@ -41,7 +33,15 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 {
                     xtype: 'button',
                     ui: 'orange-button',
-                    text: 'Hapus',
+                    text: 'SAVE',
+                    iconCls: 'icon-btn-save',
+                    itemId: 'BkRaSave'
+                },
+                '-',
+                {
+                    xtype: 'button',
+                    ui: 'orange-button',
+                    text: 'DELETE',
                     iconCls: 'icon-btn-delete',
                     itemId: 'BkRaDelete',
                     disabled: false
@@ -143,50 +143,6 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                 },
                 {
                     xtype: 'combobox',
-                    fieldLabel: 'Nama Supplier ',
-                    name: 'namaSup',
-                    triggerAction: 'all',
-                    hidden: true,
-                    minChars: 2,
-                    store: 'bkrencanaagr.SupplierStore',
-                    displayField: 'ms_name',
-                    valueField: 'id',
-                    emptyText: 'Ketik nama supplier...',
-//                    listeners: {
-//                        select: function(combo, rec, e) {
-//                            var id = this.getValue(),
-//                                    trx_fakturno = this.up('form').getForm().findField('trx_fakturno'),
-//                                    trx_value = this.up('form').getForm().findField('trx_value');
-//
-//                            trx_fakturno.setValue("");
-//                            trx_value.setValue();
-//
-//                            Ext.Ajax.request({
-//                                url: BASE_PATH + 'akun/minta_anggaran_check',
-//                                method: 'POST',
-//                                params: {idSupp: id},
-//                                scope: this,
-//                                callback: function(options, success, response) {
-//                                    var resp = Ext.decode(response.responseText);
-//
-//                                    if (resp.success === 'true') {
-//                                        trx_fakturno.setValue(resp.data);
-//                                        trx_value.setValue(resp.total);
-//                                    } else {
-//                                        Ext.MessageBox.show({
-//                                            title: 'Info',
-//                                            msg: resp.data,
-//                                            buttons: Ext.MessageBox.OK,
-//                                            icon: Ext.MessageBox.WARNING
-//                                        });
-//                                    }
-//                                }
-//                            });
-//                        }
-//                    }
-                },
-                {
-                    xtype: 'combobox',
                     fieldLabel: 'Divisi ',
 //                    width: 210,
                     emptyText: 'Pilih',
@@ -206,13 +162,13 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                             'type' //the text value is the value
                         ],
                         data: [
-                            [0, 'PELAYANAN'],
-                            [1, 'MARKETING'],
-                            [2, 'KEUANGAN'],
-                            [3, 'LAB'],
-                            [4, 'SDM'],
-                            [5, 'IT'],
-                            [6, 'RUMAH TANGGA']
+                            [1, 'PELAYANAN'],
+                            [2, 'MARKETING'],
+                            [3, 'KEUANGAN'],
+                            [4, 'LAB'],
+                            [5, 'SDM'],
+                            [6, 'IT'],
+                            [7, 'RUMAH TANGGA']
                         ]
                     })
                 },
@@ -243,43 +199,9 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
 //                            store.load();
 //                        }
                     },
-//                    onTrigger2Click: function() {
-//                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
-//                            border: true,
-//                            region: 'center'
-//                        }),
-//                        mbkDtGrid = new Ext.widget('shared.gkmasterdetailgrid', {
-//                            region: 'east',
-//                            border: true,
-//                            width: 290,
-//                            split: true
-//                        }),
-//                        store = mbkGrid.getStore();
-//                        var win = new Ext.widget('shared.newwindow', {
-//                            title: 'DAFTAR KEPERLUAN',
-//                            width: 700,
-//                            height: 300,
-//                            border: false,
-//                            layout: 'border',
-//                            items: [
-//                                mbkGrid, mbkDtGrid
-//                            ],
-//                            buttons: [
-//                                {
-//                                    text: 'Simpan',
-//                                    itemId: 'dtKeperluanSave'
-//                                }
-//                            ]
-//                        });
-//
-//                        var store = mbkGrid.getStore();
-//
-//
-//                        store.clearFilter(true);
-//                        store.filter('form_id', 'mintabayar');
-//                        mbkGrid.down('#keperluanForm').setValue('mintabayar');
-//                        win.show();
-//                    }
+                    onTrigger2Click: function() {
+                        var win = Ext.widget('bkrencanaagr.bkgroupkpwin');
+                    }
                 },
                 {
                     xtype: 'combobox',
