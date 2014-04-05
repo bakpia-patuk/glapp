@@ -10,10 +10,11 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
     border: false,
     layout: 'border',
     defaults: {
+        ui: 'orange-panel',
         border: true,
         split: true
     },
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
@@ -22,7 +23,7 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                     region: 'center',
                     layout: 'border',
                     id: 'maCenter',
-                    ui:'orange-panel',
+                    title: 'DAFTAR PERMINTAAN ANGGARAN',
                     defaults: {
                         split: true
                     },
@@ -35,7 +36,9 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                             border: false,
                             activeTab: 0,
                             id: 'bkrencanagrtab',
-                            title: 'DAFTAR PERMINTAAN ANGGARAN',
+//                            plugins: {
+//                                ptype: 'tabclosemenu'
+//                            },
                             items: [
                                 {
                                     xtype: 'bkrencanaagr.bkrencanaagrgrid'
@@ -44,34 +47,17 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                                     xtype: 'bkrencanaagr.bkrencanaagrnongrid'
                                 }
                             ]
-                        })/*,
-                         {
-                         region: 'south',
-                         height: 250,
-                         minHeight: 250,
-                         maxHeight: 250,
-                         collapsible: true,
-                         title: 'Detail Permintaan Anggaran',
-                         id: 'mintaAnggaranSouth',
-                         layout: 'fit',
-                         xtype: 'bkrencanagrdetailgrid'
-                         }*/
+                        })
                     ]
                 },
                 {
                     region: 'west',
                     width: 325,
                     minWidth: 325,
-                    ui: 'orange-panel',
                     title: 'FORM ANGGARAN NON-SUPPLIER',
                     collapsible: true,
-                    layout: 'fit',
-                    componentCls: 'border-left',
-                    items: [
-                        {
-                            xtype: 'bkrencanaagr.bkrencanaagrform'
-                        }
-                    ]
+                    layout: 'auto',
+                    xtype: 'bkrencanaagr.bkrencanaagrform'
                 }
             ]
         });

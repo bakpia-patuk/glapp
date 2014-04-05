@@ -95,7 +95,7 @@ class Gd_tt extends Auth_Controller {
             $data = array();
 
             $data['jumlah'] = 1;
-            
+
             $data['tujuan'] = 1;
             $data['id_cabang'] = $this->user->cabang_id;
 
@@ -110,7 +110,7 @@ class Gd_tt extends Auth_Controller {
             $this->Gdtt_model->insert_outgoing($data, 'detail');
         }
 
-        $params=array();
+        $params = array();
         $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_tt_detail');
         foreach ($data_po as $key) {
@@ -119,7 +119,7 @@ class Gd_tt extends Auth_Controller {
             $data = array();
 
             $data['jumlah'] = 1;
-            
+
             $data['tujuan'] = 1;
             $data['id_cabang'] = $this->user->cabang_id;
 
@@ -134,7 +134,7 @@ class Gd_tt extends Auth_Controller {
             $this->Gdtt_model->insert_outgoing($data, 'detail');
         }
 
-        $params=array();
+        $params = array();
         $params[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_stock_lot');
         foreach ($data_po as $key) {
@@ -143,7 +143,7 @@ class Gd_tt extends Auth_Controller {
             $data = array();
 
             $data['jumlah'] = 1;
-            
+
             $data['tujuan'] = 1;
             $data['id_cabang'] = $this->user->cabang_id;
 
@@ -158,7 +158,7 @@ class Gd_tt extends Auth_Controller {
             $this->Gdtt_model->insert_outgoing($data, 'detail');
         }
 
-        $params=array();
+        $params = array();
         $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_tt');
         foreach ($data_po as $key) {
@@ -167,7 +167,7 @@ class Gd_tt extends Auth_Controller {
             $data = array();
 
             $data['jumlah'] = 1;
-            
+
             $data['tujuan'] = 1;
             $data['id_cabang'] = $this->user->cabang_id;
 
@@ -181,7 +181,7 @@ class Gd_tt extends Auth_Controller {
 
             $this->Gdtt_model->insert_outgoing($data, 'detail');
         }
-        
+
 
         $this->Gdtt_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_TT');
 
@@ -254,8 +254,8 @@ class Gd_tt extends Auth_Controller {
     }
 
     private function __final_tt($insert) {
-        $filename = 'assets/ttd_tx/ttSign'.$insert['id'].'NULL_.png';
-        $newfile2 = 'assets/ttd_tx/tt/tt_' .$insert['id']. "_sign.png";
+        $filename = 'assets/ttd_tx/ttSign' . $insert['id'] . 'NULL_.png';
+        $newfile2 = 'assets/ttd_tx/tt/tt_' . $insert['id'] . "_sign.png";
 
         $data = array(
             'tt_penerima' => $insert['tt_penerima'],
@@ -268,14 +268,14 @@ class Gd_tt extends Auth_Controller {
         if (!$this->Gdtt_model->update($data, $params, NULL, 'trx_tt')) {
             return FALSE;
         }
-        
-         if (!copy($filename, $newfile2)) {
-             return FALSE;
-         }
-       
-         if (file_exists($filename)) {
-             unlink($filename);
-         }
+
+        if (!copy($filename, $newfile2)) {
+            return FALSE;
+        }
+
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
 
         return TRUE;
     }
@@ -283,19 +283,15 @@ class Gd_tt extends Auth_Controller {
     public function edit_peng_tt() {
         $insert = $this->input->post(NULL, TRUE);
 
-        $data = array(
-            'po_qty' => $insert['po_qty'],
-            'po_harga' => $insert['po_harga'],
-            'po_disc' => $insert['po_disc'],
-            'po_ppn' => $insert['po_ppn'],
-            'po_katalog' => $insert['po_katalog'],
-            'barang_desc' => $insert['barang_desc']
-        );
+        if ($insert['tt_id'] != 0) {
+            $data = array(
+                'tt_qty_kirim' => $insert['tt_qty_kirim']
+            );
 
-        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-        $this->Gdtt_model->update($data, $opt, NULL, 'trx_pengadaan_detail');
-        $id_po = $this->Gdtt_model->get_detail('id', $insert['id'], 'trx_pengadaan_detail')->po_id;
-        echo json_encode(array('success' => 'true', 'data' => $this->Gdtt_model->total_po($id_po)));
+            $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            $this->Gdtt_model->update($data, $opt, NULL, 'trx_po_detail');
+        }
+        echo json_encode(array('success' => 'true', 'data' => $insert['id']));
     }
 
     public function save_lot() {
@@ -433,7 +429,7 @@ class Gd_tt extends Auth_Controller {
         $filename = 'assets/ttd_tx/ttSign' . $id . 'NULL_.png';
 
         if (!file_exists($filename)) {
-             return FALSE;
+            return FALSE;
         }
 
         return TRUE;
@@ -480,6 +476,7 @@ class Gd_tt extends Auth_Controller {
 
         return FALSE;
     }
+
     public function printTt($type, $id) {
         $pars[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $data_tt = $this->Gdtt_model->get_detail('id', $id, 'trx_tt');
@@ -488,8 +485,8 @@ class Gd_tt extends Auth_Controller {
 
         foreach ($detail_tt as $row) {
             $detail_po = $this->Gdtt_model->get_detail_array('id', $row->tt_po_id, 'trx_po');
-            $detail_barang = $this->Gdtt_model->get_detail('id', $row->tt_barang_id, 'dt_item_cabang' );
-            $detail_barang = $this->Gdtt_model->get_detail('id', $detail_barang->mi_id, 'dt_item' );
+            $detail_barang = $this->Gdtt_model->get_detail('id', $row->tt_barang_id, 'dt_item_cabang');
+            $detail_barang = $this->Gdtt_model->get_detail('id', $detail_barang->mi_id, 'dt_item');
 
             $pars[$row->id][] = array('field' => 'stl_barangid', 'param' => 'where', 'operator' => '', 'value' => $row->tt_barang_id);
             $pars[$row->id][] = array('field' => 'stl_ttid', 'param' => 'where', 'operator' => '', 'value' => $row->tt_id);
@@ -525,6 +522,5 @@ class Gd_tt extends Auth_Controller {
 
         $this->load->view('tt_invoice', $data);
     }
-
 
 }

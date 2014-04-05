@@ -18,7 +18,7 @@ Ext.define('GlApp.view.ksmintakas.GetKsMintaKas', {
             tbar: [
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'green-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
                     itemId: 'MintaKasSave'
@@ -26,7 +26,7 @@ Ext.define('GlApp.view.ksmintakas.GetKsMintaKas', {
                 '-',
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'green-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
                     itemId: 'MintaKasNew'
@@ -34,7 +34,7 @@ Ext.define('GlApp.view.ksmintakas.GetKsMintaKas', {
                 '-',
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'green-button',
                     text: 'Hapus',
                     iconCls: 'icon-btn-delete',
                     itemId: 'MintaKasDelete'
@@ -52,7 +52,7 @@ Ext.define('GlApp.view.ksmintakas.GetKsMintaKas', {
                     hideLabel: true,
                     itemId: 'dateMbFilter',
                     format: 'd/M/Y',
-                    submitFormat: 'Y-m-d',
+                    submitFormat: 'Y-m-d'
                 },
                 {
                     xtype: 'datefield',
@@ -62,7 +62,7 @@ Ext.define('GlApp.view.ksmintakas.GetKsMintaKas', {
                     emptyText: 'Tanggal',
                     itemId: 'dateMbFilter2',
                     format: 'd/M/Y',
-                    submitFormat: 'Y-m-d',
+                    submitFormat: 'Y-m-d'
                 },
                 {
                     xtype: 'combobox',
@@ -78,19 +78,19 @@ Ext.define('GlApp.view.ksmintakas.GetKsMintaKas', {
                     triggerAction: 'all',
 //                    hidden: userCabang == 14 ? false : true,
 //                    valueNotFoundText: 'Tidak ada Data',
-                    store: 'ksmintakas.CabangStore',
+                    store: 'ksmintakas.CabangStore'
                 },
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'green-button',
                     text: 'Search',
                     iconCls: 'icon-btn-search',
-                    itemId: 'MintaKasSearch',
+                    itemId: 'MintaKasSearch'
                 },
                 '-',
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'green-button',
                     text: 'Approval',
                     iconCls: 'icon-btn-accept',
                     itemId: 'MintaKasApproval'

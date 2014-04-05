@@ -20,7 +20,6 @@ Ext.define('GlApp.controller.GetBkMsBank', {
     refs: [
         {ref: 'BkMsBankForm', selector: '#bkmsbankform'},
         {ref: 'BkMsBankGrid', selector: '#bkmsbankgrid'}
-//        {ref: 'inputCabang', selector: '#filterCabang'}
     ],
     init: function() {
         this.control({
