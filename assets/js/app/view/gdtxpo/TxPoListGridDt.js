@@ -10,6 +10,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGridDt', {
     autoScroll: true,
     forceFit: true,
     columnLines: true,
+    
 
     initComponent: function () {
         var me = this;

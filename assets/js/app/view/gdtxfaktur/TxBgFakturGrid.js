@@ -23,7 +23,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
                 deferEmptyText: false
             },
             tbar: [
-                {
+                /*{
                     xtype: 'combobox',
                     fieldLabel: 'Filter ',
                     labelWidth: 40,
@@ -39,10 +39,13 @@ Ext.define('GlApp.view.gdtxfaktur.TxBgFakturGrid', {
                 },
                 {
                     text: 'SEARCH'
-                },
+                },*/
                 '->',
                 {
-                    text: 'REFRESH'
+                    text: 'REFRESH',
+                    handler: function() {
+                        this.up('grid').getStore().load();
+                    }
                 }
             ],
             features: [
