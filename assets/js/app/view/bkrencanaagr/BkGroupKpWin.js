@@ -38,20 +38,75 @@ Ext.define('GlApp.view.bkrencanaagr.BkGroupKpWin', {
                             width: 375,
                             itemId: 'gridGk',
                             forceFit: true,
-//                            store: 'gdtxterima.TtLotStore',
+                            store: 'bkrencanaagr.GrkBkStore',
                             tbar: [
                                 {
-                                    text:'ADD',
-                                    ui: 'orange-button'
+                                    text: 'ADD',
+                                    ui: 'orange-button',
+                                    handler: function() {
+                                        var cellEditing = this.up('grid').getPlugin('daftarKpGrid');
+                                        cellEditing.cancelEdit();
+                                        var r = {
+                                            id: 0,
+                                            grk_name: "NAMA",
+                                            grk_desc: "Deskripsi",
+                                            grk_status: 0,
+                                            form_id: 'mintabayar',
+                                            grk_active: 1
+                                        };
+
+                                        this.up('grid').getStore().insert(0, r);
+                                        cellEditing.startEditByPosition({
+                                            row: 0,
+                                            column: 1
+                                        });
+                                    }
                                 },
                                 '-',
                                 {
-                                    text:'DELETE',
-                                    ui: 'orange-button'
+                                    text: 'DELETE',
+                                    ui: 'orange-button',
+                                    itemId: 'removeGrk',
+                                    disabled: true,
+                                    handler: function() {
+                                        var store = this.up('grid').getStore();
+                                        var store2 = this.up('grid').up('window').down('#gridGkAkun').getStore();
+                                        var sm = this.up('grid').getSelectionModel();
+
+                                        Ext.Ajax.request({
+                                            url: BASE_PATH + 'shared/del_group_keperluan',
+                                            method: 'POST',
+                                            params: {id: sm.getSelection()[0].get('id')},
+                                            scope: this,
+                                            callback: function(options, success, response) {
+                                                var resp = Ext.decode(response.responseText);
+
+                                                if (resp.success === 'true') {
+                                                    store.load();
+                                                    store2.load();
+                                                    Ext.MessageBox.show({
+                                                        title: 'INFO',
+                                                        msg: resp.msg,
+                                                        buttons: Ext.MessageBox.OK,
+                                                        icon: Ext.MessageBox.INFO
+                                                    });
+                                                } else {
+                                                    store.load();
+                                                    store2.load();
+                                                    Ext.MessageBox.show({
+                                                        title: 'ERROR',
+                                                        msg: resp.msg,
+                                                        buttons: Ext.MessageBox.OK,
+                                                        icon: Ext.MessageBox.ERROR
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
                                 },
                                 '-',
                                 {
-                                    text:'SET AKUN',
+                                    text: 'SET AKUN',
                                     ui: 'orange-button',
                                     itemId: 'setAkunGk'
                                 }
@@ -62,9 +117,52 @@ Ext.define('GlApp.view.bkrencanaagr.BkGroupKpWin', {
                                     flex: 1,
                                     text: 'ALIAS KEPERLUAN',
                                     renderer: 'uppercase',
-                                    dataIndex: 'stl_qtylast'
+                                    dataIndex: 'grk_name',
+                                    editor: {
+                                        allowBlank: false
+                                    }
                                 }
-                            ]
+                            ],
+                            plugins: [
+                                {
+                                    ptype: 'cellediting',
+                                    clicksToEdit: 2,
+                                    pluginId: 'daftarKpGrid',
+                                    listeners: {
+                                        'edit': function(editor, e, opt) {
+                                            if (e.record.dirty) {
+                                                e.record.commit();
+                                                Ext.Ajax.request({
+                                                    url: BASE_PATH + 'shared/add_group_keperluan',
+                                                    method: 'POST',
+                                                    params: e.record.data,
+                                                    scope: this,
+                                                    callback: function(options, success, response) {
+                                                        var resp = Ext.decode(response.responseText);
+
+                                                        if (resp.success === 'true') {
+                                                            e.grid.getStore().load();
+                                                        } else {
+                                                            e.grid.getStore().load();
+                                                            Ext.MessageBox.show({
+                                                                title: 'ERROR',
+                                                                msg: resp.msg,
+                                                                buttons: Ext.MessageBox.OK,
+                                                                icon: Ext.MessageBox.ERROR
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
+                            listeners: {
+                                'selectionchange': function(view, records) {
+                                    this.down('#removeGrk').setDisabled(!records.length);
+                                }
+                            }
                         },
                         {
                             xtype: 'grid',
@@ -75,12 +173,12 @@ Ext.define('GlApp.view.bkrencanaagr.BkGroupKpWin', {
 //                            store: 'gdtxterima.TtLotStore',
                             tbar: [
                                 {
-                                    text:'DELETE',
+                                    text: 'DELETE',
                                     ui: 'orange-button'
                                 },
                                 '-',
                                 {
-                                    text:'REFRESH',
+                                    text: 'REFRESH',
                                     ui: 'orange-button'
                                 }
                             ],

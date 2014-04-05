@@ -5,7 +5,6 @@
 Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
     extend: 'Ext.panel.Panel',
     alias: 'widget.bkrencanaagr.getbkrencanaagr',
-    itemId: 'getbkrencanaagr',
     bodyPadding: '2 0 0 0',
     border: false,
     layout: 'border',
@@ -22,7 +21,7 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                 {
                     region: 'center',
                     layout: 'border',
-                    id: 'maCenter',
+                    itemId: 'maCenter',
                     title: 'DAFTAR PERMINTAAN ANGGARAN',
                     defaults: {
                         split: true
@@ -35,7 +34,7 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                             ui: 'orange-tab',
                             border: false,
                             activeTab: 0,
-                            id: 'bkrencanagrtab',
+                            itemId: 'bkrencanagrtab',
 //                            plugins: {
 //                                ptype: 'tabclosemenu'
 //                            },

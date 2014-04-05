@@ -33,11 +33,6 @@ Ext.define('GlApp.view.bkrencanaagr.BkListAkunWin', {
                         },
                         '-',
                         {
-                            text: 'DELETE',
-                            ui: 'orange-button'
-                        },
-                        '-',
-                        {
                             text: 'SET AKUN',
                             ui: 'orange-button'
                         }

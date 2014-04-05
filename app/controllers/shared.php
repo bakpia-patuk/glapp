@@ -174,7 +174,6 @@ class Shared extends Auth_Controller {
         
     }
 
-    //LIST, ADD, EDIT, DELETE BARANG END
     //LIST, ADD, EDIT, DELETE MERK START
     public function list_merk() {
         $records = $this->input->get('filter');
@@ -462,6 +461,38 @@ class Shared extends Auth_Controller {
         }
     }
 
+    public function add_group_keperluan() {
+        $input = $this->input->post(NULL, TRUE);
+
+        if ($input['id'] != 0) {
+            $input['grk_name'] = strtoupper($input['grk_name']);
+            $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+            if (!$this->Shared_model->update($input, $opt, NULL, 'ms_group_keperluan')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
+            } else {
+                echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Update Success'));
+            }
+        } else {
+            unset($input['id']);
+            $input['grk_name'] = strtoupper($input['grk_name']);
+            if (!$this->Shared_model->insert($input, 'ms_group_keperluan')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
+            } else {
+                echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Success'));
+            }
+        }
+    }
+    
+    public function del_group_keperluan() {
+        $input = $this->input->post(NULL, TRUE);
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+        $this->Shared_model->delete($opt, NULL, 'ms_group_keperluan');
+        $rec[] = array('field' => 'kp_id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+        $this->Shared_model->delete($rec, NULL, 'ms_keperluan_akun');
+        echo json_encode(array('success' => 'true', 'msg' => 'Delete Data Success'));
+    }
+    
     //KEPERLUAN AKUN
     public function list_detailkp() {
         $records = $this->input->get('filter');
@@ -479,7 +510,7 @@ class Shared extends Auth_Controller {
 //            }
 //        }
 
-        $tablename = 'master_keperluan_akun';
+        $tablename = 'ms_keperluan_akun';
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
