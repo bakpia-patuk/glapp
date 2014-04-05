@@ -10,6 +10,7 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanGrid', {
     autoScroll: true,
     forceFit: true,
     columnLines: true,
+    plugins: 'bufferedrenderer',
     selModel: Ext.create('Ext.selection.CheckboxModel', {
     }),
     initComponent: function() {

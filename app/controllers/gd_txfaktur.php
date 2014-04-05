@@ -14,6 +14,7 @@ class Gd_txfaktur extends Auth_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('Gdtxfaktur_model');
+        $this->Gdtxfaktur_model->cms_db = $this->load->database('outgoing', TRUE);
     }
     
     public function tt_list() {
@@ -285,9 +286,17 @@ class Gd_txfaktur extends Auth_Controller {
 
         foreach ($res as $row) {
             $item_price = $row->tt_harga;
+            $ppn = $row->tt_ppn;
+            
             $qty = $row->tt_qty_kirim;
-
-            $total += ($item_price * $qty);
+            if($ppn!=0){
+                $ppn=$ppn/100;
+                $total += ($item_price * $qty)+($item_price * $qty*$ppn);
+            }
+            else{
+                $total += ($item_price * $qty);
+            }
+           
         }
 
         $return_data = array(
@@ -298,8 +307,8 @@ class Gd_txfaktur extends Auth_Controller {
     }
 
     public function check_ttd() {
-        if ($this->the_user->ttd_status == 1) {
-            echo json_encode(array('success' => 'true', 'url' => $this->the_user->ttd_url));
+        if ($this->user->ttd_status == 1) {
+            echo json_encode(array('success' => 'true', 'url' => $this->user->ttd_url));
         } else {
             echo json_encode(array('success' => 'false'));
         }
@@ -403,12 +412,111 @@ class Gd_txfaktur extends Auth_Controller {
 
         $data_anggaran_fk = array(
             'faktur_id' => $id,
-            'minta_anggaranid' => $ma_id,
+            'minta_anggaranid' => $ma_id.'.'.$this->user->cabang_id,
             'tipe_faktur' => 0,
             'cabang_id'=> $this->user->cabang_id
         );
         $this->Gdtxfaktur_model->insert($data_anggaran_fk, 'kas_anggaran_faktur');
 
+        $params=array();
+        $params[] = array('field' => 'faktur_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'kas_anggaran_faktur');
+        foreach ($data_po as $key) {
+            $id_kas_anggaran = $key->minta_anggaranid;
+            $data_json = json_encode($key);
+
+            $data = array();
+
+            $data['jumlah'] = 1;
+            
+            $data['tujuan'] = 1;
+            $data['id_cabang'] = $this->user->cabang_id;
+
+            $no = $this->Gdtxfaktur_model->insert_outgoing($data, 'head');
+
+            $data = array();
+            $data['data'] = $data_json;
+            $data['head_id '] = $no . '.' . $this->user->cabang_id;
+            $data['primary_key'] = $key->id;
+            $data['table_name'] = 'kas_anggaran_faktur';
+
+            $this->Gdtxfaktur_model->insert_outgoing($data, 'detail');
+        }
+
+        $params=array();
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_kas_anggaran);
+        $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'kas_minta_anggaran');
+        foreach ($data_po as $key) {
+            
+            $data_json = json_encode($key);
+
+            $data = array();
+
+            $data['jumlah'] = 1;
+            
+            $data['tujuan'] = 1;
+            $data['id_cabang'] = $this->user->cabang_id;
+
+            $no = $this->Gdtxfaktur_model->insert_outgoing($data, 'head');
+
+            $data = array();
+            $data['data'] = $data_json;
+            $data['head_id '] = $no . '.' . $this->user->cabang_id;
+            $data['primary_key'] = $key->id;
+            $data['table_name'] = 'kas_minta_anggaran';
+
+            $this->Gdtxfaktur_model->insert_outgoing($data, 'detail');
+        }
+        
+        $params=array();
+        $params[] = array('field' => 'trx_fakturid', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'trx_faktur_detail');
+        foreach ($data_po as $key) {
+            
+            $data_json = json_encode($key);
+
+            $data = array();
+
+            $data['jumlah'] = 1;
+            
+            $data['tujuan'] = 1;
+            $data['id_cabang'] = $this->user->cabang_id;
+
+            $no = $this->Gdtxfaktur_model->insert_outgoing($data, 'head');
+
+            $data = array();
+            $data['data'] = $data_json;
+            $data['head_id '] = $no . '.' . $this->user->cabang_id;
+            $data['primary_key'] = $key->id;
+            $data['table_name'] = 'trx_faktur_detail';
+
+            $this->Gdtxfaktur_model->insert_outgoing($data, 'detail');
+        }
+
+        $params=array();
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'trx_faktur');
+        foreach ($data_po as $key) {
+            
+            $data_json = json_encode($key);
+
+            $data = array();
+
+            $data['jumlah'] = 1;
+            
+            $data['tujuan'] = 1;
+            $data['id_cabang'] = $this->user->cabang_id;
+
+            $no = $this->Gdtxfaktur_model->insert_outgoing($data, 'head');
+
+            $data = array();
+            $data['data'] = $data_json;
+            $data['head_id '] = $no . '.' . $this->user->cabang_id;
+            $data['primary_key'] = $key->id;
+            $data['table_name'] = 'trx_faktur';
+
+            $this->Gdtxfaktur_model->insert_outgoing($data, 'detail');
+        }
         echo json_encode(array('success' => 'true', 'data' => "", 'message' => 'Faktur berhasil dibuat'));
     }
 
@@ -474,17 +582,17 @@ class Gd_txfaktur extends Auth_Controller {
                 $list_tt .= $this->Gdtxfaktur_model->get_detail('id', $row->trx_ttid, 'trx_tt')->tt_no . ', ';
             }
             $list_tf[] = array(
-                'id' => $data_fk[$j],
+                'id' => $id_faktur[$j],
                 'no_fk' => $this->Gdtxfaktur_model->get_detail('id', $id_faktur[$j], 'trx_faktur')->faktur_no,
                 'no_tt' => rtrim($list_tt, ', '),
                 'total_fk' => $this->Gdtxfaktur_model->get_detail('id', $id_faktur[$j], 'trx_faktur')->faktur_nototal
             );
         }
         $detail_faktur = $this->Gdtxfaktur_model->get_detail('id', $idfaktur, 'trx_faktur');
-        $detail_supplier = $this->Gdtxfaktur_model->get_detail('id', $detail_faktur->faktur_suppid, 'master_supplier');
+        $detail_supplier = $this->Gdtxfaktur_model->get_detail('id', $detail_faktur->faktur_suppid, 'dt_supplier');
 
         $data['supplier_name'] = $detail_supplier->ms_name;
-        $data['po_tgl'] = mdate('%d %F %Y', strtotime($data_tt->tt_tgltrx));
+        $data['po_tgl'] = null;
         $data['ttd1'] = $detail_faktur->fkt_userappsign;
         $data['ttd2'] = $detail_faktur->fkt_userkirimsign;
         $data['user'] = strtoupper($this->ion_auth->user($detail_faktur->fkt_userapp)->row()->first_name . ' ' . $this->ion_auth->user($detail_faktur->fkt_userapp)->row()->last_name);
@@ -529,6 +637,57 @@ class Gd_txfaktur extends Auth_Controller {
             $faktur_no = $this->Gdtxfaktur_model->get_detail('id', $faktur[$i], 'trx_faktur')->faktur_no;
             $opts[$i][] = array('field' => 'trx_fakturno', 'param' => 'where', 'operator' => '', 'value' => $faktur_no);
             $this->Gdtxfaktur_model->update($data_minta_anggaran, $opts[$i], NULL, 'kas_minta_anggaran');
+
+            $params=array();
+            $params[] = array('field' => 'faktur_id', 'param' => 'where', 'operator' => '', 'value' => $faktur[$i]);
+            $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'trx_faktur_bayar');
+            foreach ($data_po as $key) {
+                
+                $data_json = json_encode($key);
+
+                $data = array();
+
+                $data['jumlah'] = 1;
+                
+                $data['tujuan'] = 1;
+                $data['id_cabang'] = $this->user->cabang_id;
+
+                $no = $this->Gdtxfaktur_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                $data['primary_key'] = $key->id;
+                $data['table_name'] = 'trx_faktur_bayar';
+
+                $this->Gdtxfaktur_model->insert_outgoing($data, 'detail');
+            }
+
+            $params=array();
+            $params[] = array('field' => 'trx_fakturno', 'param' => 'where', 'operator' => '', 'value' => $faktur_no);
+            $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'kas_minta_anggaran');
+            foreach ($data_po as $key) {
+                
+                $data_json = json_encode($key);
+
+                $data = array();
+
+                $data['jumlah'] = 1;
+                
+                $data['tujuan'] = 1;
+                $data['id_cabang'] = $this->user->cabang_id;
+
+                $no = $this->Gdtxfaktur_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                $data['primary_key'] = $key->id;
+                $data['table_name'] = 'kas_minta_anggaran';
+
+                $this->Gdtxfaktur_model->insert_outgoing($data, 'detail');
+            }
+
         }
 
         echo json_encode(array('success' => 'true', 'data' => "", 'message' => 'BG Berhasil disimpan'));
@@ -612,7 +771,7 @@ class Gd_txfaktur extends Auth_Controller {
         if ($query && $_GET['query'] != "") {
             $record[] = array('field' => 'tt_po_no', 'param' => 'like', 'operator' => '', 'value' => $query);
         }
-
+        $record[] = array('field' => 'simpan_status', 'param' => 'where', 'operator' => '', 'value' => 1);
         $result = $this->Gdtxfaktur_model->gets($record, NULL, 'trx_faktur');
 
         if ($result != NULL) {
@@ -687,6 +846,17 @@ class Gd_txfaktur extends Auth_Controller {
         }
 
         echo json_encode(array('success' => 'true', 'data' => $list_bank));
+    }
+   
+    public function check_ttd_pengirim($img) {
+        $filename = 'assets/img_data/' . $img . '.png';
+
+        if (file_exists($filename)) {
+            echo json_encode(array('success' => 'true', 'url' => 'assets/img_data/' . $img . '.png'));
+        } else {
+            echo json_encode(array('success' => 'false'));
+        }
+        clearstatcache();
     }
 
 

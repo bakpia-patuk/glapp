@@ -1,9 +1,9 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.mintaanggaran.newWindow', {
+Ext.define('GlApp.view.gdtxfaktur.newWindow', {
     extend: 'Ext.window.Window',
-    alias: 'widget.newwindow',
+    alias: 'widget.gdtxfaktur.newwindow',
     modal: true,
     resizable: false,
     border: true,

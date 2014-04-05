@@ -10,9 +10,11 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
         'gdtxfaktur.TtStore',
         'gdtxfaktur.TtDetailStore',
         'gdtxfaktur.FakturStore',
+        'gdtxfaktur.FakturStore2',
         'gdtxfaktur.ListFakturStore',
         'gdtxfaktur.MasterSupplierStore',
-        'gdtxfaktur.BankStore'
+        'gdtxfaktur.BankStore',
+        'gdtxfaktur.CabangStore'
     ],
     views: [
         'gdtxfaktur.GetGdTxFaktur',
@@ -22,14 +24,21 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
         'gdtxfaktur.TxBgFakturForm',
         'gdtxfaktur.TxBgFakturGrid',
       'gdtxfaktur.TxListFakturGrid',
-        'gdtxfaktur.TxFakturPrintWin'
+        'gdtxfaktur.TxFakturPrintWin',
+        'gdtxfaktur.tfPrintGrid',
+        'gdtxfaktur.app2Form',
+        'gdtxfaktur.newWindow',
+
     ],
     refs: [
         {ref: 'Txfakturform', selector: '#txfakturform'},
         {ref: 'Txbgfakturgrid', selector: '#txbgfakturgrid'},
         {ref: 'Txbgfakturform', selector: '#txbgfakturform'},
         {ref: 'Txfakturgrid', selector: '#txfakturgrid'},
-        {ref: 'Txfakturgriddt', selector: '#txfakturgriddt'}
+        {ref: 'Txfakturgriddt', selector: '#txfakturgriddt'},
+        {ref: 'Txlistfakturgrid', selector: '#txlistfakturgrid'},
+        {ref: 'tfListFkt', selector: '#tfprintgrid'},
+        {ref: 'tfTtdForm', selector: '#app2formtf'},
     ],
     init: function() {
         this.listen({
@@ -63,6 +72,12 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
                         var statusFilter2 = new Ext.util.Filter({
                             property: 'faktur_bgstatus',
                             value: 0
+                        });
+                        filterCollection.push(statusFilter2);
+
+                        var statusFilter2 = new Ext.util.Filter({
+                            property: 'simpan_status',
+                            value: 1
                         });
                         filterCollection.push(statusFilter2);
 
@@ -117,6 +132,94 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
                         }
                     }
                 },
+                '#app2formtf': {
+                afterrender: function() {
+                    var form = this.getTfTtdForm();
+                    Ext.Ajax.request({
+                        url: BASE_PATH + 'gd_txfaktur/check_ttd',
+                        method: 'POST',
+                        scope: this,
+                        callback: function(options, success, response) {
+                            var resp = Ext.decode(response.responseText);
+
+                            if (resp.success === 'false') {
+                                form.body.mask();
+                                Ext.MessageBox.show({
+                                    title: 'WARNING',
+                                    msg: TTD_STRING,
+                                    buttons: Ext.MessageBox.OK,
+                                    icon: Ext.MessageBox.WARNING
+                                });
+                            } else {
+                                form.down('#imageTtdTf1').setSrc(BASE_URL + resp.url);
+                            }
+                        }
+                    });
+                }
+            },
+            '#tfprintgrid button[action=cetakFkt]': {
+                click: function(btn, e, opt) {
+                    var data = Ext.getCmp('idFakturCetak').getValue();
+
+                    if (data === "") {
+                        Ext.Msg.alert('Info', 'Pilih Faktur yang Akan di Cetak');
+                        return;
+                    }
+
+                    var win = new Ext.widget('gdtxfaktur.newwindow', {
+                        layout: 'fit',
+                        modal: true,
+                        title: 'Tanda Tangan',
+                        autoScroll: false,
+                        width: 335,
+                        height: 505,
+                        border: true,
+                        items: [
+                            {
+                                xtype: 'gdtxfaktur.app2formtf'
+                            }
+                        ],
+                        buttons: [
+                            {
+                                text: 'Cetak',
+                                itemId: 'printThisFkt'
+                            }
+                        ]
+                    });
+                    win.show();
+
+                    this.getTfTtdForm().getForm().findField('fktList').setValue(data);
+                }
+            },
+            '#printThisFkt': {
+                click: function(btn, e, opt) {
+//                    Ext.Ajax.request({
+//                        url: BASE_PATH + 'data/check_ttd/signNullTf1',
+//                        scope: this,
+//                        callback: function(options, success, response) {
+//                            var resp = Ext.decode(response.responseText);
+//
+//                            if (resp.success === 'true') {
+                                Ext.Ajax.request({
+                                    url: BASE_PATH + 'gd_txfaktur/check_ttd_pengirim/signNullTf2',
+                                    scope: this,
+                                    callback: function(options, success, response) {
+                                        var resp = Ext.decode(response.responseText);
+
+                                        if (resp.success === 'true') {
+                                            this.printTf(btn, e, opt);
+                                        } else {
+                                            Ext.MessageBox.alert('Error', 'Belum ada tanda tangan PENGIRIM');
+                                        }
+                                    }
+                                });
+//                            } else {
+//                                Ext.MessageBox.alert('Error', 'Belum ada tanda tangan PETUGAS');
+//                            }
+//                        }
+//                    });
+                }
+            },
 //                'tfbgform button[action=fktBgSave]': {
 //                    click: this.saveTfBg
 //                },
@@ -180,6 +283,26 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
                         });
                     }
                 },
+                '#txlistfakturgrid button[action="cetakUlangTf"]': {
+                click: function() {
+                    var grid = this.getTxlistfakturgrid(),
+                            sm = grid.getSelectionModel(),
+                            sel = sm.getSelection();
+                    
+                    if(!sel.length) {
+                        Ext.Msg.alert('Info', 'Pilih Faktur yang akan di cetak');
+                        return;
+                    }
+
+                    if(sel[0].get('fktCetakStatus') == 0) {
+                        Ext.Msg.alert('Info', 'Faktur asli belum di cetak. Gunakan tombol cetak di form Tanda Terima Faktur');
+                        return;
+                    }
+                    
+                    window.open(BASE_PATH + 'gd_txfaktur/printTf/1/' + sel[0].get('id'), "Print Preview", "height=" + screen.height + ",width=950,scrollbars=true");
+
+                }
+            },
                 '#txfakturgrid': {
                     select: function(record, index, eOpts) {
                      //   alert('ff');
@@ -309,7 +432,7 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
 
                                         var statusFilter = new Ext.util.Filter({
                                             property: 'tt_cabang',
-                                            value: userCabang
+                                            value: CABANG_ID
                                         });
                                         filterCollection.push(statusFilter);
 
@@ -469,7 +592,59 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
                 });
             }
         }
-    }
+    },
+    showPrintTf: function(btn, e, opt) {
+
+         var win = new Ext.widget('gdtxfaktur.newwindow', {
+            layout: 'fit',
+            modal: true,
+            title: 'Data Faktur',
+            autoScroll: false,
+            width: 600,
+            height: 300,
+            border: true,
+            items: [
+                {
+                    xtype: 'gdtxfaktur.tfprintgrid',
+                    layout: 'fit',
+                    region: 'center'
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Tutup',
+                    handler: function() {
+                        this.up('window').destroy();
+                    }
+                }
+            ]
+        });
+        win.show();
+    },
+    printTf: function(btn, e, opt) {
+        var form = this.getTfTtdForm().getForm(),
+                fkt = form.findField('fktList').getValue(),
+                pengirim = form.findField('pengirim').getValue();
+
+        if (form.isValid()) {
+            Ext.Ajax.request({
+                url: BASE_PATH + 'persediaan/set_cetak_tf',
+                method: 'POST',
+                params: form.getValues(),
+                scope: this,
+                callback: function(options, success, response) {
+                    var resp = Ext.decode(response.responseText);
+
+                    if (resp.success === 'true') {
+                        window.open(BASE_PATH + 'persediaan/printTf/0/' + resp.data, "Print Preview", "scrollbars=1,height=" + screen.height + ",width=950");
+                        btn.up('window').destroy();
+                        this.getTfListFkt().getStore().load();
+                    }
+                }
+            });
+        }
+    },
+
 });
 
 /* End of file Base.js */
