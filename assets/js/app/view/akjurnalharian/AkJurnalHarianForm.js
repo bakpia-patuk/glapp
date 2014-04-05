@@ -71,8 +71,8 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Status Otorisasi',
-                    name: 'apprStat',
-                    itemId: 'apprStat',
+                    name: 'status_app',
+                    itemId: 'status_app',
                     hidden: true
                 },
                 {
@@ -83,64 +83,64 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianForm', {
                     items: [
                         {
                             boxLabel: 'BKM',
-                            name: 'typeTrx',
+                            name: 'jurnal_type',
                             inputValue: 0,
                             width: 60,
                             checked: true,
-//                            listeners: {
-//                                change: function(o, n, e, opt) {
-//                                    if (n) {
-//                                        this.up('form').down('#noBk').setFieldLabel('No BKM ');
-//                                        this.up('form').down('#bankAkun').disable();
-//                                        this.up('form').down('#bankAkun').hide();
-//                                    }
-//                                }
-//                            }
+                            listeners: {
+                                change: function(o, n, e, opt) {
+                                    if (n) {
+                                        this.up('form').down('#noBk').setFieldLabel('No BKM ');
+                                        this.up('form').down('#bankAkun').disable();
+                                        this.up('form').down('#bankAkun').hide();
+                                    }
+                                }
+                            }
                         },
                         {
                             boxLabel: 'BKK',
-                            name: 'typeTrx',
+                            name: 'jurnal_type',
                             inputValue: 1,
                             width: 60,
-//                            listeners: {
-//                                change: function(o, n, e, opt) {
-//                                    if (n) {
-//                                        this.up('form').down('#noBk').setFieldLabel('No BKK ');
-//                                        this.up('form').down('#bankAkun').disable();
-//                                        this.up('form').down('#bankAkun').hide();
-//                                    }
-//                                }
-//                            }
+                            listeners: {
+                                change: function(o, n, e, opt) {
+                                    if (n) {
+                                        this.up('form').down('#noBk').setFieldLabel('No BKK ');
+                                        this.up('form').down('#bankAkun').disable();
+                                        this.up('form').down('#bankAkun').hide();
+                                    }
+                                }
+                            }
                         },
                         {
                             boxLabel: 'BBM',
-                            name: 'typeTrx',
+                            name: 'jurnal_type',
                             inputValue: 2,
                             width: 60,
-//                            listeners: {
-//                                change: function(o, n, e, opt) {
-//                                    if (n) {
-//                                        this.up('form').down('#noBk').setFieldLabel('No BBM ');
-//                                        this.up('form').down('#bankAkun').enable();
-//                                        this.up('form').down('#bankAkun').show();
-//                                    }
-//                                }
-//                            }
+                            listeners: {
+                                change: function(o, n, e, opt) {
+                                    if (n) {
+                                        this.up('form').down('#noBk').setFieldLabel('No BBM ');
+                                        this.up('form').down('#bankAkun').enable();
+                                        this.up('form').down('#bankAkun').show();
+                                    }
+                                }
+                            }
                         },
                         {
                             boxLabel: 'BBK',
-                            name: 'typeTrx',
+                            name: 'jurnal_type',
                             inputValue: 3,
                             width: 60,
-//                            listeners: {
-//                                change: function(o, n, e, opt) {
-//                                    if (n) {
-//                                        this.up('form').down('#noBk').setFieldLabel('No BBK ');
-//                                        this.up('form').down('#bankAkun').enable();
-//                                        this.up('form').down('#bankAkun').show();
-//                                    }
-//                                }
-//                            }
+                            listeners: {
+                                change: function(o, n, e, opt) {
+                                    if (n) {
+                                        this.up('form').down('#noBk').setFieldLabel('No BBK ');
+                                        this.up('form').down('#bankAkun').enable();
+                                        this.up('form').down('#bankAkun').show();
+                                    }
+                                }
+                            }
                         }
                     ]
                 },
@@ -168,27 +168,27 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianForm', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        afterrender: function() {
-//                            var store = this.getStore(),
-//                                    filterCollection = [];
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'akun_child_status',
-//                                value: 1
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'akun_fungsi',
-//                                value: 2
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                    listeners: {
+                        afterrender: function() {
+                            var store = this.getStore(),
+                                    filterCollection = [];
+
+                            var filter2 = new Ext.util.Filter({
+                                property: 'akun_child_status',
+                                value: 1
+                            });
+                            filterCollection.push(filter2);
+
+                            var filter2 = new Ext.util.Filter({
+                                property: 'akun_fungsi',
+                                value: 2
+                            });
+                            filterCollection.push(filter2);
+
+                            store.clearFilter(true);
+                            store.filter(filterCollection);
+                        }
+                    }
                 },
                 {
                     xtype: 'textfield',
@@ -230,8 +230,8 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianForm', {
                     width: 325,
                     height: 50,
                     fieldLabel: 'Keterangan ',
-                    name: 'keterangan',
-                    itemId: 'keterangan',
+                    name: 'uraian',
+                    itemId: 'uraian',
                     allowBlank: false
                 },
                 {

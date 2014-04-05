@@ -9,7 +9,7 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianGrid', {
     autoScroll: true,
     forceFit: false,
     ui: 'blue-panel',
-//    store: 'JurnalHarianStore',
+    store: 'akjurnalharian.JurnalAllStore',
     columnLines: true,
     stripeRows: true,
     flex: 1,
@@ -146,21 +146,21 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianGrid', {
                     width: 220,
                     emptyText: 'Pilih',
                     labelWidth: 50,
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     allowBlank: true,
                     triggerAction: 'all',
-//                    hidden: userCabang === '14' ? false : true,
+//                    hidden: userCabang === '1' ? false : true,
 //                    valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
-//                    listeners: {
-//                        select: function () {
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#dateJmFilter').getValue(),
-//                                combo2 = this.up('grid').down('#dateJmFilter2').getValue();
-//
+                    store: 'akjurnalharian.CabangStore',
+                    listeners: {
+                        select: function () {
+                            var store = this.up('grid').getStore(),
+                                filterCollection = [],
+                                combo = this.up('grid').down('#dateJmFilter').getValue(),
+                                combo2 = this.up('grid').down('#dateJmFilter2').getValue();
+
 //                            if(combo !== null) {
 //                                var statusFilter = new Ext.util.Filter({
 //                                    property: 'tgl_trx',
@@ -176,23 +176,23 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianGrid', {
 //                                });
 //                                filterCollection.push(statusFilter);
 //                            }
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'jurnal_type',
-//                                value: 0
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'cabang',
+                                value: this.getValue()
+                            });
+                            filterCollection.push(statusFilter);
+
+                            var filter2 = new Ext.util.Filter({
+                                property: 'jurnal_type',
+                                value: 0
+                            });
+                            filterCollection.push(filter2);
+
+                            store.clearFilter(true);
+                            store.filter(filterCollection);
+                        }
+                    }
                 },
                 '->',
                 {
@@ -245,7 +245,7 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianGrid', {
                     width: 275,
                     hidden: false,
                     text: 'URAIAN',
-                    dataIndex: 'keterangan',
+                    dataIndex: 'uraian',
                     renderer: function (value, meta, record) {
                         var status = record.get('apprStat');
                         if (status !== false) {
@@ -273,7 +273,7 @@ Ext.define('GlApp.view.akjurnalharian.AkJurnalHarianGrid', {
                     xtype: 'gridcolumn',
                     width: 275,
                     text: 'AKUN',
-                    dataIndex: 'namaAkun',
+                    dataIndex: 'akun_name',
                     renderer: function (value, meta, record) {
                         var status = record.get('apprStat');
                         if (status !== false) {

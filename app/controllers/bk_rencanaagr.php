@@ -127,11 +127,11 @@ class Bk_rencanaagr extends Auth_Controller {
                                 $keperluan = '';
                             }
                             
-                            if ($detail_ma->dtl_keperluan != 0) {
-                                $dt_perlu = $this->Bkrencanaagr_model->get_detail('id', $detail_ma->dt_keperluan, 'dt_akun')->akun_name;
-                            } else {
+//                            if ($detail_ma->dtl_keperluan != 0) {
+//                                $dt_perlu = $this->Bkrencanaagr_model->get_detail('id', $detail_ma->dtl_keperluan, 'dt_akun')->akun_name;
+//                            } else {
                                 $dt_perlu = '';
-                            }
+//                            }
 
                             if (intval($row->keterangan) == 0) {
                                 $ket = $row->keterangan;

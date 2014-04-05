@@ -9,7 +9,7 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
     forceFit: true,
     ui: 'blue-panel',
     title: 'DAFTAR JURNAL UMUM',
-//    store: 'akjurnalumum.JurnalAllStore',
+    store: 'akjurnalumum.JurnalAllStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -38,46 +38,6 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
                     itemId: 'dateJuFilter',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
-//                    listeners: {
-//                        change: function () {
-//                            var grid = this.up('grid'),
-//                                store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#cabangJuFilter').getValue(),
-//                                combo2 = this.up('grid').down('#dateJuFilter2').getValue();;
-//                    
-//                            grid.columns[8].hide();
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'tgl_trx',
-//                                value: Ext.Date.format(this.getValue(), 'Y-m-d 00:00:00') + 'GT'
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'status_app',
-//                                value: 1
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang',
-//                                value: combo !== null ? combo : userCabang
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
                 },
                 {
                     xtype: 'datefield',
@@ -89,46 +49,6 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
                     itemId: 'dateJuFilter2',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
-//                    listeners: {
-//                        change: function () {
-//                            var grid = this.up('grid'),
-//                                store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#cabangJuFilter').getValue(),
-//                                combo2 = this.up('grid').down('#dateJuFilter').getValue();
-//
-//                            grid.columns[8].hide();
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 00:00:00') + 'GT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'tgl_trx',
-//                                value: Ext.Date.format(this.getValue(), 'Y-m-d 23:59:59') + 'LT'
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'status_app',
-//                                value: 1
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang',
-//                                value: combo !== null ? combo : userCabang
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
                 },
                 {
                     xtype: 'combobox',
@@ -146,55 +66,13 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
 //                    hidden: userCabang == 14 ? false : true,
                     valueNotFoundText: 'Tidak ada Data',
                     store: 'akjurnalumum.CabangStore',
-//                    listeners: {
-//                        select: function () {
-//                            var grid = this.up('grid'),
-//                                store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#dateJuFilter').getValue(),
-//                                combo2 = this.up('grid').down('#dateJuFilter2').getValue();
-//
-//                            grid.columns[8].hide();
-//
-//                            if(combo !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo, 'Y-m-d 00:00:00') + 'GT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'status_app',
-//                                value: 1
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
                 },
                 {
                     xtype: 'button',
                     iconCls: 'icon-btn-search',
                     ui: 'blue-button',
-                    text: 'Search'
-//                    action: 'juRefresh'
+                    text: 'Search',
+                    itemId: 'JurnalUmumSearch'
                 },
                 '->',
 //                {
@@ -204,37 +82,39 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
 //                },
                 {
                     xtype: 'button',
+                    text: 'Refresh',
                     iconCls: 'icon-btn-refresh',
                     ui: 'blue-button',
-//                    action: 'juRefresh'
+                    itemId: 'JurnalUmumRefresh'
                 },
                 {
                     xtype: 'button',
                     iconCls: 'icon-btn-clear',
                     ui: 'blue-button',
-//                    action: 'juToday'
+                    text: 'Clear',
+                    itemId: 'JurnalUmumClear'
                 },
                 {
                     xtype: 'button',
                     text: 'All',
                     ui: 'blue-button',
                     iconCls: 'icon-filter',
-//                    hidden: userCabang == 14 ? false : true,
-//                    action: 'juAll'
+//                    hidden: userCabang == 1 ? false : true,
+                    action: 'JurnalUmumAll'
                 }
             ],
-//            features: [
-//                {
-//                    //startCollapsed: true,
-//                    collapsible: false,
-//                    id: 'juGridSum',
-//                    ftype: 'groupingsummary',
-//                    groupHeaderTpl: 'Jurnal Umum',
-//                    hideGroupedHeader: true,
-//                    //remoteRoot: 'summaryData',
-//                    enableGroupingMenu: true
-//                }
-//            ],
+            features: [
+                {
+                    //startCollapsed: true,
+                    collapsible: false,
+                    id: 'juGridSum',
+                    ftype: 'groupingsummary',
+                    groupHeaderTpl: 'Jurnal Umum',
+                    hideGroupedHeader: true,
+                    //remoteRoot: 'summaryData',
+                    enableGroupingMenu: true
+                }
+            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {
