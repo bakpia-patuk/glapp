@@ -6,9 +6,8 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankGrid', {
     alias: 'widget.bkmsbank.bkmsbankgrid',
     itemId: 'bkmsbankgrid',
     autoScroll: true,
-    ui: 'green-panel',
     title: 'TABEL BANK',
-    forceFit: false,
+    forceFit: true,
     store: 'bkmsbank.BankStore',
     columnLines: true,
     border: false,
@@ -21,43 +20,6 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankGrid', {
                 emptyText: 'Tidak ada data Bank',
                 deferEmptyText: false
             },
-            tbar: [
-                {
-                    xtype: 'combobox',
-                    emptyText: 'Pilih',
-                    fieldLabel: 'Cabang ',
-                    labelWidth: 55,
-                    width: 200,
-                    displayField: 'cabang_alias',
-                    valueField: 'id',
-                    queryMode: 'remote',
-                    name: 'filterCbPusat1',
-                    itemId: 'filterCabang',
-                    allowBlank: true,
-                    triggerAction: 'all',
-                    valueNotFoundText: 'Tidak ada Data',
-                    store: 'bkmsbank.CabangGridStore',
-//                    hidden: CABANG_ID === "1" ? false : true,
-                    listeners: {
-                        select: function(me, value, field) {
-                            var store = Ext.StoreMgr.lookup('bkmsbank.BankStore');
-//
-                            store.clearFilter(true);
-                            store.filter('bank_cabang', this.getValue());
-                        }
-                    }
-                },
-                '->',
-                {
-                    iconCls: 'icon-btn-refresh',
-                    text: 'Refresh',
-                    ui: 'blue-button',
-                    handler: function() {
-                        this.up('grid').getSelectionModel().clearSelections();
-                        this.up('grid').getStore().load();
-                    }
-                }
-            ],
             columns: [
                 {
                     xtype: 'gridcolumn',

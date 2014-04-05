@@ -15,9 +15,7 @@ Ext.define('GlApp.controller.GetBkMsBank', {
     views: [
         'bkmsbank.GetBkMsBank',
         'bkmsbank.BkMsBankForm',
-        'bkmsbank.BkMsBankGrid',
-//        'masterbank.bnGrid',
-//        'masterbank.newWindow'
+        'bkmsbank.BkMsBankGrid'
     ],
     refs: [
         {ref: 'BkMsBankForm', selector: '#bkmsbankform'},

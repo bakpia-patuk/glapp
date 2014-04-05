@@ -10,38 +10,88 @@ Ext.define('GlApp.view.bkmsbank.GetBkMsBank', {
     border: false,
     layout: 'border',
     defaults: {
-        split: true
+        split: true,
+        border: true,
+        ui: 'orange-panel'
     },
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
+            tbar: [
+                {
+                    xtype: 'button',
+                    ui: 'orange-button',
+                    text: 'ADD_NEW',
+                    iconCls: 'icon-btn-add',
+                    itemId: 'MsBankNew'
+                },
+                '-',
+                {
+                    xtype: 'button',
+                    ui: 'orange-button',
+                    text: 'SAVE',
+                    iconCls: 'icon-btn-save',
+                    itemId: 'MsBankSave'
+                },
+                '-',
+                {
+                    xtype: 'button',
+                    ui: 'orange-button',
+                    text: 'DELETE',
+                    iconCls: 'icon-btn-delete',
+                    itemId: 'MsBankDelete'
+                },
+                '->',
+                {
+                    xtype: 'combobox',
+                    emptyText: 'Pilih',
+                    fieldLabel: 'Filter ',
+                    labelWidth: 40,
+                    width: 200,
+                    displayField: 'cabang_alias',
+                    valueField: 'id',
+                    queryMode: 'remote',
+                    name: 'filterCbPusat1',
+                    itemId: 'filterCabang',
+                    allowBlank: true,
+                    triggerAction: 'all',
+                    valueNotFoundText: 'Tidak ada Data',
+                    store: 'bkmsbank.CabangGridStore',
+//                    hidden: CABANG_ID === "1" ? false : true,
+                    listeners: {
+                        select: function(me, value, field) {
+                            var store = Ext.StoreMgr.lookup('bkmsbank.BankStore');
+//
+                            store.clearFilter(true);
+                            store.filter('bank_cabang', this.getValue());
+                        }
+                    }
+                },
+                {
+                    iconCls: 'icon-btn-refresh',
+                    text: 'REFRESH',
+                    ui: 'orange-button',
+                    handler: function() {
+                        this.up('grid').getSelectionModel().clearSelections();
+                        this.up('grid').getStore().load();
+                    }
+                }
+            ],
             items: [
                 {
                     region: 'center',
-                    border: false,
                     layout: 'fit',
-                    items: [
-                        {
-                            xtype: 'bkmsbank.bkmsbankgrid',
-                            border: true
-                        }
-                    ]
+                    xtype: 'bkmsbank.bkmsbankgrid'
                 },
                 {
                     region: 'west',
                     width: 275,
                     minWidth: 275,
-                    ui: 'blue-panel',
                     title: 'FORM MASTER BANK',
-                    border: true,
                     collapsible: true,
-                    layout: 'fit',
-                    items: [
-                        {
-                            xtype: 'bkmsbank.bkmsbankform'
-                        }
-                    ]
+                    layout: 'auto',
+                    xtype: 'bkmsbank.bkmsbankform'
                 }
             ]
         });

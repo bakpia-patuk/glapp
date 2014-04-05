@@ -20,31 +20,6 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankForm', {
         var me = this;
 
         Ext.applyIf(me, {
-            tbar: [
-                {
-                    xtype: 'button',
-                    ui: 'blue-button',
-                    text: 'Simpan',
-                    iconCls: 'icon-btn-save',
-                    itemId: 'MsBankSave'
-                },
-                '-',
-                {
-                    xtype: 'button',
-                    ui: 'blue-button',
-                    text: 'Baru',
-                    iconCls: 'icon-btn-add',
-                    itemId: 'MsBankNew'
-                },
-                '-',
-                {
-                    xtype: 'button',
-                    ui: 'blue-button',
-                    text: 'Hapus',
-                    iconCls: 'icon-btn-delete',
-                    itemId: 'MsBankDelete'
-                }
-            ],
             items: [
                 {
                     xtype: 'textfield',
