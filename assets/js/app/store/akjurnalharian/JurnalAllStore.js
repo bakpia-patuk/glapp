@@ -29,9 +29,9 @@ var JurnalUmum = Ext.define('GlApp.model.JurnalAllModel', {
     idProperty: 'idJurnal'
 });
 
-Ext.define('GlApp.store.akjurnalumum.JurnalAllStore', {
+Ext.define('GlApp.store.akjurnalharian.JurnalAllStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.akjurnalumum.jurnalallstore',
+    alias: 'store.akjurnalharian.jurnalallstore',
     model: JurnalUmum,
     storeId: 'AkJuUmumStore',
     autoLoad: false,
@@ -39,16 +39,26 @@ Ext.define('GlApp.store.akjurnalumum.JurnalAllStore', {
     proxy: {
         success: true,
         type: 'ajax',
-        url: BASE_PATH + 'ak_jurnalumum/jurnal_all_list',
+        url: BASE_PATH + 'ak_jurnalharian/jurnal_all_list',
         reader: {
             type: 'json',
             root: 'data'
         }
     },
-    groupField: ['jurnal_type']
+    groupField: ['jurnal_type'],
+    sorters: [
+        {
+            property: 'noRefTrx',
+            direction: 'asc'
+        },
+        {
+            property: 'status_db',
+            direction: 'desc'
+        }
+    ]
 });
 
-//Ext.define('GlApp.store.akurnalumum.JurnalAllStore', {
+//Ext.define('GlApp.store.akurnalharian.JurnalAllStore', {
 //    extend: 'Ext.data.Store',
 //    alias: 'store.jurnalallstore',
 //    requires: [
