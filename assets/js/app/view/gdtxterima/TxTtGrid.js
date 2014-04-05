@@ -1,6 +1,41 @@
 /**
  * @author Isht Ae
  **/
+var editorCell = new Ext.grid.plugin.CellEditing({
+    clicksToEdit: 2,
+    listeners: {
+        'edit': function(editor, e, eOpt) {
+            if (e.record.dirty) {
+                e.record.commit();
+                Ext.Ajax.request({
+                    url: BASE_PATH + 'gd_tt/edit_peng_tt',
+                    method: 'POST',
+                    params: e.record.data,
+                    scope: this,
+                    callback: function(options, success, response) {
+                        var resp = Ext.decode(response.responseText);
+
+                        if (resp.success === 'true') {
+                            e.grid.getStore().load();
+                            e.grid.getSelectionModel().clearSelections();
+                        } else {
+                            Ext.MessageBox.show({
+                                title: 'Info',
+                                msg: resp.msg,
+                                buttons: Ext.MessageBox.OK,
+                                icon: Ext.MessageBox.ERROR
+                            });
+                            e.grid.getStore().load();
+                            e.grid.getSelectionModel().clearSelections();
+                        }
+                    }
+                });
+            }
+        }
+    }
+});
+
+
 Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.gdtxterima.txttgrid',
@@ -10,8 +45,8 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
     autoScroll: true,
     forceFit: false,
     columnLines: true,
-
-    initComponent: function () {
+    plugins: [editorCell],
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
@@ -44,7 +79,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     width: 300,
                     text: 'NAMA BARANG',
                     dataIndex: 'barang_name',
-                    renderer: function (value, meta, record) {
+                    renderer: function(value, meta, record) {
                         var status = record.get('tt_status');
                         if (status) {
                             return value;
@@ -60,7 +95,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     text: 'QTY PESAN',
                     format: '000',
                     dataIndex: 'barang_qty',
-                    renderer: function (value, meta, record) {
+                    renderer: function(value, meta, record) {
                         var status = record.get('tt_status');
                         if (status) {
                             return value;
@@ -76,7 +111,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     text: 'QTY DITERIMA',
                     format: '000',
                     dataIndex: 'tt_qty_kirim',
-                    renderer: function (value, meta, record) {
+                    renderer: function(value, meta, record) {
                         var status = record.get('tt_status');
                         if (status) {
                             return value;
@@ -97,7 +132,7 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     text: 'QTY TERKIRIM',
                     format: '000',
                     dataIndex: 'tt_qty_sisa',
-                    renderer: function (value, meta, record) {
+                    renderer: function(value, meta, record) {
                         var status = record.get('tt_status');
                         if (status) {
                             return value;
@@ -111,16 +146,16 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     width: 150,
                     text: 'MERK',
                     dataIndex: 'merk_name',
-                    renderer: function (value, meta, record) {
+                    renderer: function(value, meta, record) {
                         var status = record.get('tt_status');
                         if (value === 0) {
-                            if(status) {
+                            if (status) {
                                 return '-';
                             } else {
                                 return '<span style="color:red;">-</span>';
                             }
                         } else {
-                            if(status) {
+                            if (status) {
                                 return value;
                             } else {
                                 return '<span style="color:red;">' + value + '</span>';
@@ -133,16 +168,16 @@ Ext.define('GlApp.view.gdtxterima.TxTtGrid', {
                     width: 150,
                     text: 'KATALOG',
                     dataIndex: 'barang_katalog',
-                    renderer: function (value, meta, record) {
+                    renderer: function(value, meta, record) {
                         var status = record.get('tt_status');
                         if (value === 0) {
-                            if(status) {
+                            if (status) {
                                 return '-';
                             } else {
                                 return '<span style="color:red;">-</span>';
                             }
                         } else {
-                            if(status) {
+                            if (status) {
                                 return value;
                             } else {
                                 return '<span style="color:red;">' + value + '</span>';
