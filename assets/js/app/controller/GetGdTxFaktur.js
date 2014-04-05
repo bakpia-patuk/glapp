@@ -628,7 +628,7 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
 
         if (form.isValid()) {
             Ext.Ajax.request({
-                url: BASE_PATH + 'persediaan/set_cetak_tf',
+                url: BASE_PATH + 'gd_txfaktur/set_cetak_tf',
                 method: 'POST',
                 params: form.getValues(),
                 scope: this,
@@ -636,7 +636,7 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
                     var resp = Ext.decode(response.responseText);
 
                     if (resp.success === 'true') {
-                        window.open(BASE_PATH + 'persediaan/printTf/0/' + resp.data, "Print Preview", "scrollbars=1,height=" + screen.height + ",width=950");
+                        window.open(BASE_PATH + 'gd_txfaktur/printTf/0/' + resp.data, "Print Preview", "scrollbars=1,height=" + screen.height + ",width=950");
                         btn.up('window').destroy();
                         this.getTfListFkt().getStore().load();
                     }

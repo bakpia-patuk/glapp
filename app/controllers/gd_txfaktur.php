@@ -858,6 +858,82 @@ class Gd_txfaktur extends Auth_Controller {
         }
         clearstatcache();
     }
+    public function upload_signNullTf1() {
+        /* $stat = stat('C:\Wacom\ttd\signNull.png');
+          $stm = $stat['mtime'];
+          if($stm <= time() - 60)
+          {
+          echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+          return FALSE;
+          } */
+
+        if ($_FILES['fileSgn']['name'] != "signNull.png") {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            return FALSE;
+        }
+
+
+        $config['upload_path'] = './assets/img_data/';
+        $config['allowed_types'] = 'png';
+        $config['file_name'] = 'signNullTf1.png';
+        $config['max_size'] = '20';
+        $config['max_width'] = '300';
+        $config['max_height'] = '150';
+        $config['overwrite'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('fileSgn')) {
+            $data = $this->upload->data();
+            if ($data['image_width'] != 300 || $data['image_height'] != 150) {
+                echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            } else {
+                echo '{success:true, message: "Verifikasi Selesai", url: "assets/img_data/signNullTf1.png"}';
+            }
+        } else {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+        }
+    }
+
+    public function upload_signNullTf2() {
+        /* $stat = stat('C:\Wacom\ttd\signNull.png');
+          $stm = $stat['mtime'];
+          if($stm <= time() - 60)
+          {
+          echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+          return FALSE;
+          } */
+
+        if ($_FILES['fileSgn2']['name'] != "signNull.png") {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            return FALSE;
+        }
+
+
+        $config['upload_path'] = './assets/img_data/';
+        $config['allowed_types'] = 'png';
+        $config['file_name'] = 'signNullTf2.png';
+        $config['max_size'] = '20';
+        $config['max_width'] = '300';
+        $config['max_height'] = '150';
+        $config['overwrite'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('fileSgn2')) {
+            $data = $this->upload->data();
+            if ($data['image_width'] != 300 || $data['image_height'] != 150) {
+                echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            } else {
+                echo '{success:true, message: "Verifikasi Selesai", url: "assets/img_data/signNullTf2.png"}';
+            }
+        } else {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+        }
+    }
+
 
 
 }
