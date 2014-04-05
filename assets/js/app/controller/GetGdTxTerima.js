@@ -10,7 +10,9 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
         'gdtxterima.SupplierStore',
         'gdtxterima.PoDetailStore',
         'gdtxterima.TtLotStore',
-        'gdtxterima.TtListStore'
+        'gdtxterima.TtListStore',
+        'gdtxterima.CabangStore',
+        'gdtxterima.MasterSupplierStore'
     ],
     views: [
         'gdtxterima.GetGdTxTerima',
@@ -27,7 +29,8 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
         {ref: 'TtLotGrid', selector: '#txttgriddt'},
         {ref: 'TtForm', selector: '#txttform'},
         {ref: 'WindowLot', selector: '#gridLot'},
-        {ref: 'FormLot', selector: '#formLot'}
+        {ref: 'FormLot', selector: '#formLot'},
+        {ref: 'Tsxttlistgrid', selector: '#tsxttlistgrid'}
         
     ],
     init: function() {
@@ -148,7 +151,20 @@ Ext.define('GlApp.controller.GetGdTxTerima', {
                             this.ajaxReq('gd_tt/save_lot', form.getForm().getValues(), 9);
                         }
                     }
+                },
+                '#tsxttlistgrid button[action=printListTt]': {
+                click: function(btn, e, opt) {
+                    var grid = this.getTsxttlistgrid(),
+                            sm = grid.getSelectionModel(),
+                            sel = sm.getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Info', 'Pilih Barang TT Dahulu');
+                        return;
+                    }
+
+                    window.open(BASE_PATH + 'gd_tt/print_tt/1/' + sel[0].get('tt_id'), "Print Preview", "height=" + screen.height + ",width=950, scrollbars=true");
                 }
+            }
             },
             global: {
             },

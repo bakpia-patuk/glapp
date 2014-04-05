@@ -23,52 +23,164 @@ Ext.define('GlApp.view.gdtxterima.TxTtListGrid', {
             tbar: [
                 {
                     xtype: 'datefield',
-                    fieldLabel: 'Filter ',
-                    labelWidth: 40,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Awal',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
+                    width: 130,
+                    fieldLabel: 'Tanggal',
+                    margin: '0 0 0 5',
+                    emptyText: 'Tanggal Awal',
+                    hideLabel: true,
+                    itemId: 'dateTtFilter',
+                    format: 'd/M/Y',
+                    submitFormat: 'Y-m-d'
                 },
                 {
                     xtype: 'datefield',
-                    fieldLabel: ' s.d ',
-                    labelWidth: 30,
+                    width: 160,
+                    labelWidth: 23,
+                    fieldLabel: 's.d ',
+                    margin: '0 5 0 5',
+                    emptyText: 'Tanggal Akhir',
+                    itemId: 'dateTtFilter2',
+                    format: 'd/M/Y',
+                    submitFormat: 'Y-m-d'
+                },
+                {
+                    xtype: 'combobox',
+                    itemId: 'cbTtFilter',
+                    width: 150,
+                    margin: '0 5 0 0',
+                    emptyText: 'Pilih Cabang',
                     labelAlign: 'right',
-                    emptyText: 'Tgl. Akhir',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
+                    displayField: 'cabang_alias',
+                    valueField: 'id',
+                    queryMode: 'remote',
+                    allowBlank: true,
+                    triggerAction: 'all',
+                    hidden: CABANG_ID === '1' ? true : false,
+                    valueNotFoundText: 'Tidak ada Data',
+                    store: 'gdtxterima.CabangStore',
+                    listeners: {
+                        afterrender: function() {
+                            if (CABANG_ID !== '1') {
+                                this.setValue(parseInt(CABANG_ID));
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
-                    emptyText: 'Cabang',
-                    allowBlank: false
+                    emptyText: 'Pilih suplier.',
+                    triggerAction: 'all',
+                    queryMode: 'remote',
+                    minChars: 2,
+                    itemId: 'pilihSup',
+                    width: 150,
+                    labelAlign: 'right',
+                    labelWidth: 50,
+                    msgTarget: 'side',
+                    store: 'gdtxterima.MasterSupplierStore',
+                    displayField: 'suppdisplay',
+                    valueField: 'idms',
+                    hideTrigger: false,
+                    matchFieldWidth: false,
+                    listConfig: {
+                        minWidth: 185
+                    }
+
                 },
                 {
-                    xtype: 'combobox',
-                    emptyText: 'Supplier',
-                    allowBlank: false
-                },
-                {
-                    text: 'SEARCH'
+                    iconCls: 'icon-btn-search',
+                    text: 'SEARCH',
+                    tooltip: 'Search Query',
+                    ui: 'blue-button',
+                    handler: function() {
+                        var grid = this.up('grid'),
+                                store = grid.getStore(),
+                                cabang = this.up('grid').down('#cbTtFilter').getValue(),
+                                supplier = this.up('grid').down('#pilihSup').getValue(),
+                                tgl1 = this.up('grid').down('#dateTtFilter').getValue(),
+                                tgl2 = this.up('grid').down('#dateTtFilter2').getValue(),
+                                filterCollection = [];
+
+
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'trx_tt.tt_tgltrx',
+                            value: Ext.Date.format(tgl1 === null ? new Date() : tgl1, 'Y-m-d 00:00:00') + 'GT'
+                        });
+                        filterCollection.push(statusFilter);
+
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'trx_tt.tt_tgltrx',
+                            value: Ext.Date.format(tgl2 === null ? new Date() : tgl2, 'Y-m-d 23:59:59') + 'LT'
+                        });
+                        filterCollection.push(statusFilter);
+
+                        if (supplier !== null) {
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'trx_tt.tt_supp_id',
+                                value: supplier
+                            });
+                            filterCollection.push(statusFilter);
+                        }
+
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'trx_tt.tt_cabang',
+                            value: cabang === null ? userCabang : cabang
+                        });
+                        filterCollection.push(statusFilter);
+
+                        store.clearFilter(true);
+                        store.filter(filterCollection);
+                        store.group('tt_no');
+                    }
                 },
                 '->',
                 {
-                    text: 'PRINT_TT'
+                    text: 'PRINT_TT',
+                    action: 'printListTt'
                 },
                 {
-                    text: 'REFRESH'
+                    text: 'REFRESH',
+                    handler: function() {
+                        var cabang = this.up('grid').down('#cbTtFilter').getValue(),
+                                myval = this.up('grid').down('#pilihSup').getValue();
+                        if (cabang !== null && myval !== null) {
+                            this.up('grid').getStore().load();
+                        }
+                    }
                 },
                 {
-                    text: 'ALL'
+                    text: 'ALL',
+                    handler: function() {
+                        var grid = this.up('grid'),
+                                store = grid.getStore(),
+                                cabang = this.up('grid').down('#cbTtFilter').getValue(),
+                                tgl1 = this.up('grid').down('#dateTtFilter').getValue(),
+                                tgl2 = this.up('grid').down('#dateTtFilter2').getValue(),
+                                filterCollection = [];
+
+
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'trx_tt.tt_tgltrx',
+                            value: Ext.Date.format(tgl1 === null ? new Date() : tgl1, 'Y-m-d 00:00:00') + 'GT'
+                        });
+                        filterCollection.push(statusFilter);
+
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'trx_tt.tt_tgltrx',
+                            value: Ext.Date.format(tgl2 === null ? new Date() : tgl2, 'Y-m-d 23:59:59') + 'LT'
+                        });
+                        filterCollection.push(statusFilter);
+
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'trx_tt.tt_cabang',
+                            value: cabang === null ? userCabang : cabang
+                        });
+                        filterCollection.push(statusFilter);
+
+                        store.clearFilter(true);
+                        store.filter(filterCollection);
+                        store.group('tt_no');
+                    }
                 }
                 
             ],

@@ -11,8 +11,8 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGrid', {
     forceFit: false,
     columnLines: true,
     selModel: Ext.create('Ext.selection.CheckboxModel', {
-        header: false,
-        selectOnly: true
+        //header: false,
+        //selectOnly: true
     }),
 
     initComponent: function () {

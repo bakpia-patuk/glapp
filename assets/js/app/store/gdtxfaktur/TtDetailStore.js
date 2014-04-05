@@ -30,7 +30,7 @@ Ext.define('GlApp.store.gdtxfaktur.TtDetailStore', {
     alias: 'store.gdtxfaktur.ttdetailstore',
     model: TtDetail,
     storeId: 'TrxTtDetailStore',
-    autoLoad: true,
+    autoLoad: false,
     remoteFilter: true,
     proxy: {
         success: true,
