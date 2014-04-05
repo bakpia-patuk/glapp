@@ -58,19 +58,19 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                     allowBlank: false,
                     valueNotFoundText: 'Tidak ada Data',
                     store: new Ext.data.SimpleStore({
-                        id: 0,
+                        id: 1,
                         fields: [
                             'typeCode', //numeric value is the key
                             'type' //the text value is the value
                         ],
                         data: [
-                            [0, 'PELAYANAN'],
-                            [1, 'MARKETING'],
-                            [2, 'KEUANGAN'],
-                            [3, 'LAB'],
-                            [4, 'SDM'],
-                            [5, 'IT'],
-                            [6, 'RUMAH TANGGA']
+                            [1, 'PELAYANAN'],
+                            [2, 'MARKETING'],
+                            [3, 'KEUANGAN'],
+                            [4, 'LAB'],
+                            [5, 'SDM'],
+                            [6, 'IT'],
+                            [7, 'RUMAH TANGGA']
                         ]
                     })
                 },

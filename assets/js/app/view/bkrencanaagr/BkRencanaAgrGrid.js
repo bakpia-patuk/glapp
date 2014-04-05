@@ -8,8 +8,8 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
     itemId: 'bkrencanaagrgrid',
     id: 'bkrencanaagrgrid',
     title: 'SUPPLIER',
-    ui: 'blue-panel',
-//    store: 'MaStoreTree',
+    ui: 'orange-panel',
+    store: 'bkrencanaagr.MaStoreTree',
     useArrows: true,
     border: false,
     //componentCls: 'border-right',
@@ -33,33 +33,34 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
                     width: 250,
                     emptyText: 'Pilih',
                     labelWidth: 60,
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     name: 'filterCbPusat1',
                     itemId: 'filterCbPusat1',
                     allowBlank: true,
                     triggerAction: 'all',
-//                    hidden: userCabang === '14' ? false : true,
+//                    hidden: userCabang === '1' ? false : true,
 //                    valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
-//                    listeners: {
-//                        afterrender: function() {
-//                            this.setValue(parseInt(userCabang));
-//                        },
-//                        change: function() {
-//                            this.up('treepanel').store.setRootNode({idCabang: this.getValue()});
-//                        }
-//                    }
+                    store: 'bkrencanaagr.CabangStore',
+                    listeners: {
+                        afterrender: function() {
+                            this.setValue(parseInt(CABANG_ID));
+                        },
+                        change: function() {
+                            this.up('treepanel').store.setRootNode({idCabang: this.getValue()});
+                        }
+                    }
                 },
                 '->',
                 {
                     xtype: 'button',
-                    ui: 'blue-button',
+                    ui: 'orange-button',
                     iconCls: 'icon-btn-refresh',
-//                    handler: function () {
-//                        this.up('treepanel').store.setRootNode({idCabang: this.up('treepanel').down('#filterCbPusat1').getValue()});
-//                    }
+                    text: 'Refresh',
+                    handler: function () {
+                        this.up('treepanel').store.setRootNode({idCabang: this.up('treepanel').down('#filterCbPusat1').getValue()});
+                    }
                 }
             ],
             columns: [
@@ -72,47 +73,47 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
                 {
                     width: 150,
                     text: 'NO FAKTUR',
-                    dataIndex: 'fakturNo'
+                    dataIndex: 'faktur_no'
                 },
                 {
                     width: 150,
                     text: 'NO PO',
-                    dataIndex: 'noPo'
+                    dataIndex: 'list_po'
                 },
                 {
                     width: 150,
                     text: 'NO TT',
-                    dataIndex: 'noTt'
+                    dataIndex: 'list_tt'
                 },
                 {
                     xtype: 'datecolumn',
                     width: 120,
                     text: 'JTH TEMPO',
-                    dataIndex: 'fakturEd',
+                    dataIndex: 'faktur_ed',
                     format: 'd/M/Y',
                     hidden: true
                 },
                 {
                     text: 'JADWAL BYR',
                     width: 200,
-                    dataIndex: 'jadwalBayar'
+                    dataIndex: 'tgldari'
                 },
                 {
                     text: 'NO REK/BG',
                     width: 150,
-                    dataIndex: 'noRekBg'
+                    dataIndex: 'no_rekbg'
                 },
                 {
                     width: 120,
                     text: 'JTH TEMPO BG',
-                    dataIndex: 'bgEd'
+                    dataIndex: 'faktur_bgstatus'
                 },
                  {
                  text: 'JUMLAH',
                  xtype: 'numbercolumn',
                  width: 150,
                  align: 'right',
-                 dataIndex: 'fakturRealisasi',
+                 dataIndex: 'hp_cicilan_amt',
                  format: '0.000,00/i'
                  }/*,
                  {

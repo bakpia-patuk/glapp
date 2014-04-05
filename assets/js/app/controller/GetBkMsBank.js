@@ -7,14 +7,15 @@ Ext.define('GlApp.controller.GetBkMsBank', {
     models: [
     ],
     stores: [
-        'bkmsbank.CabangStore'
+        'bkmsbank.CabangStore',
+        'bkmsbank.CabangGridStore',
+        'bkmsbank.BankStore',
+        'bkmsbank.BankNasStore'
     ],
     views: [
         'bkmsbank.GetBkMsBank',
         'bkmsbank.BkMsBankForm',
-        'bkmsbank.BkMsBankGrid',
-//        'masterbank.bnGrid',
-//        'masterbank.newWindow'
+        'bkmsbank.BkMsBankGrid'
     ],
     refs: [
         {ref: 'BkMsBankForm', selector: '#bkmsbankform'},
@@ -23,218 +24,112 @@ Ext.define('GlApp.controller.GetBkMsBank', {
     ],
     init: function() {
         this.control({
-            '#mbgrid': {
-                afterrender: this.gridLoad,
-                selectionchange: this.loadMasterBank
-            },
-            '#kodeakun': {
-                afterrender: function(cmb, rec, opt) {
-                    var store = cmb.getStore(),
-                            filterCollection = [];
+            '#bkmsbankgrid': {
+                afterrender: function(){
+                    var store = this.getBkMsBankGrid().getStore();
 
-                    var statusFilter = new Ext.util.Filter({
-                        property: 'akun_child_status',
-                        value: 1
-                    });
-                    filterCollection.push(statusFilter);
-
-                    var statusFilter = new Ext.util.Filter({
-                        property: 'akun_fungsi',
-                        value: 0
-                    });
-                    filterCollection.push(statusFilter);
-
-                    store.clearFilter(true);
-                    store.filter(filterCollection);
-                }
-            },
-            'mbform': {
-                afterrender: function() {
-                    var form = this.getMbForm().getForm(),
-                            bankCabang = form.findField('bankCabang'),
-                            golAkun = form.findField('golAkun');
-
-                    if (userCabang !== "14") {
-                        bankCabang.getStore().load();
-                        bankCabang.setValue(parseInt(userCabang));
-                        bankCabang.setReadOnly(true);
-
-
-                        golAkun.enable();
-                        var store = golAkun.getStore();
-                        store.getProxy().extraParams.cabang = parseInt(userCabang);
-                        var filterCollection = [];
-
-                        var statusFilter = new Ext.util.Filter({
-                            property: 'akun_group',
-                            value: 1
-                        });
-
-                        filterCollection.push(statusFilter);
-
-                        var statusFilter = new Ext.util.Filter({
-                            property: 'akun_head_status',
-                            value: 0
-                        });
-
-                        filterCollection.push(statusFilter);
-
+                    if (CABANG_ID !== "1") {
                         store.clearFilter(true);
-                        store.filter(filterCollection);
+                        store.filter('bank_cabang', CABANG_ID);
                     }
                 }
             },
-            'mbform button[action=mbNew]': {
-                click: this.newmb
+            '#MsBankSave':{
+                click: function(){
+                    var form = this.getBkMsBankForm().getForm(),
+                            idmb = form.findField('id').getValue(),
+                            store = this.getBkMsBankGrid().getStore();
+
+                    if (idmb !== "" && CABANG_ID !== '1') {
+                        Ext.MessageBox.show({
+                            title: 'Error',
+                            msg: 'Anda Tidak Bisa Merubah data',
+                            buttons: Ext.MessageBox.OK,
+                            icon: Ext.MessageBox.ERROR
+                        });
+                    } else {
+                        Ext.Ajax.request({
+                            url: BASE_PATH + 'bk_msbank/add_msbank',
+                            method: 'POST',
+                            params: form.getValues(),
+                            scope: this,
+                            callback: function(options, success, response) {
+                                var resp = Ext.decode(response.responseText);
+
+                                if (resp.success === 'true') {
+                                    Ext.MessageBox.show({
+                                        title: resp.title,
+                                        msg: resp.message,
+                                        buttons: Ext.MessageBox.OK,
+                                        icon: Ext.MessageBox.INFO
+                                    });
+                                    if (CABANG_ID !== '1') {
+                                        form.findField('bank_cabang').setValue(parseInt(CABANG_ID));
+                                    }
+                                    form.reset();
+                                    if (CABANG_ID !== '1') {
+                                        store.load();
+                                    }
+                                } else {
+                                    Ext.MessageBox.show({
+                                        title: resp.title,
+                                        msg: resp.message,
+                                        buttons: Ext.MessageBox.OK,
+                                        icon: Ext.MessageBox.ERROR
+                                    });
+                                }
+                            }
+                        });
+                    }
+                }
             },
-            'mbform button[action=mbSave]': {
-                click: this.savemb
+            '#MsBankNew':{
+                click: function(){
+                    var form = this.getBkMsBankForm().getForm(),
+                            grid = this.getBkMsBankGrid();
+                    form.reset();
+                    if (CABANG_ID !== '1') {
+                        grid.getStore().load();
+                    }
+                }
             },
-            'mbform button[action=mbDel]': {
-                click: this.deletemb
+            '#MsBankDelete':{
+                click: function(){
+                    var form = this.getBkMsBankForm().getForm(),
+                            grid = this.getBkMsBankGrid(),
+                            sm = grid.getSelectionModel(),
+                            sel = sm.getSelection();
+
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Pilih Data yang Akan di hapus');
+                        return;
+                    }
+
+                    Ext.Ajax.request({
+                        url: BASE_PATH + 'bk_msbank/delete_msbank',
+                        method: 'POST',
+                        params: form.getValues(),
+                        scope: this,
+                        callback: function(options, success, response) {
+                            var resp = Ext.decode(response.responseText);
+
+                            if (resp.success === 'true') {
+                                form.reset();
+                                if (CABANG_ID !== '1') {
+                                    form.findField('bank_cabang').setValue(parseInt(CABANG_ID));
+                                }
+                                sm.clearSelections();
+                                grid.getStore().load();
+                            }
+                        }
+                    });
+                }
             }
         });
     },
     gridLoad: function() {
-        var store = this.getMbGrid().getStore();
-
-        if (userCabang !== "14") {
-            store.clearFilter(true);
-            store.filter('bank_cabang', userCabang);
-        }
+        
     },
-    loadMasterBank: function(model, records) {
-        var form = this.getMbForm().getForm(),
-                golAkun = form.findField('golAkun');
-
-        if (records[0]) {
-            form.findField('bankGroup').setValue(records[0].get('bankGroup'));
-            form.findField('aliasBank').setValue(records[0].get('bankAlias'));
-            form.findField('reknamaBank').setValue(records[0].get('bankNama'));
-            form.findField('reknoBank').setValue(records[0].get('bankRek'));
-            form.findField('idmb').setValue(records[0].get('id'));
-            form.findField('alamatBank').setValue(records[0].get('bankAlamat'));
-            form.findField('bankCabang').setValue(records[0].get('bankCabang'));
-            form.findField('bankAkun').setValue(records[0].get('bankAkun'));
-            
-            golAkun.enable();
-            var store = golAkun.getStore();
-            store.getProxy().extraParams.cabang = parseInt(userCabang);
-            var filterCollection = [];
-
-            var statusFilter = new Ext.util.Filter({
-                property: 'akun_group',
-                value: 1
-            });
-
-            filterCollection.push(statusFilter);
-
-            var statusFilter = new Ext.util.Filter({
-                property: 'akun_head_status',
-                value: 0
-            });
-
-            filterCollection.push(statusFilter);
-
-            store.clearFilter(true);
-            store.filter(filterCollection);
-            
-            golAkun.setValue(records[0].get('golAkun'));
-            if(records[0].get('bankAkun') !== 0) {
-                golAkun.setReadOnly(true);
-            } else {
-                golAkun.setReadOnly(false);
-            }
-        }
-    },
-    newmb: function() {
-        var form = this.getMbForm().getForm(),
-                grid = this.getMbGrid();
-        form.reset();
-        if (userCabang !== '14') {
-            grid.getStore().load();
-        }
-    },
-    savemb: function(button, e, options) {
-        var form = this.getMbForm().getForm(),
-                idmb = form.findField('idmb').getValue(),
-                store = this.getMbGrid().getStore();
-
-        if (form.isValid()) {
-            if (idmb !== "" && userCabang !== '14') {
-                Ext.MessageBox.show({
-                    title: 'Error',
-                    msg: 'Anda Tidak Bisa Merubah data',
-                    buttons: Ext.MessageBox.OK,
-                    icon: Ext.MessageBox.ERROR
-                });
-            } else {
-                Ext.Ajax.request({
-                    url: BASE_PATH + 'master/add_mb',
-                    method: 'POST',
-                    params: form.getValues(),
-                    scope: this,
-                    callback: function(options, success, response) {
-                        var resp = Ext.decode(response.responseText);
-
-                        if (resp.success === 'true') {
-                            Ext.MessageBox.show({
-                                title: resp.title,
-                                msg: resp.message,
-                                buttons: Ext.MessageBox.OK,
-                                icon: Ext.MessageBox.INFO
-                            });
-                            if (userCabang !== '14') {
-                                form.findField('bankCabang').setValue(parseInt(userCabang));
-                            }
-                            form.reset();
-                            if (userCabang !== '14') {
-                                store.load();
-                            }
-                        } else {
-                            Ext.MessageBox.show({
-                                title: resp.title,
-                                msg: resp.message,
-                                buttons: Ext.MessageBox.OK,
-                                icon: Ext.MessageBox.ERROR
-                            });
-                        }
-                    }
-                });
-            }
-
-        }
-    },
-    deletemb: function() {
-        var form = this.getMbForm().getForm(),
-                grid = this.getMbGrid(),
-                sm = grid.getSelectionModel(),
-                sel = sm.getSelection();
-
-        if (!sel.length) {
-            Ext.Msg.alert('Warning', 'Pilih Data yang Akan di hapus');
-            return;
-        }
-
-        Ext.Ajax.request({
-            url: BASE_PATH + 'master/delete_mb',
-            method: 'POST',
-            params: form.getValues(),
-            scope: this,
-            callback: function(options, success, response) {
-                var resp = Ext.decode(response.responseText);
-
-                if (resp.success === 'true') {
-                    form.reset();
-                    if (userCabang !== '14') {
-                        form.findField('bankCabang').setValue(parseInt(userCabang));
-                    }
-                    sm.clearSelections();
-                    grid.getStore().load();
-                }
-            }
-        });
-    }
 });
 
 /* End of file SystemMenu.js */

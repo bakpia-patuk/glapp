@@ -22,6 +22,7 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                     region: 'center',
                     layout: 'border',
                     id: 'maCenter',
+                    ui:'orange-panel',
                     defaults: {
                         split: true
                     },
@@ -30,7 +31,7 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                             region: 'center',
                             deferredRender: false,
                             plain: true,
-                            ui: 'blue-tab',
+                            ui: 'orange-tab',
                             border: false,
                             activeTab: 0,
                             id: 'bkrencanagrtab',
@@ -61,7 +62,7 @@ Ext.define('GlApp.view.bkrencanaagr.GetBkRencanaAgr', {
                     region: 'west',
                     width: 325,
                     minWidth: 325,
-                    ui: 'black-panel',
+                    ui: 'orange-panel',
                     title: 'FORM ANGGARAN NON-SUPPLIER',
                     collapsible: true,
                     layout: 'fit',

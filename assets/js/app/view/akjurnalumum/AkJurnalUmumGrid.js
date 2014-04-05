@@ -9,7 +9,7 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
     forceFit: true,
     ui: 'blue-panel',
     title: 'DAFTAR JURNAL UMUM',
-//    store: 'JurnalAllStore',
+//    store: 'akjurnalumum.JurnalAllStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -223,18 +223,18 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
 //                    action: 'juAll'
                 }
             ],
-            features: [
-                {
-                    //startCollapsed: true,
-                    collapsible: false,
-                    id: 'juGridSum',
-                    ftype: 'groupingsummary',
-                    groupHeaderTpl: 'Jurnal Umum',
-                    hideGroupedHeader: true,
-                    //remoteRoot: 'summaryData',
-                    enableGroupingMenu: true
-                }
-            ],
+//            features: [
+//                {
+//                    //startCollapsed: true,
+//                    collapsible: false,
+//                    id: 'juGridSum',
+//                    ftype: 'groupingsummary',
+//                    groupHeaderTpl: 'Jurnal Umum',
+//                    hideGroupedHeader: true,
+//                    //remoteRoot: 'summaryData',
+//                    enableGroupingMenu: true
+//                }
+//            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {
@@ -248,13 +248,13 @@ Ext.define('GlApp.view.akjurnalumum.AkJurnalUmumGrid', {
                     xtype: 'gridcolumn',
                     flex: 0.1,
                     text: 'NO. REF.',
-                    dataIndex: 'noRefTrx'
+                    dataIndex: 'no_ref_trx'
                 },
                 {
                     xtype: 'gridcolumn',
                     flex: 0.3,
                     text: 'URAIAN',
-                    dataIndex: 'keterangan',
+                    dataIndex: 'uraian',
                     cellCls: 'valign-top',
                     renderer: 'uppercase'
                 },

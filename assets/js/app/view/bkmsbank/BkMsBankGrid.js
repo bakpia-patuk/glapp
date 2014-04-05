@@ -6,10 +6,9 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankGrid', {
     alias: 'widget.bkmsbank.bkmsbankgrid',
     itemId: 'bkmsbankgrid',
     autoScroll: true,
-    ui: 'green-panel',
     title: 'TABEL BANK',
-    forceFit: false,
-//    store: 'BankStore',
+    forceFit: true,
+    store: 'bkmsbank.BankStore',
     columnLines: true,
     border: false,
     initComponent: function() {
@@ -21,42 +20,6 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankGrid', {
                 emptyText: 'Tidak ada data Bank',
                 deferEmptyText: false
             },
-            tbar: [
-                {
-                    xtype: 'combobox',
-                    emptyText: 'Pilih',
-                    fieldLabel: 'Cabang ',
-                    labelWidth: 55,
-                    width: 200,
-                    displayField: 'cabangName',
-                    valueField: 'id',
-                    queryMode: 'remote',
-                    name: 'filterCbPusat1',
-                    itemId: 'filterCabang',
-                    allowBlank: true,
-                    triggerAction: 'all',
-                    valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
-//                    hidden: userCabang === "14" ? false : true,
-//                    listeners: {
-//                        select: function(me, value, field) {
-//                            var store = Ext.StoreMgr.lookup('BankStore');
-//
-//                            store.clearFilter(true);
-//                            store.filter('bank_cabang', this.getValue());
-//                        }
-//                    }
-                },
-                '->',
-                {
-                    iconCls: 'icon-btn-refresh',
-                    ui: 'blue-button',
-//                    handler: function() {
-//                        this.up('grid').getSelectionModel().clearSelections();
-//                        this.up('grid').getStore().load();
-//                    }
-                }
-            ],
             columns: [
                 {
                     xtype: 'gridcolumn',
@@ -68,25 +31,25 @@ Ext.define('GlApp.view.bkmsbank.BkMsBankGrid', {
                     xtype: 'gridcolumn',
                     width: 175,
                     text: 'NAMA ALIAS',
-                    dataIndex: 'bankAlias'
+                    dataIndex: 'bank_alias'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 145,
                     text: 'ATAS NAMA',
-                    dataIndex: 'bankNama'
+                    dataIndex: 'bank_reknama'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 130,
                     text: 'NO REKENING',
-                    dataIndex: 'bankRek'
+                    dataIndex: 'bank_rekno'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 175,
                     text: 'ALAMAT',
-                    dataIndex: 'bankAlamat'
+                    dataIndex: 'bank_alamat'
                 }
             ]
         });

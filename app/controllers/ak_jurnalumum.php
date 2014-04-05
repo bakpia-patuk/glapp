@@ -13,32 +13,32 @@ class Ak_jurnalumum extends Auth_Controller {
 
     function __construct() {
         parent::__construct();
-        $this->load->model('Akju_model');
+        $this->load->model('Akjurnalumum_model');
         $this->page = 'Master';
     }
     
     public function jurnal_all_list() {
-        $records = isset($_GET['filter']);
-        $record = array();
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
 
         if ($records) {
-            $raw_record = json_decode($_GET['filter'], true);
-            foreach ($raw_record as $key) {
-                $field = $this->property_reader($key['property']);
-                $param = $this->param_reader($key['property']);
-                $op = $this->operator_reader($key['value']);
-                $val = $this->value_reader($key['value']);
-
-                $record[] = array('field' => $field, 'param' => $param, 'operator' => $op, 'value' => $val);
-            }
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
         }
 
-        $result = $this->Akju_model->jurnal_list($record, NULL);
+//        if ($query) {
+//            if ($query != "") {
+//                $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $query);
+//            }
+//        }
+
+        $result = $this->Akjurnalumum_model->jurnal_list($params, NULL);
 
         if ($result) {
             echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua Jurnal'));
         } else {
-            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Tidak ada data Jurnal'));
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Tidak ada data Jurnal'));
         }
     }
 }
