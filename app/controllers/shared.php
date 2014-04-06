@@ -1112,6 +1112,49 @@ class Shared extends Auth_Controller {
         echo 'Copy Akun Success';
     }
 
+    public function kemasan_all() {
+        $records = isset($_GET['filter']);
+        $query = isset($_GET['query']);
+        $record = array();
+
+        if ($records) {
+            $raw_record = json_decode($_GET['filter'], true);
+            foreach ($raw_record as $key) {
+                $field = $this->property_reader($key['property']);
+                $param = $this->param_reader($key['property']);
+                $op = $this->operator_reader($key['value']);
+                $val = $this->property_reader($key['value']);
+
+                $record[] = array('field' => $field, 'param' => $param, 'operator' => $op, 'value' => $val);
+            }
+        }
+
+        if ($query && $_GET['query'] != "") {
+            $record[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $_GET['query']);
+        }
+
+        $opt['sortBy'] = 'msi_satkecil';
+        $opt['sortDirection'] = 'ASC';
+        $data_dokter = $this->Dmodel->gets($record, $opt, 'item_kemasan');
+        $list_dokter = array();
+
+        if ($data_dokter != NULL) {
+            foreach ($data_dokter as $key) {
+                $list_dokter[] = array(
+                    'id' => $key->id,
+                    'msi_idbarang' => $key->msi_idbarang,
+                    'msi_satbesar' => $key->msi_satbesar,
+                    'nama_satbesar' => $key->msi_satbesar != 0 ? $this->Dmodel->get_detail('id', $key->msi_satbesar, 'master_satuan')->sat_name : '',
+                    'msi_konversi' => $key->msi_konversi,
+                    'msi_satkecil' => $key->msi_satkecil,
+                    'nama_satkecil' => '',
+                    'is_active' => $key->is_active,
+                );
+            }
+        }
+        echo json_encode(array('success' => 'true', 'data' => $list_dokter, 'message' => 'Daftar semua Pengeluaran Inventaris'));
+    }
+
 }
 
 /* End of file welcome.php */

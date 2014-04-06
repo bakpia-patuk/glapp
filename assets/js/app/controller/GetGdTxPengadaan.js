@@ -10,7 +10,8 @@ Ext.define('GlApp.controller.GetGdTxPengadaan', {
         'gdtxpengadaan.BarangStore',
         'gdtxpengadaan.CabangStore',
         'gdtxpengadaan.PengStore',
-        'gdtxpengadaan.PengDetailStore'
+        'gdtxpengadaan.PengDetailStore',
+        'gdtxpengadaan.KemasanStore'
     ],
     views: [
         'gdtxpengadaan.GetGdTxPengadaan',

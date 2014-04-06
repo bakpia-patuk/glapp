@@ -7,6 +7,9 @@ Ext.define('GlApp.controller.GetDvTxPengadaan', {
     models: [
     ],
     stores: [
+        'dvtxpengadaan.ItemStore', 'dvtxpengadaan.PengadaanStore', 'dvtxpengadaan.ItemMerkStore', 
+        'dvtxpengadaan.ItemKatalogStore', 'dvtxpengadaan.KemasanStore', 'dvtxpengadaan.PengdivDetailStore',
+        'dvtxpengadaan.CabangStore', 'dvtxpengadaan.DivisiStore'
     ],
     views: [
         'dvtxpengadaan.GetDvTxPengadaan',
