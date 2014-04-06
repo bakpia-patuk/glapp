@@ -170,7 +170,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkGroupKpWin', {
                             region: 'center',
                             itemId: 'gridGkAkun',
                             forceFit: true,
-//                            store: 'gdtxterima.TtLotStore',
+                            store: 'bkrencanaagr.GrkAkunStore',
                             tbar: [
                                 {
                                     text: 'DELETE',
@@ -225,7 +225,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkGroupKpWin', {
                                     xtype: 'gridcolumn',
                                     flex: 1,
                                     text: 'NAMA AKUN',
-                                    dataIndex: 'stl_nolot'
+                                    dataIndex: 'akun_name'
                                 }
                             ],
                             listeners: {

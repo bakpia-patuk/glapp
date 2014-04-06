@@ -106,7 +106,7 @@ class Bkrencanaagr_model extends MY_Model {
             'agrplan_rujuk' => $mkr_rujukanke,
             'simpan_status' => 1
         );
-        if($this->get_detail('agrplan_id', $insert['agrplan_id'], 'trx_agrplan_detail') == NULL)  {
+        if($this->get_detail('agrplan_id', $general_mad['agrplan_id'], 'trx_agrplan_detail') == NULL)  {
             $this->insert($general_mad, 'trx_agrplan_detail');
         } else {
             $upd[] = array('field' => 'agrplan_id', 'param' => 'where', 'operator' => '', 'value' => $insert['agrplan_id']);

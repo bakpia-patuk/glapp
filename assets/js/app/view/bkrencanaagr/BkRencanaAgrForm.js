@@ -166,10 +166,10 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                     hidden: false,
                     triggerAction: 'all',
                     minChars: 2,
-//                    store: 'DetailKpStore',
+                    store: 'bkrencanaagr.ListAkunGkStore',
                     readOnly: true,
                     allowBlank: false,
-                    displayField: 'namaAkun',
+                    displayField: 'akun_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
                     listeners: {
