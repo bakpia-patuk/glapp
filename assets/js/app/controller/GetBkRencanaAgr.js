@@ -112,13 +112,16 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                     for (i = 0; i < sel.length; i++) {
                         data = data + sel[i].get('akun_id') + '-';
                     }
+                    
+                    var gd = this.getBkGkGrid(),
+                            sel = gd.getSelectionModel().getSelection();
 
                     var params = {
-                        idForm: id,
-                        idPerlu: kpr,
+                        idForm: 'mintabayar',
+                        idPerlu: sel[0].get('id'),
                         data: data
                     };
-                    this.ajaxReq('bk_rencanaagr/set_akungr', form.getValues(), 2);
+                    this.ajaxReq('bk_rencanaagr/set_akungr', params, 2);
                 }
             }
         });

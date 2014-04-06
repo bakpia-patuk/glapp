@@ -1092,6 +1092,27 @@ class Shared extends Auth_Controller {
         }
     }
 
+    public function list_akun_gr() {
+        $records = $this->input->get('filter');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, 'ms_keperluan_akun');
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Akun'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+
     public function copy_akun($cabang) {
         $akun_all = $this->Shared_model->gets(NULL, NULL, 'dt_akun');
 
