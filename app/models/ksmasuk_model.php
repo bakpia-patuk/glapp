@@ -24,7 +24,8 @@ class Ksmasuk_model extends MY_Model {
         if ($results != NULL) {
             foreach ($results as $row) {
                 $datatgl = explode(' ', $row->kas_tgltrx);
-
+                $tes = $this->Ksmasuk_model->get_detail('id', $row->kas_dtlkeperluan, 'ms_keperluan_akun')->akun_header;
+                
                 $listkm[] = array(
                     'id' => $row->id,
                     'kas_type' => $row->kas_type,
@@ -35,7 +36,7 @@ class Ksmasuk_model extends MY_Model {
                     'kas_bank' => $row->kas_bank,
                     'kas_grpkeperluan' => $row->kas_grpkeperluan,
                     'kas_dtlkeperluan' => $row->kas_dtlkeperluan,
-//                    'keteranganKd' => $row->kas_grpkeperluan == 6 ? $this->get_detail('no_ref_trx', $row->no_ref_trx, 'trx_harian')->keterangan_trx : $this->get_detail('id', $row->kas_dtlkeperluan, 'master_keperluan_detail')->kd_name,
+                    'keteranganKd' => $row->kas_grpkeperluan == 6 ? $this->get_detail('no_ref_trx', $row->no_ref_trx, 'trx_harian')->keterangan_trx : $row->kas_dtlkeperluan != 0 ? $this->get_detail('id', $tes, 'dt_akun')->akun_name : 'TIDAK ADA DETAIL KEPERLUAN',
                     'kas_jumlah' => $row->kas_jumlah,
                     'kas_bayartype' => $row->kas_bayartype,
 //                    'noBg' => $row->kas_bayartype == 0 ? $row->kas_nobayar : 0,

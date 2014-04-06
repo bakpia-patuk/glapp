@@ -1,5 +1,5 @@
 /**
- * @author Isht Ae
+ * @author coepoe
  **/
 
 Ext.define('GlApp.controller.GetKsMasuk', {
@@ -11,19 +11,17 @@ Ext.define('GlApp.controller.GetKsMasuk', {
         'ksmasuk.KsMasukStore',
         'ksmasuk.TrxKasStore',
         'ksmasuk.CabangStore',
-        'ksmasuk.MasterTelisaStore'
+        'ksmasuk.MasterTelisaStore',
+        'ksmasuk.AkunHeaderStore',
+        'ksmasuk.GrkAkunStore',
+        'ksmasuk.ListAkunGkStore'
     ],
     views: [
         'ksmasuk.GetKsMasuk',
         'ksmasuk.KsMasukForm',
         'ksmasuk.KsMasukGrid',
-//        'kasmasuk.app2Form',
-//        'shared.newWindow',
-//        //shared Window
-//        'shared.newWindow',
-        'ksmasuk.GkMasterGrid',
-        'ksmasuk.GkMasterAkunGrid',
-        'ksmasuk.GkMasterDetailGrid'
+        'ksmasuk.KsListAkunWin',
+        'ksmasuk.KsGroupKpWin'
     ],
     refs: [
         {ref: 'GetKsMasuk', selector: '#getksmasuk'},
@@ -32,14 +30,14 @@ Ext.define('GlApp.controller.GetKsMasuk', {
         {ref: 'StartKm', selector: '#dateStartKm'},
         {ref: 'EndKm', selector: '#dateEndKm'},
         {ref: 'CabangKm', selector: '#cabangKmFilter'},
-//        {ref: 'GridKeperluan', selector: '#gkmastergrid'},
-//        {ref: 'GridAkunKeperluan', selector: '#gkmasterakungrid'},
-//        {ref: 'GridAkunDetail', selector: '#gkmasterdetailgrid'}
+        {ref: 'KsGkGrid', selector: '#gridGk'},
+        {ref: 'KsGkAkunGrid', selector: '#gridGkAkun'},
+        {ref: 'KsheaderAkunGrid', selector: '#gridHeaderAkun'}
     ],
     init: function () {
         this.control({
-            '#kasmasukgrid': {
-                click: function(){
+            '#ksmasukgrid': {
+                afterrender: function(){
                     var grid = this.getKsMasukGrid(),
                         store = grid.getStore(),
                         filterCollection = [];
@@ -53,10 +51,10 @@ Ext.define('GlApp.controller.GetKsMasuk', {
                     store.clearFilter(true);
                     store.filter(filterCollection);
                 }, 
-                // masih belum berjalan
-                selectionchange: function (model, records) {
+                selectionchange: function(model, records){
                     var form = this.getKsMasukForm().getForm();
-                    if(records[0]) {
+
+                    if (records[0]) {
                         form.loadRecord(records[0]);
                     }
                 }
@@ -398,6 +396,16 @@ Ext.define('GlApp.controller.GetKsMasuk', {
 //                        });
                     }
                 }
+            },
+            '#gridGk': {
+                selectionchange: function(m, r) {
+                    var grid = this.getKsGkAkunGrid();
+
+                    if (r[0]) {
+                        grid.getStore().clearFilter(true);
+                        grid.getStore().filter('kp_id', r[0].get('id'));
+                    }
+                }
             }
         });
     },
@@ -471,7 +479,7 @@ Ext.define('GlApp.controller.GetKsMasuk', {
                         }
                     });
                 }
-            }
+            },
         });
     }
 });

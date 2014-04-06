@@ -50,22 +50,22 @@ class Ks_mintakas extends Auth_Controller {
         $input['trx_value'] = $this->Ksmintakas_model->money_formatter($input['trx_value']);
         //sementara yg rujukan tidak bisa krn belum ada akun
         if ($input['mk_keperluan'] == 6) {
-            $input['trx_desc'] = "Rujukan a.n. " ;//. $input['mkr_namapasien'] . " ke " . $input['mkr_rujukanke'];
+            $input['trx_desc'] = "Rujukan a.n. " . $input['mkr_namapasien'] . " ke " . $input['mkr_rujukanke'];
         } else {
             $input['mkr_namapasien'] = 0;
             $input['mkr_pemeriksaan'] = 0;
             $input['mkr_rujukanke'] = 0;
 
             $input['trx_desc'] = "PEMBAYARAN ";
-//            $akun_name = $this->get_detail('id', $dtl_keperluan, 'list_akun_' . $user->cabang_id)->akun_name;
-//            if ($dtl_keperluan == 771 || $dtl_keperluan == 772 || $dtl_keperluan == 773) {
-//                $desc_detkpr = $this->get_detail('id', $dtl_keperluan_desc, 'master_telisa');
-//                $detail_ext = $dtl_keperluan_desc;
-//                $ket_data = " a.n. " . $desc_detkpr->mt_nama . " no " . $desc_detkpr->mt_rek . ' d.a ' . $desc_detkpr->mt_alamat;
-//            } else {
-//                $ket_data = "";
-//            }
-//            $keterangan = $ket . $akun_name . $ket_data;
+            $akun_name = $this->Ksmintakas_model->get_detail('id', $input['mk_detail'], 'dt_akun')->akun_name;
+            if ($input['mk_detail'] == 771 || $input['mk_detail'] == 772 || $input['mk_detail'] == 773) {
+                $desc_detkpr = $this->Ksmintakas_model->get_detail('id', $input['mk_detailext'], 'ms_telisa');
+//                $detail_ext = $input['mk_detailext'];
+                $ket_data = " a.n. " . $desc_detkpr->mt_nama . " no " . $desc_detkpr->mt_rek . ' d.a ' . $desc_detkpr->mt_alamat;
+            } else {
+                $ket_data = "";
+            }
+            $input['trx_desc'] = $input['trx_desc'] . $akun_name . $ket_data;
         }
         
         if ($input['id'] != 0) {

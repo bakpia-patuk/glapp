@@ -58,9 +58,14 @@ class Ks_masuk extends Auth_Controller {
         $input['modified'] = date('Y-m-d H:i:s', now());
         $input['simpan_status'] = 1;
         
+//        var_dump($input);
+        $tes = $this->Ksmasuk_model->get_detail('id', $input['kas_dtlkeperluan'], 'ms_keperluan_akun')->akun_header;
+//        $tes2 = $this->Ksmasuk_model->get_detail('id', $tes, 'dt_akun')->akun_name;
+//        var_dump($tes);
+//        var_dump($tes2);
         //sementara tidak digunakan
         unset($input['kas_dtlkeperluanext']);
-        unset($input['kas_dtlkeperluan']);
+//        unset($input['kas_dtlkeperluan']);
         unset($input['petugas']);
         
         if ($input['id'] != 0) {
@@ -73,7 +78,7 @@ class Ks_masuk extends Auth_Controller {
             } else {
                 $data_trx_harian = array(
                     'jumlah_trx' => $input['kas_jumlah'],
-                    'keterangan_trx' => 'KAS MASUK DARI ',// . $this->get_detail('id', $dtil_keperluan, 'master_keperluan_detail')->kd_name,
+                    'keterangan_trx' => 'KAS MASUK DARI ' . $this->Ksmasuk_model->get_detail('id', $tes, 'dt_akun')->akun_name,
                     'modified' => date('Y-m-d H:i:s', now())
                 );
                 $opts[] = array('field' => 'no_ref_trx', 'param' => 'where', 'operator' => '', 'value' => $no_ref_trx);
@@ -96,7 +101,7 @@ class Ks_masuk extends Auth_Controller {
                     'tgl_trx' => $input['kas_tgltrx'],
                     'jumlah_trx' => $input['kas_jumlah'],
                     'no_ref_trx' => $invoice,
-                    'keterangan_trx' => $keterangan_string,// . $this->get_detail('id', $dtil_keperluan, 'master_keperluan_detail')->kd_name,
+                    'keterangan_trx' => $keterangan_string . $this->Ksmasuk_model->get_detail('id', $tes, 'dt_akun')->akun_name,
                     'jenis_trx' => $input['kas_type'],
                     'created' => date('Y-m-d H:i:s', now()),
                     'modified' => date('Y-m-d H:i:s', now()),
