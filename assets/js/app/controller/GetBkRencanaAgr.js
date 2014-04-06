@@ -10,7 +10,6 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         'bkrencanaagr.MaStoreTree',
         'bkrencanaagr.MaNonStoreTree',
         'bkrencanaagr.CabangStore',
-        'bkrencanaagr.SupplierStore',
         'bkrencanaagr.GrkBkStore',
         'bkrencanaagr.AkunHeaderStore'
     ],

@@ -25,7 +25,11 @@ Ext.define('GlApp.view.bkrencanaagr.BkListAkunWin', {
                     itemId: 'gridHeaderAkun',
                     border: false,
                     forceFit: true,
-                            store: 'bkrencanaagr.AkunHeaderStore',
+                    store: 'bkrencanaagr.AkunHeaderStore',
+                    selModel: Ext.create('Ext.ux.selection.CheckboxModel', {
+                        checkOnly: false,
+                        mode: 'multi'
+                    }),
                     tbar: [
                         {
                             text: 'SET AKUN',
@@ -40,7 +44,12 @@ Ext.define('GlApp.view.bkrencanaagr.BkListAkunWin', {
                             renderer: 'uppercase',
                             dataIndex: 'akun_name'
                         }
-                    ]
+                    ],
+                    listeners: {
+                        afterrender: function() {
+                            me.down('#gridHeaderAkun').getSelectionModel().clearSelections();
+                        }
+                    }
                 }
             ],
             buttons: [
