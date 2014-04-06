@@ -24,7 +24,7 @@
                     TAB_BG = 'background:#3892D3;',
                     FORM_BG = "background:#F8F9F9;",
                     tinggi = 27,
-                    USER_DIVISI = <?php echo $divisi_id; ?>;
+                    USER_DIVISI = "<?php echo 1; ?>";
                     
         </script>
         <script type="text/javascript" src="<?php echo base_url("assets/js/$app"); ?>.js"></script>

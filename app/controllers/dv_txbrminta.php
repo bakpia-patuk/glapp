@@ -213,6 +213,7 @@ class Dv_txbrminta extends Auth_Controller {
                     'simpanStatus' => $row->simpan_status,
                      'appr_status' => $row->appr_status
                 );
+            
             }
         }
 

@@ -114,8 +114,8 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
         });
     },
     showEdWindow: function() {
-        var form = this.getDivBkForm().getForm(),
-                grid2 = this.getDivBkDetailGrid(),
+        var form = this.getDvTxBrKeluarForm().getForm(),
+                grid2 = this.getDvTxBrKeluarDetailGrid(),
                 id = form.findField('id').getValue(),
                 idRuang = form.findField('idRuang').getValue(),
                 divisi = form.findField('divisi').getValue(),

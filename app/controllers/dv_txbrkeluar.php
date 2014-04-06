@@ -29,7 +29,7 @@ class Dv_txbrkeluar extends Auth_Controller {
                 echo json_encode(array('success' => 'false', 'title' => 'Error', 'msg' => 'Jumlah yang anda keluarkan melebihi jumlah stock'));
                 return;
             } else {
-                $stok_max_min = $this->pmodel->get_detail('id', $id_barang, 'master_item_' . $user->cabang_id); //CEK STOK MAX MIN
+                $stok_max_min = $this->Dv_txbrkeluar_model->get_detail('id', $id_barang, 'master_item_' . $user->cabang_id); //CEK STOK MAX MIN
 
                 if ($checking_stok < $stok_max_min->mi_minstock) {
                     echo json_encode(array('success' => 'false', 'title' => 'Error', 'msg' => 'Barang stock anda di bawah stok minimal'));
@@ -42,4 +42,50 @@ class Dv_txbrkeluar extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'title' => 'Error', 'msg' => 'Anda tidak mempunyai stock untuk dikeluarkan'));
         }
     }
+    public function getsdiv_lot() {
+        $records = isset($_GET['filter']);
+        $record = array();
+        $listpo = array();
+
+        if ($records) {
+            $raw_record = json_decode($_GET['filter'], true);
+            foreach ($raw_record as $key) {
+                $field = $this->property_reader($key['property']);
+                $param = $this->param_reader($key['property']);
+                $op = $this->operator_reader($key['value']);
+                $val = $this->value_reader($key['value']);
+
+                $record[] = array('field' => $field, 'param' => $param, 'operator' => $op, 'value' => $val);
+            }
+        }
+
+        $result = $this->Dv_txbrkeluar_model->getsdiv_lot($record, NULL, 'trx_stock_lotdiv');
+
+        if ($result != NULL) {
+            foreach ($result as $row) {
+            	$param_barang = $this->Dv_txbrkeluar_model->get_detail('id', $row->stl_barangid, 'dt_item_cabang');
+            	$param_barang = $this->Dv_txbrkeluar_model->get_detail('id', $param_barang->mi_id, 'dt_item');
+                $listpo[] = array(
+                    'id' => $row->id,
+                    'noLot' => $row->stl_nolot,
+                    'idRuang' => $row->stl_ruang_id,
+                    'idBarang' => $row->stl_barangid,
+                    'namaBarang' => $param_barang->mi_name,
+                    'qtyLot' => $row->stl_barangqty,
+                    'qtyKeluar' => $row->stl_barangkeluar,
+                    'qtyOld' => $row->stl_barangqty,
+                    'tglEd' => $row->stl_baranged,
+                    'noBarcode' => $row->stl_barcode,
+                    'simpanStatus' => $row->simpan_status
+                );
+            }
+        }
+
+        if ($result) {
+            echo json_encode(array('success' => 'true', 'data' => $listpo, 'message' => 'Daftar semua No Lot'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => $listpo, 'message' => 'Tidak ada data No LOT'));
+        }
+    }
+
 }

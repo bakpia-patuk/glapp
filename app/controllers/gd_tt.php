@@ -86,6 +86,26 @@ class Gd_tt extends Auth_Controller {
             return;
         }
 
+        //Masuk ke trx stock div
+        /*$params = array();
+        $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        $params[] = array('field' => 'ruang_nama', 'param' => 'where', 'operator' => '', 'value' => 'R. GUDANG');
+        $data_ruang = $this->Gdtt_model->get($params, NULL, 'dt_ruang');
+
+
+        $params = array();
+        $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $data_tt_detail = $this->Gdtt_model->gets($params, NULL, 'trx_tt_detail');
+        foreach ($data_tt_detail as $key) {
+            $data = array();
+            $data['id_ruang'] = $data_ruang->id;
+            $data['id_cabang '] = $this->user->cabang_id;
+            $data['id_barang'] = $key->tt_barang_id;
+            $data['jmlh_stok'] = $key->tt_qty_kirim;
+            $data['jenis_trx'] = 1;
+        }*/
+
+
         $params = array();
         $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
@@ -339,7 +359,7 @@ class Gd_tt extends Auth_Controller {
             $params = $this->generate_db_query($raw_record);
         }
 
-        $params[] = array('field' => 'po_ed', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d", now()));
+        $params[] = array('field' => 'po_ed', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d", now()));
         $params[] = array('field' => 'po_cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
 //        $params[] = array('field' => 'tt_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
         $params[] = array('field' => 'tt_set', 'param' => 'where', 'operator' => '', 'value' => 0);

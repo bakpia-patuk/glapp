@@ -1,14 +1,14 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.divbkruang.divBkEdGrid', {
+Ext.define('GlApp.view.dvtxbrkeluar.divBkEdGrid', {
     extend: 'Ext.grid.Panel',
-    alias: 'widget.divbkruang.divbkedgrid',
+    alias: 'widget.dvtxbrkeluar.divbkedgrid',
     itemId: 'divbkedgrid',
     id: 'gridBkLot',
     autoScroll: true,
     forceFit: true,
-    store: 'LotDivStore',
+    store: 'dvtxbrkeluar.LotDivStore',
     columnLines: true,
     flex: 1,
     border: false,

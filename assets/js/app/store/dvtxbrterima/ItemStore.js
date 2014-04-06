@@ -1,7 +1,7 @@
 var modelku = Ext.define('eTrav.model.ItemModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'id', type: 'string'},
+        {name: 'id', type: 'int'},
         {name: 'itemCode', type: 'string'},
         {name: 'itemRender', type: 'string'},
         {name: 'itemCodeOld', type: 'string'},
@@ -31,9 +31,9 @@ var modelku = Ext.define('eTrav.model.ItemModel', {
     ],
     idProperty: 'id'
 });
-Ext.define('GlApp.store.dvtxbrkeluar.ItemStore', {
+Ext.define('GlApp.store.dvtxbrterima.ItemStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.dvtxbrkeluar.itemstore',
+    alias: 'store.dvtxbrterima.itemstore',
     model: modelku,
     autoLoad: false,
     storeId: 'ItemStore',

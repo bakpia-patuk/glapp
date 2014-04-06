@@ -145,7 +145,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     displayField: 'itemName',
                     valueField: 'id',
                     forceSelection: true,
-                    valueNotFoundText: 'Tidak ada barang',
+                   // valueNotFoundText: 'Tidak ada barang',
                     emptyText: 'ketik nama barang',
                     matchFieldWidth: false,
                     listConfig: {

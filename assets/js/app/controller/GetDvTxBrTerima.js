@@ -7,6 +7,8 @@ Ext.define('GlApp.controller.GetDvTxBrTerima', {
     models: [
     ],
     stores: [
+        'dvtxbrterima.DivisiStore', 'dvtxbrterima.DivisiStore1', 'dvtxbrterima.DivisiRuanganStore', 'dvtxbrterima.DivisiRuanganStore1',
+         'dvtxbrterima.ItemStore','dvtxbrterima.PengdivStore', 'dvtxbrterima.PengdivDetailStore'
     ],
     views: [
         'dvtxbrterima.GetDvTxBrTerima',
