@@ -10,8 +10,10 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         'bkrencanaagr.MaStoreTree',
         'bkrencanaagr.MaNonStoreTree',
         'bkrencanaagr.CabangStore',
-        'bkrencanaagr.SupplierStore',
-        'bkrencanaagr.GrkBkStore'
+        'bkrencanaagr.GrkBkStore',
+        'bkrencanaagr.AkunHeaderStore',
+        'bkrencanaagr.GrkAkunStore',
+        'bkrencanaagr.ListAkunGkStore'
     ],
     views: [
         'bkrencanaagr.GetBkRencanaAgr',
@@ -22,156 +24,154 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         'bkrencanaagr.BkListAkunWin'
     ],
     refs: [
-        {ref: 'BkRencanaAgrTab', selector: '#bkrencanaagrtab'},
+        {ref: 'BkRencanaAgrTab', selector: '#bkrencanagrtab'},
         {ref: 'BkRencanaAgrForm', selector: '#bkrencanaagrform'},
         {ref: 'BkRencanaAgrGrid', selector: '#bkrencanaagrgrid'},
         {ref: 'BkRencanaAgrNonGrid', selector: '#bkrencanaagrnongrid'},
+        {ref: 'BkGkGrid', selector: '#gridGk'},
+        {ref: 'BkGkAkunGrid', selector: '#gridGkAkun'},
+        {ref: 'BkheaderAkunGrid', selector: '#gridHeaderAkun'}
     ],
     init: function() {
         this.control({
-            '#BkRaSave':{
-                click: function(){
-                    var form = this.getBkRencanaAgrForm().getForm(), 
-                            store;
-                    
-                    if (this.getBkRencanaAgrGrid()) {
-                        store = this.getBkRencanaAgrGrid().store;
-                    } else {
-                        store = this.getBkRencanaAgrNonGrid().store;
-                    }
-
-                    Ext.Ajax.request({
-                        url: BASE_PATH + 'bk_rencanaagr/add_rencanaanggaran',
-                        method: 'POST',
-                        params: form.getValues(),
-                        callback: function(options, success, response) {
-                            var resp = Ext.decode(response.responseText);
-
-                            if (resp.success === 'true') {
-                                Ext.MessageBox.show({
-                                    title: resp.title,
-                                    msg: resp.message,
-                                    buttons: Ext.MessageBox.OK,
-                                    icon: Ext.MessageBox.INFO
-                                });
-
-                                form.reset();
-
-                                form.findField('tglDari').setValue(resp.data.tgl_dari);
-                                form.findField('tglSampai').setValue(resp.data.tgl_ke);
-                                form.findField('divisi').setValue(parseInt(resp.data.divisi));
-
-                                form.findField('bg_no').hide();
-                                form.findField('rek_no').hide();
-                                form.findField('bg_ed').hide();
-
-                                form.findField('mkr_pemeriksaan').disable();
-                                form.findField('mkr_pemeriksaan').hide();
-
-                                form.findField('mkr_namapasien').disable();
-                                form.findField('mkr_namapasien').hide();
-
-                                form.findField('mkr_rujukanke').disable();
-                                form.findField('mkr_rujukanke').hide();
-
-                                //store.removeAll();
-                                store.setRootNode({idCabang: '0'});
-                            } else {
-                                Ext.MessageBox.show({
-                                    title: resp.title,
-                                    msg: resp.message,
-                                    buttons: Ext.MessageBox.OK,
-                                    icon: Ext.MessageBox.ERROR
-                                });
-                            }
+            '#BkRaSave': {
+                click: function() {
+                    var form = this.getBkRencanaAgrForm().getForm(),
+                            store = this.getBkRencanaAgrNonGrid().getStore();
+                    if (form.isValid()) {
+                        var approval = this.getBkRencanaAgrForm().down('#app_status').getValue();
+                        if (approval === 1) {
+                            Ext.MessageBox.show({
+                                title: 'INFO',
+                                msg: 'Anda tidak bisa mengubah data yang sudah di approve',
+                                buttons: Ext.MessageBox.OK,
+                                icon: Ext.MessageBox.INFO
+                            });
+                            return;
                         }
-                    });
+                        this.ajaxReq('bk_rencanaagr/add_rencanaanggaran', form.getValues(), 1);
+                    }
                 }
             },
-            '#BkRaNew':{
-                click: function(){
-                    var form = this.getBkRencanaAgrForm().getForm();
+            '#BkRaNew': {
+                click: function() {
+                    var form = this.getBkRencanaAgrForm();
 //
-                    form.reset();
-                    form.findField('namaSup').setReadOnly(false);
-                    form.findField('trx_fakturno').setReadOnly(false);
-                    form.findField('divisi').setReadOnly(false);
-                    form.findField('cara_bayar').setReadOnly(false);
-                    form.findField('bg_no').hide();
-                    form.findField('rek_no').hide();
-                    form.findField('bg_ed').hide();
+                    form.getForm().reset();
+                    form.down('#isRujukan').disable();
+                    form.down('#isRujukan').hide();
+                    form.down('#agrplan_kprdetail').setReadOnly(true);
+                    form.down('#agrplan_idtelisa').hide();
                 }
             },
-            '#BkRaDelete':{
-                click: function(){
-                    var form = this.getBkRencanaAgrForm(),
-                        grid = this.getBkRencanaAgrNonGrid();
-            //            store = this.getBkRencanaAgrDetailGrid().getStore();
-
-                    if (form.getForm().findField('id').getValue() === "") {
+            '#BkRaDelete': {
+                click: function() {
+                    var form = this.getBkRencanaAgrForm();
+                    if (form.down('#id').getValue() === "0") {
                         Ext.Msg.alert('Info', 'Pilih Anggaran Non Supplier yang akan di hapus');
                         return;
                     }
 
-                    if (form.getForm().findField('app_status').getValue() === "1") {
+                    if (form.down('#app_status').getValue() === "1") {
                         Ext.Msg.alert('Info', 'Anda tidak bisa menghapus anggaran yang sudah di Approve');
                         return;
                     }
 
-                    Ext.Ajax.request({
-                        url: BASE_PATH + 'bk_rencanaagr/delete_rencanaagr',
-                        method: 'POST',
-                        params: form.getValues(),
-                        scope: this,
-                        callback: function(options, success, response) {
-                            var resp = Ext.decode(response.responseText);
-
-                            if (resp.success === 'true') {
-                                form.getForm().reset();
-                                grid.store.setRootNode({idCabang: parseInt(CABANG_ID)});
-                            }
-                        }
-                    });
+                    this.ajaxReq('bk_rencanaagr/delete_rencanaagr', form.getValues(), 2);
                 }
             },
-            '#bkrencanaagrnongrid':{
-                itemclick: function(){
+            '#bkrencanaagrnongrid': {
+                itemclick: function() {
                     var tree = this.getBkRencanaAgrNonGrid(),
                             sel = tree.getSelectionModel().getSelection();
-
                     var form = this.getBkRencanaAgrForm().getForm(),
                             rec = sel[0];
-
-            //        if (sel) {
-            //            form.loadRecord(rec);
-                    form.findField('id').setValue(rec.get('cabang_city'));
-                    form.findField('app_status').setValue(rec.get('list_tt'));
-            //            form.findField('trx_fakturno').setReadOnly(true);
-            //            if (rec.get('jenisSup') === 1) {
-            //                form.findField('divisi').setValue(rec.get('idSup'));
-            //                form.findField('divisi').setReadOnly(true);
-            //
-            //                form.findField('caraBayar').setReadOnly(true);
-            //                form.findField('caraBayar').setValue(rec.get('caraBayar'));
-            //                if (rec.get('caraBayar') === 1) {
-            //                    form.findField('rekNo').setValue(rec.get('noDoc'));
-            //                } else if (rec.get('caraBayar') === 2) {
-            //                    form.findField('bgNo').setValue(rec.get('noDoc'));
-            //                    form.findField('bgEd').setValue(rec.get('bgEd'));
-            //                }
-            //
-            //            }
-            //        }
+                    if (sel) {
+                        form.loadRecord(rec);
+                    }
                 }
             },
             '#setAkunGk': {
-                click: function(){
+                click: function() {
+                    var grid = this.getBkGkGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Select Group Keperluan First');
+                        return;
+                    }
                     var win = Ext.widget('bkrencanaagr.bklistakunwin');
+                }
+            },
+            '#setAkunKp': {
+                click: function() {
+                    var grid = this.getBkheaderAkunGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Pilih Header Akun Group');
+                        return;
+                    }
+
+                    var data = '';
+                    for (i = 0; i < sel.length; i++) {
+                        data = data + sel[i].get('akun_id') + '-';
+                    }
+
+                    var gd = this.getBkGkGrid(),
+                            sel = gd.getSelectionModel().getSelection();
+
+                    var params = {
+                        idForm: 'mintabayar',
+                        idPerlu: sel[0].get('id'),
+                        data: data
+                    };
+                    this.ajaxReq('bk_rencanaagr/set_akungr', params, 2);
+                }
+            },
+            '#gridGk': {
+                selectionchange: function(m, r) {
+                    var grid = this.getBkGkAkunGrid();
+
+                    if (r[0]) {
+                        grid.getStore().clearFilter(true);
+                        grid.getStore().filter('kp_id', r[0].get('id'));
+                    }
                 }
             }
         });
+    },
+    onSuccess: function(resp, idForm) {
+        var form = this.getBkRencanaAgrForm(),
+                tabs = this.getBkRencanaAgrTab(),
+                gridPo = this.getBkRencanaAgrNonGrid(),
+                storeMa = gridPo.store;
+        if (idForm === 1) {
+            form.getForm().reset();
+            tabs.setActiveTab(1);
+            storeMa.setRootNode({idCabang: '0'});
+            form.down('#isRujukan').disable();
+            form.down('#isRujukan').hide();
+            form.down('#agrplan_kprdetail').setReadOnly(true);
+            form.down('#agrplan_idtelisa').hide();
+            form.down('#agrplan_from').setValue(resp.data.tgl_dari);
+            form.down('#agrplan_to').setValue(resp.data.tgl_ke);
+            form.down('#agrplan_divisi').setValue(parseInt(resp.data.divisi));
+
+            form.down('#trx_no').hide();
+            form.down('#trx_no').disable();
+            form.down('#trx_trfbank').disable();
+            form.down('#trx_trfnama').disable();
+            form.down('#trx_trfbank').hide();
+            form.down('#trx_trfnama').hide();
+        }
+    },
+    onFailure: function(resp, idForm) {
+        Ext.MessageBox.show({
+            title: resp.title,
+            msg: resp.msg,
+            buttons: Ext.MessageBox.OK,
+            icon: Ext.MessageBox.ERROR
+        });
     }
 });
-
 /* End of file SystemMenu.js */
 /* Location: ./assets/js/app/controller/SystemMenu.js */

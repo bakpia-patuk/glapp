@@ -15,11 +15,13 @@ Ext.require([
     'Ext.tip.*',
     'Ext.util.*',
     'Ext.window.*',
-    'Ext.ux.*',
+    'Ext.ux.*',,
+    'Ext.ux.TabCloseMenu',
     'Ext.ux.form.ComboGrid',
     'Ext.ux.tree.plugin.NodeDisabled',
     'Ext.ux.TreeFilter'
 ]);
+
 Ext.application({
     requires: ['Ext.container.Viewport'],
     appFolder: BASE_PATH + 'assets/js/app',

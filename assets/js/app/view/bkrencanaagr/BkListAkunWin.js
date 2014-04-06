@@ -25,32 +25,32 @@ Ext.define('GlApp.view.bkrencanaagr.BkListAkunWin', {
                     itemId: 'gridHeaderAkun',
                     border: false,
                     forceFit: true,
-//                            store: 'gdtxterima.TtLotStore',
+                    store: 'bkrencanaagr.AkunHeaderStore',
+                    selModel: Ext.create('Ext.ux.selection.CheckboxModel', {
+                        checkOnly: false,
+                        mode: 'multi'
+                    }),
                     tbar: [
                         {
-                            text: 'ADD',
-                            ui: 'orange-button'
-                        },
-                        '-',
-                        {
-                            text: 'DELETE',
-                            ui: 'orange-button'
-                        },
-                        '-',
-                        {
                             text: 'SET AKUN',
-                            ui: 'orange-button'
+                            ui: 'orange-button',
+                            itemId: 'setAkunKp'
                         }
                     ],
                     columns: [
-                        Ext.create('Ext.grid.RowNumberer'),
+                        Ext.create('Ext.grid.RowNumberer', {width: 40}),
                         {
                             flex: 1,
                             text: 'NAMA AKUN',
                             renderer: 'uppercase',
-                            dataIndex: 'stl_qtylast'
+                            dataIndex: 'akun_name'
                         }
-                    ]
+                    ],
+                    listeners: {
+                        afterrender: function() {
+                            me.down('#gridHeaderAkun').getSelectionModel().clearSelections();
+                        }
+                    }
                 }
             ],
             buttons: [
