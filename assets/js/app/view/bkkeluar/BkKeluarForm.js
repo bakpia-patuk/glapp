@@ -23,31 +23,31 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
         Ext.applyIf(me, {
             tbar: [
                 {
-                    xtype: 'button',
+                    ui: 'orange-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'bkrSave'
+                    itemId: 'BankKeluarSave'
                 },
                 '-',
                 {
-                    xtype: 'button',
+                    ui: 'orange-button',
                     text: 'Cetak',
                     iconCls: 'icon-btn-print',
-//                    action: 'bkrSavePrint'
+//                    itemId: 'BankKeluarPrint'
                 },
                 '-',
                 {
-                    xtype: 'button',
+                    ui: 'orange-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
-//                    action: 'bkrNew'
+                    itemId: 'BankKeluarNew'
                 },
                 '-',
                 {
-                    xtype: 'button',
+                    ui: 'orange-button',
                     text: 'Hapus',
                     iconCls: 'icon-btn-delete',
-//                    action: 'bkrDelete'
+                    itemId: 'BankKeluarDelete'
                 }
             ],
             items: [
@@ -78,43 +78,43 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Pilih Bank ',
-                    name: 'namaBank',
+                    name: 'kas_bank',
                     hidden: false,
                     triggerAction: 'all',
                     minChars: 2,
-//                    store: 'BankStore',
-                    displayField: 'bankAlias',
+                    store: 'bkkeluar.BankFormStore',
+                    displayField: 'bank_alias',
                     valueField: 'id',
                     emptyText: 'Pilih Bank',
-//                    listeners: {
-//                        afterrender: function(combo, rec, eOpt) {
-//                            var store = combo.getStore();
-//
-//                            store.clearFilter(true);
-//                            store.filter('bank_cabang', userCabang);
-//                        }
-//                    }
+                    listeners: {
+                        afterrender: function(combo, rec, eOpt) {
+                            var store = combo.getStore();
+
+                            store.clearFilter(true);
+                            store.filter('bank_cabang', CABANG_ID);
+                        }
+                    }
                 },
                 {
                     xtype: 'comboboxedit',
                     fieldLabel: 'Keperluan ',
-                    name: 'namaGrk',
+                    name: 'kas_grpkeperluan',
                     itemId: 'namaGrk',
                     hidden: false,
                     triggerAction: 'all',
                     minChars: 2,
-//                    store: 'GrkStoreBkr',
+                    store: 'bkkeluar.GrkBkStore',
                     readOnly: false,
-                    displayField: 'grkName',
+                    displayField: 'grk_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
-//                    listeners: {
-//                        afterrender: function(combo, rec, eOpt) {
-//                            var store = combo.getStore();
-//
-//                            store.clearFilter(true);
-//                            store.filter("form_id", "bankkeluar");
-//                        },
+                    listeners: {
+                        afterrender: function(combo, rec, eOpt) {
+                            var store = combo.getStore();
+
+                            store.clearFilter(true);
+                            store.filter("form_id", "bankkeluar");
+                        },
 //                        select: function(combo, rec, eOpt) {
 //                            var store = this.up('form').getForm().findField('namaKd').getStore();
 //                            this.up('form').getForm().findField('namaKd').show();
@@ -124,7 +124,7 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
 //                            store.filter('kp_id', combo.getValue());
 //                            store.load();
 //                        }
-//                    },
+                    },
 //                    onTrigger2Click: function() {
 //                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
 //                            border: true,
@@ -248,7 +248,7 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     fieldLabel: 'Nominal ',
-                    name: 'jumlahTrx',
+                    name: 'kas_jumlah',
                     decimalPrecision: 2,
                     decimalSeparator: ',',
                     alwaysDisplayDecimals: true,
@@ -282,7 +282,7 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Nama Bank ',
-                            name: 'bankBg',
+                            name: 'kas_bankbg',
                             readOnly: false,
                             hidden: false,
                             allowBlank: false
@@ -290,7 +290,7 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                         {
                             xtype: 'datefield',
                             fieldLabel: 'Jth Tempo BG ',
-                            name: 'tglBgEd',
+                            name: 'kas_bged',
                             format: 'd/M/Y',
                             submitFormat: 'Y-m-d',
                             emptyText: 'Pilih tanggal',
@@ -300,7 +300,7 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                         {
                             xtype: 'textfield',
                             fieldLabel: 'Penerima ',
-                            name: 'penerimaBg',
+                            name: 'kas_namabayar',
                             readOnly: false,
                             hidden: false,
                             allowBlank: false

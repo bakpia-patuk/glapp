@@ -30,7 +30,7 @@ Ext.define('GlApp.view.bkmasuk.GetBkMasuk', {
                     region: 'west',
                     width: 325,
                     minWidth: 325,
-                    title: 'FORM KAS MASUK',
+                    title: 'FORM BANK MASUK',
                     border: true,
                     ui: 'orange-panel',
                     collapsible: true,
