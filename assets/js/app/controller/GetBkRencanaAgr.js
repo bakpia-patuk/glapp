@@ -115,7 +115,7 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                     for (i = 0; i < sel.length; i++) {
                         data = data + sel[i].get('akun_id') + '-';
                     }
-                    
+
                     var gd = this.getBkGkGrid(),
                             sel = gd.getSelectionModel().getSelection();
 
@@ -128,10 +128,10 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                 }
             },
             '#gridGk': {
-                selectionchange: function(m,r) {
+                selectionchange: function(m, r) {
                     var grid = this.getBkGkAkunGrid();
-                    
-                    if(r[0]) {
+
+                    if (r[0]) {
                         grid.getStore().clearFilter(true);
                         grid.getStore().filter('kp_id', r[0].get('id'));
                     }
@@ -152,9 +152,16 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
             form.down('#isRujukan').hide();
             form.down('#agrplan_kprdetail').setReadOnly(true);
             form.down('#agrplan_idtelisa').hide();
-            form.down('agrplan_from').setValue(resp.data.tgl_dari);
-            form.down('agrplan_to').setValue(resp.data.tgl_ke);
-            form.down('agrplan_divisi').setValue(parseInt(resp.data.divisi));
+            form.down('#agrplan_from').setValue(resp.data.tgl_dari);
+            form.down('#agrplan_to').setValue(resp.data.tgl_ke);
+            form.down('#agrplan_divisi').setValue(parseInt(resp.data.divisi));
+
+            form.down('#trx_no').hide();
+            form.down('#trx_no').disable();
+            form.down('#trx_trfbank').disable();
+            form.down('#trx_trfnama').disable();
+            form.down('#trx_trfbank').hide();
+            form.down('#trx_trfnama').hide();
         }
     },
     onFailure: function(resp, idForm) {
