@@ -989,6 +989,9 @@ class Shared extends Auth_Controller {
         }
     }
 
+    public function copy_akun($cabang) {
+        
+    }
 }
 
 /* End of file welcome.php */
