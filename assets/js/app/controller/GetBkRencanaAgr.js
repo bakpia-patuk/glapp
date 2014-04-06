@@ -26,7 +26,8 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         {ref: 'BkRencanaAgrForm', selector: '#bkrencanaagrform'},
         {ref: 'BkRencanaAgrGrid', selector: '#bkrencanaagrgrid'},
         {ref: 'BkRencanaAgrNonGrid', selector: '#bkrencanaagrnongrid'},
-        {ref: 'BkGkGrid', selector: '#gridGk'}
+        {ref: 'BkGkGrid', selector: '#gridGk'},
+        {ref: 'BkheaderAkunGrid', selector: '#gridHeaderAkun'}
     ],
     init: function() {
         this.control({
@@ -34,7 +35,6 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                 click: function() {
                     var form = this.getBkRencanaAgrForm().getForm(),
                             store = this.getBkRencanaAgrNonGrid().getStore();
-
                     if (form.isValid()) {
                         var approval = form.down('#app_status').getValue();
                         if (approval === 1) {
@@ -47,7 +47,6 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                             return;
                         }
                         this.ajaxReq('bk_rencanaagr/add_rencanaanggaran', form.getValues(), 1);
-
                     }
                 }
             },
@@ -65,7 +64,6 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
             '#BkRaDelete': {
                 click: function() {
                     var form = this.getBkRencanaAgrForm();
-
                     if (form.down('#id').getValue() === "0") {
                         Ext.Msg.alert('Info', 'Pilih Anggaran Non Supplier yang akan di hapus');
                         return;
@@ -83,10 +81,8 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                 itemclick: function() {
                     var tree = this.getBkRencanaAgrNonGrid(),
                             sel = tree.getSelectionModel().getSelection();
-
                     var form = this.getBkRencanaAgrForm().getForm(),
                             rec = sel[0];
-
                     if (sel) {
                         form.loadRecord(rec);
                     }
@@ -102,6 +98,28 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                     }
                     var win = Ext.widget('bkrencanaagr.bklistakunwin');
                 }
+            },
+            '#setAkunKp': {
+                click: function() {
+                    var grid = this.getBkheaderAkunGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Pilih Header Akun Group');
+                        return;
+                    }
+
+                    var data = '';
+                    for (i = 0; i < sel.length; i++) {
+                        data = data + sel[i].get('akun_id') + '-';
+                    }
+
+                    var params = {
+                        idForm: id,
+                        idPerlu: kpr,
+                        data: data
+                    };
+                    this.ajaxReq('bk_rencanaagr/set_akungr', form.getValues(), 2);
+                }
             }
         });
     },
@@ -114,12 +132,10 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
             form.getForm().reset();
             tabs.setActiveTab(1);
             storeMa.setRootNode({idCabang: '0'});
-
             form.down('#isRujukan').disable();
             form.down('#isRujukan').hide();
             form.down('#agrplan_kprdetail').setReadOnly(true);
             form.down('#agrplan_idtelisa').hide();
-
             form.down('agrplan_from').setValue(resp.data.tgl_dari);
             form.down('agrplan_to').setValue(resp.data.tgl_ke);
             form.down('agrplan_divisi').setValue(parseInt(resp.data.divisi));
@@ -134,6 +150,5 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         });
     }
 });
-
 /* End of file SystemMenu.js */
 /* Location: ./assets/js/app/controller/SystemMenu.js */

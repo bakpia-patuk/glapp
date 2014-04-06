@@ -247,7 +247,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                     margin: 0,
                     labelAlign: 'top',
                     itemId: 'isRujukan',
-                    hidden: false,
+                    hidden: true,
                     disabled: true,
                     items: [
                         {

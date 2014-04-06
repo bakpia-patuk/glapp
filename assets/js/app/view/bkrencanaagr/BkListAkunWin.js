@@ -33,11 +33,12 @@ Ext.define('GlApp.view.bkrencanaagr.BkListAkunWin', {
                     tbar: [
                         {
                             text: 'SET AKUN',
-                            ui: 'orange-button'
+                            ui: 'orange-button',
+                            itemId: 'setAkunKp'
                         }
                     ],
                     columns: [
-                        Ext.create('Ext.grid.RowNumberer'),
+                        Ext.create('Ext.grid.RowNumberer', {width: 40}),
                         {
                             flex: 1,
                             text: 'NAMA AKUN',
