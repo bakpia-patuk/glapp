@@ -338,6 +338,8 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrForm', {
                                 form.down('#trx_trfnama').disable();
                                 form.down('#trx_trfbank').hide();
                                 form.down('#trx_trfnama').hide();
+                                form.down('#trx_bged').hide();
+                                form.down('#trx_bged').disable();
                             } else {
                                 form.down('#trx_no').show();
                                 form.down('#trx_no').enable();
