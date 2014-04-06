@@ -11,7 +11,9 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         'bkrencanaagr.MaNonStoreTree',
         'bkrencanaagr.CabangStore',
         'bkrencanaagr.GrkBkStore',
-        'bkrencanaagr.AkunHeaderStore'
+        'bkrencanaagr.AkunHeaderStore',
+        'bkrencanaagr.GrkAkunStore',
+        'bkrencanaagr.ListAkunGkStore'
     ],
     views: [
         'bkrencanaagr.GetBkRencanaAgr',
@@ -27,6 +29,7 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         {ref: 'BkRencanaAgrGrid', selector: '#bkrencanaagrgrid'},
         {ref: 'BkRencanaAgrNonGrid', selector: '#bkrencanaagrnongrid'},
         {ref: 'BkGkGrid', selector: '#gridGk'},
+        {ref: 'BkGkAkunGrid', selector: '#gridGkAkun'},
         {ref: 'BkheaderAkunGrid', selector: '#gridHeaderAkun'}
     ],
     init: function() {
@@ -36,7 +39,7 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                     var form = this.getBkRencanaAgrForm().getForm(),
                             store = this.getBkRencanaAgrNonGrid().getStore();
                     if (form.isValid()) {
-                        var approval = form.down('#app_status').getValue();
+                        var approval = this.getBkRencanaAgrForm().down('#app_status').getValue();
                         if (approval === 1) {
                             Ext.MessageBox.show({
                                 title: 'INFO',
@@ -112,13 +115,26 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
                     for (i = 0; i < sel.length; i++) {
                         data = data + sel[i].get('akun_id') + '-';
                     }
+                    
+                    var gd = this.getBkGkGrid(),
+                            sel = gd.getSelectionModel().getSelection();
 
                     var params = {
-                        idForm: id,
-                        idPerlu: kpr,
+                        idForm: 'mintabayar',
+                        idPerlu: sel[0].get('id'),
                         data: data
                     };
-                    this.ajaxReq('bk_rencanaagr/set_akungr', form.getValues(), 2);
+                    this.ajaxReq('bk_rencanaagr/set_akungr', params, 2);
+                }
+            },
+            '#gridGk': {
+                selectionchange: function(m,r) {
+                    var grid = this.getBkGkAkunGrid();
+                    
+                    if(r[0]) {
+                        grid.getStore().clearFilter(true);
+                        grid.getStore().filter('kp_id', r[0].get('id'));
+                    }
                 }
             }
         });

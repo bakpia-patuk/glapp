@@ -96,7 +96,7 @@ class Bk_rencanaagr extends Auth_Controller {
 
                             $detail_anggaran[] = array(
                                 'idCabang' => $pd . $row->id,
-                                'cabang_code' => $row->faktur_no,//trx_fakturno,
+                                'cabang_code' => $row->faktur_no, //trx_fakturno,
                                 'cabang_city' => "",
                                 'cabang_name' => "",
                                 'isCabang' => 0,
@@ -110,7 +110,7 @@ class Bk_rencanaagr extends Auth_Controller {
                                 'tgldari' => mdate("%d/%M/%Y", strtotime($detail_ma->tgldari)),
                                 'no_rekbg' => $this->no_rekbg($row->id, $row->faktur_bayar),
                                 'faktur_bgstatus' => $row->faktur_bgstatus == 0 ? "-" : mdate("%d/%M/%Y", strtotime($this->Bkrencanaagr_model->get_detail('faktur_id', $row->id, 'trx_faktur_bayar')->faktur_bayared)),
-                                'hp_cicilan_amt' => '',//$row->hp_cicilan_amt,
+                                'hp_cicilan_amt' => '', //$row->hp_cicilan_amt,
                                 'iconCls' => 'icon-tree',
                                 'leaf' => true,
                                 'expanded' => false,
@@ -126,11 +126,11 @@ class Bk_rencanaagr extends Auth_Controller {
                             } else {
                                 $keperluan = '';
                             }
-                            
+
 //                            if ($detail_ma->dtl_keperluan != 0) {
 //                                $dt_perlu = $this->Bkrencanaagr_model->get_detail('id', $detail_ma->dtl_keperluan, 'dt_akun')->akun_name;
 //                            } else {
-                                $dt_perlu = '';
+                            $dt_perlu = '';
 //                            }
 
                             if (intval($row->keterangan) == 0) {
@@ -208,7 +208,7 @@ class Bk_rencanaagr extends Auth_Controller {
             return FALSE;
         }
     }
-    
+
     public function jbt($id) {
         $data[] = array('type' => 1002, 'nama' => "TRANSFER", 'id' => $id);
         $data[] = array('type' => 1001, 'nama' => "TUNAI", 'id' => $id);
@@ -216,7 +216,7 @@ class Bk_rencanaagr extends Auth_Controller {
 
         return $data;
     }
-    
+
     function get_minta_anggaran($pd, $type) {
         $jenis_faktur = substr($pd, 0, 4);
         if (strlen($pd) == 5) {
@@ -250,7 +250,7 @@ class Bk_rencanaagr extends Auth_Controller {
             return $data;
         }
     }
-    
+
     function list_po($id, $type) {
         $tablename = 'trx_faktur_detail';
         $record[] = array('field' => 'trx_fakturid', 'param' => 'where', 'operator' => '', 'value' => $id);
@@ -307,7 +307,7 @@ class Bk_rencanaagr extends Auth_Controller {
             return '-';
         }
     }
-    
+
     function add_rencanaanggaran() {
         $input = $this->input->post(NULL, TRUE);
         $data = $this->Bkrencanaagr_model->ma_process($input);
@@ -317,7 +317,7 @@ class Bk_rencanaagr extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'gagal bung'));
         }
     }
-    
+
     function app_rencanaanggaran() {
         $id = $this->input->post('id');
 
@@ -338,18 +338,18 @@ class Bk_rencanaagr extends Auth_Controller {
 
         echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Data Berhasil Di Simpan', 'title' => 'Info'));
     }
-    
+
     function add_permintaan_divisi($id) {
         $dt_ma = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_agrplan');
 //        var_dump($dt_ma->gr_keperluan);
         $dt_nonfkt = $this->Bkrencanaagr_model->get_detail('ma_id', $id, 'trx_data_nonfaktur');
         $datestring = '%Y-%m-%d %H:%i:%s';
         $keterangan = "";
-        if($dt_ma->mkr_pemeriksaan != 0) {
+        if ($dt_ma->mkr_pemeriksaan != 0) {
             $keterangan = "Rujukan a.n. " . $dt_ma->mkr_namapasien . " ke " . $dt_ma->mkr_rujukanke;
         } else {
             $nama_akun = $this->Bkrencanaagr_model->get_detail('id', $dt_ma->dtl_keperluan, 'dt_akun')->akun_name;
-            $keterangan = $nama_akun. ', Ket. Tambahan: '.$dt_ma->keterangan;
+            $keterangan = $nama_akun . ', Ket. Tambahan: ' . $dt_ma->keterangan;
         }
         $new = array(
             'tgl_trx' => mdate($datestring, now()),
@@ -377,7 +377,7 @@ class Bk_rencanaagr extends Auth_Controller {
             return FALSE;
         }
     }
-    
+
     function delete_rencanaagr() {
         $id = $this->input->post('id');
 
@@ -389,4 +389,22 @@ class Bk_rencanaagr extends Auth_Controller {
 
         echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Data Berhasil Di Hapus', 'title' => 'Info'));
     }
+
+    public function set_akungr() {
+        $insert = $this->input->post(NULL, TRUE);
+        $data = explode('-', rtrim($insert['data'], '-'));
+        foreach ($data as $row) {
+            $this->Bkrencanaagr_model->add_to_kpakun($row, $insert['idPerlu'], $insert['idForm']);
+        }
+        echo json_encode(array('success' => 'true', 'msg' => 'Add Data Success'));
+    }
+
+    public function del_akun_gr() {
+        $data = $this->input->post('id');
+
+        $rec[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $data);
+        $this->Bkrencanaagr_model->delete($rec, NULL, 'ms_keperluan_akun');
+        echo json_encode(array('success' => 'true', 'msg' => 'Delete Data Success'));
+    }
+
 }

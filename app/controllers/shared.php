@@ -1092,6 +1092,69 @@ class Shared extends Auth_Controller {
         }
     }
 
+    public function list_akun_gr() {
+        $records = $this->input->get('filter');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        $opt['sortBy'] = 'id';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, 'ms_keperluan_akun');
+        $no = 0;
+
+        if ($result != NULL) {
+            foreach ($result as $row) {
+                $result[$no]->akun_name = $this->Shared_model->get_detail('id', $row->akun_header, 'dt_akun')->akun_name;
+                $no++;
+            }
+
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Akun'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+
+    public function get_detail_kp() {
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+        $result = $this->Shared_model->gets($params, NULL, 'ms_keperluan_akun');
+
+        if ($result != NULL) {
+            foreach ($result as $row) {
+                $id_kas[] = $row->akun_header;
+            }
+            $record[] = array('field' => 'akun_parent', 'param' => 'where_in', 'operator' => '', 'value' => $id_kas);
+            $record[] = array('field' => 'akun_head_status', 'param' => 'where', 'operator' => '', 'value' => '1');
+
+            if ($query) {
+                if ($query != "") {
+                    $record[] = array('field' => 'akun_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+                }
+            }
+
+            $result = $this->Shared_model->gets($record, NULL, 'dt_akun');
+
+            if ($result) {
+                echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua akun'));
+            } else {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'msg' => 'Tidak ada data akun'));
+            }
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'msg' => 'Tidak ada data akun'));
+        }
+    }
+
     public function copy_akun($cabang) {
         $akun_all = $this->Shared_model->gets(NULL, NULL, 'dt_akun');
 

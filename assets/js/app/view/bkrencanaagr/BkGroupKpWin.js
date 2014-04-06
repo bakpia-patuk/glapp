@@ -170,16 +170,53 @@ Ext.define('GlApp.view.bkrencanaagr.BkGroupKpWin', {
                             region: 'center',
                             itemId: 'gridGkAkun',
                             forceFit: true,
-//                            store: 'gdtxterima.TtLotStore',
+                            store: 'bkrencanaagr.GrkAkunStore',
                             tbar: [
                                 {
                                     text: 'DELETE',
-                                    ui: 'orange-button'
+                                    ui: 'orange-button',
+                                    disabled: true,
+                                    itemId: 'removeAkunKp',
+                                    handler: function() {
+                                        var store = this.up('grid').getStore();
+                                        var sm = this.up('grid').getSelectionModel();
+
+                                        Ext.Ajax.request({
+                                            url: BASE_PATH + 'bk_rencanaagr/del_akun_gr',
+                                            method: 'POST',
+                                            params: {id: sm.getSelection()[0].get('id')},
+                                            scope: this,
+                                            callback: function(options, success, response) {
+                                                var resp = Ext.decode(response.responseText);
+
+                                                if (resp.success === 'true') {
+                                                    store.load();
+                                                    Ext.MessageBox.show({
+                                                        title: 'INFO',
+                                                        msg: resp.msg,
+                                                        buttons: Ext.MessageBox.OK,
+                                                        icon: Ext.MessageBox.INFO
+                                                    });
+                                                } else {
+                                                    store.load();
+                                                    Ext.MessageBox.show({
+                                                        title: 'ERROR',
+                                                        msg: resp.msg,
+                                                        buttons: Ext.MessageBox.OK,
+                                                        icon: Ext.MessageBox.ERROR
+                                                    });
+                                                }
+                                            }
+                                        });
+                                    }
                                 },
                                 '-',
                                 {
                                     text: 'REFRESH',
-                                    ui: 'orange-button'
+                                    ui: 'orange-button',
+                                    handler: function() {
+                                        this.up('grid').load();
+                                    }
                                 }
                             ],
                             columns: [
@@ -188,9 +225,14 @@ Ext.define('GlApp.view.bkrencanaagr.BkGroupKpWin', {
                                     xtype: 'gridcolumn',
                                     flex: 1,
                                     text: 'NAMA AKUN',
-                                    dataIndex: 'stl_nolot'
+                                    dataIndex: 'akun_name'
                                 }
-                            ]
+                            ],
+                            listeners: {
+                                'selectionchange': function(view, records) {
+                                    this.down('#removeAkunKp').setDisabled(!records.length);
+                                }
+                            }
                         }
                     ]
                 }
