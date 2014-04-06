@@ -5,6 +5,7 @@ var editorCell = new Ext.grid.plugin.CellEditing({
     clicksToEdit: 2,
     listeners: {
         'edit': function(editor, e, eOpt) {
+            
             if (e.record.dirty) {
                 e.record.commit();
                 Ext.Ajax.request({
