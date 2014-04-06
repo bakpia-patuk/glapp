@@ -25,18 +25,8 @@ Ext.define('GlApp.view.bkrencanaagr.BkListAkunWin', {
                     itemId: 'gridHeaderAkun',
                     border: false,
                     forceFit: true,
-//                            store: 'gdtxterima.TtLotStore',
+                            store: 'bkrencanaagr.AkunHeaderStore',
                     tbar: [
-                        {
-                            text: 'ADD',
-                            ui: 'orange-button'
-                        },
-                        '-',
-                        {
-                            text: 'DELETE',
-                            ui: 'orange-button'
-                        },
-                        '-',
                         {
                             text: 'SET AKUN',
                             ui: 'orange-button'
@@ -48,7 +38,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkListAkunWin', {
                             flex: 1,
                             text: 'NAMA AKUN',
                             renderer: 'uppercase',
-                            dataIndex: 'stl_qtylast'
+                            dataIndex: 'akun_name'
                         }
                     ]
                 }

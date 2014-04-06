@@ -127,11 +127,11 @@ class Bk_rencanaagr extends Auth_Controller {
                                 $keperluan = '';
                             }
                             
-                            if ($detail_ma->dtl_keperluan != 0) {
-                                $dt_perlu = $this->Bkrencanaagr_model->get_detail('id', $detail_ma->dt_keperluan, 'dt_akun')->akun_name;
-                            } else {
+//                            if ($detail_ma->dtl_keperluan != 0) {
+//                                $dt_perlu = $this->Bkrencanaagr_model->get_detail('id', $detail_ma->dtl_keperluan, 'dt_akun')->akun_name;
+//                            } else {
                                 $dt_perlu = '';
-                            }
+//                            }
 
                             if (intval($row->keterangan) == 0) {
                                 $ket = $row->keterangan;
@@ -309,7 +309,8 @@ class Bk_rencanaagr extends Auth_Controller {
     }
     
     function add_rencanaanggaran() {
-        $data = $this->Bkrencanaagr_model->ma_process();
+        $input = $this->input->post(NULL, TRUE);
+        $data = $this->Bkrencanaagr_model->ma_process($input);
         if ($data) {
             echo json_encode(array('success' => 'true', 'data' => $data, 'message' => 'Data Berhasil Di Simpan', 'title' => 'Info'));
         } else {
@@ -383,12 +384,9 @@ class Bk_rencanaagr extends Auth_Controller {
         $del1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $this->Bkrencanaagr_model->delete($del1, NULL, 'trx_agrplan');
 
-        $del2[] = array('field' => 'minta_anggaranid', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $del2[] = array('field' => 'tipe_faktur', 'param' => 'where', 'operator' => '', 'value' => 1);
-        $this->Bkrencanaagr_model->delete($del2, NULL, 'trx_anggaran_faktur');
+        $del2[] = array('field' => 'agrplan_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $this->Bkrencanaagr_model->delete($del2, NULL, 'trx_agrplan_detail');
 
-        $del3[] = array('field' => 'ma_id', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $this->Bkrencanaagr_model->delete($del3, NULL, 'trx_data_nonfaktur');
         echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Data Berhasil Di Hapus', 'title' => 'Info'));
     }
 }

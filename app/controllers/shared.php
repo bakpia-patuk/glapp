@@ -174,7 +174,6 @@ class Shared extends Auth_Controller {
         
     }
 
-    //LIST, ADD, EDIT, DELETE BARANG END
     //LIST, ADD, EDIT, DELETE MERK START
     public function list_merk() {
         $records = $this->input->get('filter');
@@ -462,6 +461,38 @@ class Shared extends Auth_Controller {
         }
     }
 
+    public function add_group_keperluan() {
+        $input = $this->input->post(NULL, TRUE);
+
+        if ($input['id'] != 0) {
+            $input['grk_name'] = strtoupper($input['grk_name']);
+            $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+            if (!$this->Shared_model->update($input, $opt, NULL, 'ms_group_keperluan')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
+            } else {
+                echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Update Success'));
+            }
+        } else {
+            unset($input['id']);
+            $input['grk_name'] = strtoupper($input['grk_name']);
+            if (!$this->Shared_model->insert($input, 'ms_group_keperluan')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
+            } else {
+                echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Success'));
+            }
+        }
+    }
+
+    public function del_group_keperluan() {
+        $input = $this->input->post(NULL, TRUE);
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+        $this->Shared_model->delete($opt, NULL, 'ms_group_keperluan');
+        $rec[] = array('field' => 'kp_id', 'param' => 'where', 'operator' => '', 'value' => $input['id']);
+        $this->Shared_model->delete($rec, NULL, 'ms_keperluan_akun');
+        echo json_encode(array('success' => 'true', 'msg' => 'Delete Data Success'));
+    }
+
     //KEPERLUAN AKUN
     public function list_detailkp() {
         $records = $this->input->get('filter');
@@ -479,7 +510,7 @@ class Shared extends Auth_Controller {
 //            }
 //        }
 
-        $tablename = 'master_keperluan_akun';
+        $tablename = 'ms_keperluan_akun';
         $opt['sortBy'] = 'id';
         $opt['sortDirection'] = 'ASC';
 
@@ -920,6 +951,7 @@ class Shared extends Auth_Controller {
             }
         }
     }
+
     function akun_del() {
         $id = $this->input->post('id');
         //$table_name = $this->input->post('table_name');
@@ -951,11 +983,133 @@ class Shared extends Auth_Controller {
 
         if ($this->upload->do_upload($field)) {
             $data_apl = $this->upload->data();
-            echo '{success:true, message: "Verifikasi Selesai", url: "assets/ttdtx/' . $field. $params . 'NULL' . $data_apl['file_ext'] . '"}';
+            echo '{success:true, message: "Verifikasi Selesai", url: "assets/ttdtx/' . $field . $params . 'NULL' . $data_apl['file_ext'] . '"}';
         } else {
             $msg = json_encode($this->upload->display_errors('<p>', '</p>'));
             echo '{success:false, message: ' . $msg . '}';
         }
+    }
+
+    public function list_akun() {
+        $records = $this->input->get('filter');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        if ($query) {
+            if ($query != "") {
+                $params[] = array('field' => 'akun_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+            }
+        }
+
+        $tablename = 'dt_akun';
+        $params[] = array('field' => 'akun_child_status', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $opt['sortBy'] = 'akun_code';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->gets($params, $opt, $tablename);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Akun'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+
+    public function list_akun_cabang() {
+        $records = $this->input->get('filter');
+        $cabang = $this->input->get('cabang');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($cabang) {
+            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $cabang);
+        } else {
+            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        }
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        if ($query) {
+            if ($query != "") {
+                $params[] = array('field' => 'akun_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+            }
+        }
+
+        $params[] = array('field' => 'akun_child_status', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $opt['sortBy'] = 'no';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->get_akun_cabang($params, $opt);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Barang Cabang'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+
+    public function list_header_akun_cabang() {
+        $records = $this->input->get('filter');
+        $cabang = $this->input->get('cabang');
+        $query = $this->input->get('query');
+        $params = array();
+
+        if ($cabang) {
+            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $cabang);
+        } else {
+            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        }
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
+        }
+
+        if ($query) {
+            if ($query != "") {
+                $params[] = array('field' => 'akun_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+            }
+        }
+
+        $params[] = array('field' => 'akun_child_status', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $opt['sortBy'] = 'no';
+        $opt['sortDirection'] = 'ASC';
+
+        $result = $this->Shared_model->get_akun_cabang($params, $opt);
+
+        if ($result != NULL) {
+            echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All Barang Cabang'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Tidak ada data'));
+        }
+    }
+
+    public function copy_akun($cabang) {
+        $akun_all = $this->Shared_model->gets(NULL, NULL, 'dt_akun');
+
+        foreach ($akun_all as $value) {
+            $this->Shared_model->set_akun($value->id, $cabang);
+        }
+
+        echo 'Copy Akun Success';
+    }
+
+    public function copy_item($cabang) {
+        $akun_all = $this->Shared_model->gets(NULL, NULL, 'dt_item');
+
+        foreach ($akun_all as $value) {
+            $this->Shared_model->set_item($value->id, $cabang);
+        }
+
+        echo 'Copy Akun Success';
     }
 
 }

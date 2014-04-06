@@ -18,6 +18,9 @@ Ext.define('GlApp.view.layout.LayoutContainer', {
         var me = this;
 
         Ext.applyIf(me, {
+            plugins: {
+                ptype: 'tabclosemenu'
+            },
             items: [
                 {
                     xtype: 'panel',
