@@ -1,7 +1,7 @@
 var modelku = Ext.define('eTrav.model.PengadaanModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'idPengadaan', type: 'int'},
+        {name: 'idPengadaan', type: 'string'},
         {name: 'tglTransaksi', type: 'date'},
         {name: 'noPeng', type: 'string'},
         {name: 'idCabang', type: 'int'},
@@ -14,7 +14,9 @@ var modelku = Ext.define('eTrav.model.PengadaanModel', {
         {name: 'pengStatusDiv', type: 'int'},
         {name: 'poStatus', type: 'int'},
         {name: 'pengPetugas', type: 'int'},
-        {name: 'simpanStatus', type: 'int'}
+        {name: 'simpanStatus', type: 'int'},
+        {name: 'peng_type', type: 'int'},
+         {name: 'peng_statusmgr', type: 'int'}
     ],
     idProperty: 'idPengadaan'
 });

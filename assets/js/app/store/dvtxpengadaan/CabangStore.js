@@ -1,29 +1,29 @@
-var modelku = Ext.define('eTrav.model.CabangModel', {
+var CabangModel = Ext.define('GlApp.model.CabangModel', {
     extend: 'Ext.data.Model',
     fields: [
         {name: 'id', type: 'int'},
-        {name: 'cabangId', type: 'string'},
-        {name: 'cabangCity', type: 'string'},
-        {name: 'cabangName', type: 'string'},
-        {name: 'cabangCityName', type: 'string'},
-        {name: 'cabangAdd', type: 'string'},
-        {name: 'cabangTelp', type: 'string'}
+        {name: 'cabang_code', type: 'string'},
+        {name: 'cabang_city', type: 'string'},
+        {name: 'cabang_alias', type: 'string'},
+        {name: 'cabang_city_name', type: 'string'},
+        {name: 'cabang_address', type: 'string'},
+        {name: 'cabang_phone', type: 'string'}
     ],
     idProperty: 'id'
 });
 
+
 Ext.define('GlApp.store.dvtxpengadaan.CabangStore', {
     extend: 'Ext.data.Store',
     alias: 'store.dvtxpengadaan.cabangstore',
-    model: modelku,
-    
+    model: CabangModel,
+    storeId: 'BkRaCabangStore',
     autoLoad: true,
-    storeId: 'CabangStore',
     remoteFilter: true,
     proxy: {
         success: true,
         type: 'ajax',
-        url: BASE_PATH + 'dv_txpengadaan/list_cabang',
+        url: BASE_PATH + 'shared/list_cabang',
         reader: {
             type: 'json',
             root: 'data'

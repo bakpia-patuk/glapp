@@ -7,7 +7,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaGrid', {
     itemId: 'dvtxbrmintagrid',
     autoScroll: true,
     forceFit: true,
-//    store: 'PengdivStore',
+   store: 'dvtxbrminta.PengdivStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -35,48 +35,48 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaGrid', {
                     itemId: 'dateMbDivFilter',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
-//                    listeners: {
-//                        afterrender: function() {
-//                            this.setValue(new Date());
-//                        },
-//                        change: function() {
-//                            this.up('grid').getSelectionModel().clearSelections();
-//                            var store = this.up('grid').getStore(),
-//                                    filterCollection = [],
-//                                    combo = this.up('grid').down('#divisiMbDivFilter').getValue(),
-//                                    combo2 = this.up('grid').down('#dateMbDivFilter2').getValue();
-//                            ;
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'tgl_trx',
-//                                value: Ext.Date.format(this.getValue(), 'Y-m-d 00:00:00') + 'GT'
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            if (combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'pengdiv_cabang',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'pengdiv_divisi',
-//                                value: combo === null ? userDivisi : combo
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       afterrender: function() {
+                           this.setValue(new Date());
+                       },
+                       change: function() {
+                           this.up('grid').getSelectionModel().clearSelections();
+                           var store = this.up('grid').getStore(),
+                                   filterCollection = [],
+                                   combo = this.up('grid').down('#divisiMbDivFilter').getValue(),
+                                   combo2 = this.up('grid').down('#dateMbDivFilter2').getValue();
+                           ;
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'tgl_trx',
+                               value: Ext.Date.format(this.getValue(), 'Y-m-d 00:00:00') + 'GT'
+                           });
+                           filterCollection.push(statusFilter);
+
+                           if (combo2 !== null) {
+                               var statusFilter = new Ext.util.Filter({
+                                   property: 'tgl_trx',
+                                   value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
+                               });
+                               filterCollection.push(statusFilter);
+                           }
+
+                           var filter2 = new Ext.util.Filter({
+                               property: 'pengdiv_cabang',
+                               value: CABANG_ID
+                           });
+                           filterCollection.push(filter2);
+
+                           var filter2 = new Ext.util.Filter({
+                               property: 'pengdiv_divisi',
+                               value: combo === null ? USER_DIVISI : combo
+                           });
+                           filterCollection.push(filter2);
+
+                           store.clearFilter(true);
+                           store.filter(filterCollection);
+                       }
+                   }
                 },
                 {
                     xtype: 'datefield',
@@ -88,47 +88,47 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaGrid', {
                     itemId: 'dateMbDivFilter2',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
-//                    listeners: {
-//                        afterrender: function() {
-//                            this.setValue(new Date());
-//                        },
-//                        change: function() {
-//                            this.up('grid').getSelectionModel().clearSelections();
-//                            var store = this.up('grid').getStore(),
-//                                    filterCollection = [],
-//                                    combo = this.up('grid').down('#divisiMbDivFilter').getValue(),
-//                                    combo2 = this.up('grid').down('#dateMbDivFilter').getValue();
-//
-//                            if (combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 00:00:00') + 'GT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'tgl_trx',
-//                                value: Ext.Date.format(this.getValue(), 'Y-m-d 23:59:59') + 'LT'
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'pengdiv_cabang',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'pengdiv_divisi',
-//                                value: combo === null ? userDivisi : combo
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       afterrender: function() {
+                           this.setValue(new Date());
+                       },
+                       change: function() {
+                           this.up('grid').getSelectionModel().clearSelections();
+                           var store = this.up('grid').getStore(),
+                                   filterCollection = [],
+                                   combo = this.up('grid').down('#divisiMbDivFilter').getValue(),
+                                   combo2 = this.up('grid').down('#dateMbDivFilter').getValue();
+
+                           if (combo2 !== null) {
+                               var statusFilter = new Ext.util.Filter({
+                                   property: 'tgl_trx',
+                                   value: Ext.Date.format(combo2, 'Y-m-d 00:00:00') + 'GT'
+                               });
+                               filterCollection.push(statusFilter);
+                           }
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'tgl_trx',
+                               value: Ext.Date.format(this.getValue(), 'Y-m-d 23:59:59') + 'LT'
+                           });
+                           filterCollection.push(statusFilter);
+
+                           var filter2 = new Ext.util.Filter({
+                               property: 'pengdiv_cabang',
+                               value: CABANG_ID
+                           });
+                           filterCollection.push(filter2);
+
+                           var filter2 = new Ext.util.Filter({
+                               property: 'pengdiv_divisi',
+                               value: combo === null ? USER_DIVISI : combo
+                           });
+                           filterCollection.push(filter2);
+
+                           store.clearFilter(true);
+                           store.filter(filterCollection);
+                       }
+                   }
                 },
                 {
                     xtype: 'combobox',
@@ -146,60 +146,54 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaGrid', {
                     hidden: true, //userCabang == 14 ? false : true,
                     valueNotFoundText: 'Tidak ada Data',
 //                    store: 'CabangStore',
-//                    listeners: {
-//                        select: function() {
-//                            var store = this.up('grid').getStore(),
-//                                    filterCollection = [],
-//                                    combo = this.up('grid').down('#datePengDivFilter').getValue(),
-//                                    combo2 = this.up('grid').down('#datePengDivFilter2').getValue();
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'divisi',
-//                                value: '0NE'
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            if (combo !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo, 'Y-m-d 00:00:00') + 'GT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            if (combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            if (this.getValue() !== 14) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'peng_statusdiv',
-//                                    value: 1
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       select: function() {
+                           var store = this.up('grid').getStore(),
+                                   filterCollection = [],
+                                   combo = this.up('grid').down('#datePengDivFilter').getValue(),
+                                   combo2 = this.up('grid').down('#datePengDivFilter2').getValue();
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'cabang_id',
+                               value: this.getValue()
+                           });
+                           filterCollection.push(statusFilter);
+
+                           var filter2 = new Ext.util.Filter({
+                               property: 'divisi',
+                               value: USER_DIVISI
+                           });
+                           filterCollection.push(filter2);
+
+                           if (combo !== null) {
+                               var statusFilter = new Ext.util.Filter({
+                                   property: 'tgl_trx',
+                                   value: Ext.Date.format(combo, 'Y-m-d 00:00:00') + 'GT'
+                               });
+                               filterCollection.push(statusFilter);
+                           }
+
+                           if (combo2 !== null) {
+                               var statusFilter = new Ext.util.Filter({
+                                   property: 'tgl_trx',
+                                   value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
+                               });
+                               filterCollection.push(statusFilter);
+                           }
+
+                           
+
+                           store.clearFilter(true);
+                           store.filter(filterCollection);
+                       }
+                   }
                 },
                 '->',
                 {
                     tooltip: 'Approval Permintaan',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-appr',
-//                    action: 'apprDivMb',
+                   action: 'apprDivMb',
                     id: 'apprDivMb'
                 },
                 '-',

@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @author Coepoe
  */
-class Dv_txpengadaan_model extends MY_Model {
+class Dv_txbrminta_model extends MY_Model {
 
     function __construct() {
         parent::__construct();
