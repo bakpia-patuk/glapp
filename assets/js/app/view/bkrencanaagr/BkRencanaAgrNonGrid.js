@@ -103,7 +103,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrNonGrid', {
                 {
                     width: 50,
                     text: 'ID TRX',
-                    hidden: false,
+                    hidden: true,
                     dataIndex: 'id_trx'
                 },
                 {
