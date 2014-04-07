@@ -11,7 +11,7 @@ var TrxKas = Ext.define('GlApp.model.TrxKasModel', {
         {name: 'kas_bank', type: 'int'},
         {name: 'kas_grpkeperluan', type: 'int'},
         {name: 'kas_dtlkeperluan', type: 'int'},
-//        {name: 'keteranganKd', type: 'string'},
+        {name: 'keteranganKd', type: 'string'},
         {name: 'kas_jumlah', type: 'double'},
         {name: 'kas_bayartype', type: 'int'},
 //        {name: 'noBg', type: 'string'},

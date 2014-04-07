@@ -66,53 +66,19 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                             store.clearFilter(true);
                             store.filter("form_id", "kasmasuk");
                         },
-//                        select: function(combo, rec, eOpt) {
-//                            var store = this.up('form').getForm().findField('namaKd').getStore();
-//                            this.up('form').getForm().findField('namaKd').show();
-//                            this.up('form').getForm().findField('namaKd').setReadOnly(false);
-//                            this.up('form').getForm().findField('namaKd').reset();
-//                            store.clearFilter(true);
-//                            store.filter('kp_id', combo.getValue());
-//                            store.load();
-//                        }
+                        select: function(combo, rec, eOpt) {
+                            var store = this.up('form').getForm().findField('kas_dtlkeperluan').getStore();
+                            this.up('form').getForm().findField('kas_dtlkeperluan').show();
+                            this.up('form').getForm().findField('kas_dtlkeperluan').setReadOnly(false);
+                            this.up('form').getForm().findField('kas_dtlkeperluan').reset();
+                            store.clearFilter(true);
+                            store.filter('kp_id', combo.getValue());
+                            store.load();
+                        }
                     },
-//                    onTrigger2Click: function() {
-//                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
-//                            border: true,
-//                            region: 'center'
-//                        }),
-//                        mbkDtGrid = new Ext.widget('shared.gkmasterdetailgrid', {
-//                            region: 'east',
-//                            border: true,
-//                            width: 290,
-//                            split: true
-//                        }),
-//                        store = mbkGrid.getStore();
-//                        var win = new Ext.widget('shared.newwindow', {
-//                            title: 'DAFTAR KEPERLUAN',
-//                            width: 700,
-//                            height: 300,
-//                            border: false,
-//                            layout: 'border',
-//                            items: [
-//                                mbkGrid, mbkDtGrid
-//                            ],
-//                            buttons: [
-//                                {
-//                                    text: 'Simpan',
-//                                    itemId: 'dtKeperluanSave'
-//                                }
-//                            ]
-//                        });
-//
-//                        var store = mbkGrid.getStore();
-//
-//
-//                        store.clearFilter(true);
-//                        store.filter('form_id', 'kasmasuk');
-//                        mbkGrid.down('#keperluanForm').setValue('kasmasuk');
-//                        win.show();
-//                    }
+                    onTrigger2Click: function() {
+                        var win = Ext.widget('ksmasuk.ksgroupkpwin');
+                    }
                 },
                 {
                     xtype: 'combobox',
@@ -121,40 +87,40 @@ Ext.define('GlApp.view.ksmasuk.KsMasukForm', {
                     readOnly: true,
                     triggerAction: 'all',
                     minChars: 2,
-//                    store: 'DetailKpStore',
-                    displayField: 'namaAkun',
+                    store: 'ksmasuk.ListAkunGkStore',
+                    displayField: 'akun_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
-//                    listeners: {
-//                        select: function() {
-//                            var val = this.getValue();
-//                            if (val === 980 || val === 981 || val === 982) {
-//                                this.up('form').getForm().findField('noDetilKpr').show();
-//                                var jenis = this.getValue(),
-//                                        jenis_val = jenis === 980 ? 1 : (jenis === 981 ? 2 : 3),
-//                                        store = this.up('form').getForm().findField('noDetilKpr').getStore(),
-//                                        filterCollection = [];
-//
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'mt_cabang',
-//                                    value: userCabang
-//                                });
-//                                filterCollection.push(statusFilter);
-//
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'mt_jenis',
-//                                    value: jenis_val
-//                                });
-//                                filterCollection.push(statusFilter);
-//
-//                                store.clearFilter(true);
-//                                store.filter(filterCollection);
-//                            } else {
-//                                this.up('form').getForm().findField('noDetilKpr').hide();
-//
-//                            }
-//                        }
-//                    }
+                    listeners: {
+                        select: function() {
+                            var val = this.getValue();
+                            if (val === 980 || val === 981 || val === 982) {
+                                this.up('form').getForm().findField('kas_dtlkeperluanext').show();
+                                var jenis = this.getValue(),
+                                        jenis_val = jenis === 980 ? 1 : (jenis === 981 ? 2 : 3),
+                                        store = this.up('form').getForm().findField('kas_dtlkeperluanext').getStore(),
+                                        filterCollection = [];
+
+                                var statusFilter = new Ext.util.Filter({
+                                    property: 'mt_cabang',
+                                    value: CABANG_ID
+                                });
+                                filterCollection.push(statusFilter);
+
+                                var statusFilter = new Ext.util.Filter({
+                                    property: 'mt_jenis',
+                                    value: jenis_val
+                                });
+                                filterCollection.push(statusFilter);
+
+                                store.clearFilter(true);
+                                store.filter(filterCollection);
+                            } else {
+                                this.up('form').getForm().findField('kas_dtlkeperluanext').hide();
+
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',

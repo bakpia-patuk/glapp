@@ -91,53 +91,19 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                             combo.getStore().clearFilter(true);
                             combo.getStore().filter('form_id', 'mintakasdiv');
                         },
-//                        select: function(combo, rec, eOpt) {
-//                            var store = this.up('form').getForm().findField('mk_detail').getStore();
-//                            this.up('form').getForm().findField('mk_detail').show();
-//                            this.up('form').getForm().findField('mk_detail').setReadOnly(false);
-//                            this.up('form').getForm().findField('mk_detail').reset();
-//                            store.clearFilter(true);
-//                            store.filter('kp_id', combo.getValue());
-//                            store.load();
-//                        }
+                        select: function(combo, rec, eOpt) {
+                            var store = this.up('form').getForm().findField('mk_detail').getStore();
+                            this.up('form').getForm().findField('mk_detail').show();
+                            this.up('form').getForm().findField('mk_detail').setReadOnly(false);
+                            this.up('form').getForm().findField('mk_detail').reset();
+                            store.clearFilter(true);
+                            store.filter('kp_id', combo.getValue());
+                            store.load();
+                        }
                     },
-//                    onTrigger2Click: function() {
-//                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
-//                            border: true,
-//                            region: 'center'
-//                        }),
-//                        mbkDtGrid = new Ext.widget('shared.gkmasterdetailgrid', {
-//                            region: 'east',
-//                            border: true,
-//                            width: 290,
-//                            split: true
-//                        }),
-//                        store = mbkGrid.getStore();
-//                        var win = new Ext.widget('shared.newwindow', {
-//                            title: 'DAFTAR KEPERLUAN',
-//                            width: 700,
-//                            height: 300,
-//                            border: false,
-//                            layout: 'border',
-//                            items: [
-//                                mbkGrid, mbkDtGrid
-//                            ],
-//                            buttons: [
-//                                {
-//                                    text: 'Simpan',
-//                                    itemId: 'dtKeperluanSave'
-//                                }
-//                            ]
-//                        });
-//
-//                        var store = mbkGrid.getStore();
-//
-//
-//                        store.clearFilter(true);
-//                        store.filter('form_id', 'mintakasdiv');
-//                        mbkGrid.down('#keperluanForm').setValue('mintakasdiv');
-//                        win.show();
-//                    }
+                    onTrigger2Click: function() {
+                        var win = Ext.widget('ksmintakas.ksgroupkpwin');
+                    }
                 },
                 {
                     xtype: 'combobox',
@@ -148,73 +114,73 @@ Ext.define('GlApp.view.ksmintakas.KsMintaKasForm', {
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DetailKpStore',
+                    store: 'ksmintakas.ListAkunGkStore',
                     readOnly: false,
-                    displayField: 'namaAkun',
+                    displayField: 'akun_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
                     matchFieldWidth: false,
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        select: function() {
-//                            var val = this.getValue(),
-//                                    form = this.up('form');
-//                            if (val === 980 || val === 981 || val === 982) {
-//                                this.up('form').getForm().findField('noDetilKpr').show();
-//                                var jenis = this.getValue(),
-//                                        jenis_val = jenis === 980 ? 1 : (jenis === 981 ? 2 : 3),
-//                                        store = this.up('form').getForm().findField('noDetilKpr').getStore(),
-//                                        filterCollection = [];
-//
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'mt_cabang',
-//                                    value: userCabang
-//                                });
-//                                filterCollection.push(statusFilter);
-//
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'mt_jenis',
-//                                    value: jenis_val
-//                                });
-//                                filterCollection.push(statusFilter);
-//
-//                                store.clearFilter(true);
-//                                store.filter(filterCollection);
-//                                form.down('#mkr_pemeriksaan').disable();
-//                                form.down('#mkr_pemeriksaan').hide();
-//
-//                                form.down('#mkr_namapasien').disable();
-//                                form.down('#mkr_namapasien').hide();
-//
-//                                form.down('#mkr_rujukanke').disable();
-//                                form.down('#mkr_rujukanke').hide();
-//                                
-//                            } else if (val === 877) {
-//                                form.down('#mkr_pemeriksaan').enable();
-//                                form.down('#mkr_pemeriksaan').show();
-//
-//                                form.down('#mkr_namapasien').enable();
-//                                form.down('#mkr_namapasien').show();
-//
-//                                form.down('#mkr_rujukanke').enable();
-//                                form.down('#mkr_rujukanke').show();
-//                            } else {
-//                                form.down('#mkr_pemeriksaan').disable();
-//                                form.down('#mkr_pemeriksaan').hide();
-//
-//                                form.down('#mkr_namapasien').disable();
-//                                form.down('#mkr_namapasien').hide();
-//
-//                                form.down('#mkr_rujukanke').disable();
-//                                form.down('#mkr_rujukanke').hide();
-//                                
-//                                this.up('form').getForm().findField('noDetilKpr').hide();
-//
-//                            }
-//                        }
-//                    }
+                    listeners: {
+                        select: function() {
+                            var val = this.getValue(),
+                                    form = this.up('form');
+                            if (val === 980 || val === 981 || val === 982) {
+                                this.up('form').getForm().findField('mk_detailext').show();
+                                var jenis = this.getValue(),
+                                        jenis_val = jenis === 980 ? 1 : (jenis === 981 ? 2 : 3),
+                                        store = this.up('form').getForm().findField('mk_detailext').getStore(),
+                                        filterCollection = [];
+
+                                var statusFilter = new Ext.util.Filter({
+                                    property: 'mt_cabang',
+                                    value: CABANG_ID
+                                });
+                                filterCollection.push(statusFilter);
+
+                                var statusFilter = new Ext.util.Filter({
+                                    property: 'mt_jenis',
+                                    value: jenis_val
+                                });
+                                filterCollection.push(statusFilter);
+
+                                store.clearFilter(true);
+                                store.filter(filterCollection);
+                                form.down('#mkr_pemeriksaan').disable();
+                                form.down('#mkr_pemeriksaan').hide();
+
+                                form.down('#mkr_namapasien').disable();
+                                form.down('#mkr_namapasien').hide();
+
+                                form.down('#mkr_rujukanke').disable();
+                                form.down('#mkr_rujukanke').hide();
+                                
+                            } else if (val === 877) {
+                                form.down('#mkr_pemeriksaan').enable();
+                                form.down('#mkr_pemeriksaan').show();
+
+                                form.down('#mkr_namapasien').enable();
+                                form.down('#mkr_namapasien').show();
+
+                                form.down('#mkr_rujukanke').enable();
+                                form.down('#mkr_rujukanke').show();
+                            } else {
+                                form.down('#mkr_pemeriksaan').disable();
+                                form.down('#mkr_pemeriksaan').hide();
+
+                                form.down('#mkr_namapasien').disable();
+                                form.down('#mkr_namapasien').hide();
+
+                                form.down('#mkr_rujukanke').disable();
+                                form.down('#mkr_rujukanke').hide();
+                                
+                                this.up('form').getForm().findField('mk_detailext').hide();
+
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
