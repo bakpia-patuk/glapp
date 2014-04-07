@@ -29,6 +29,7 @@ Ext.define('GlApp.view.bkanggaran.SupplierPanel', {
                     maxHeight: 200,
                     title: 'FORM DETAIL ANGGARAN',
                     collapsible: true,
+                    collapsed: true,
                     ui: 'orange-panel',
                     layout: 'fit',
                     xtype: 'bkanggaran.bkanggarandetailgrid'
