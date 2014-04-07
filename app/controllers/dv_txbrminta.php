@@ -248,6 +248,7 @@ class Dv_txbrminta extends Auth_Controller {
                     'pengadaanNo' => $row->pengdiv_id,
                     'pengadaanKode' => $this->Dv_txbrminta_model->get_detail('id', $row->pengdiv_id, 'trx_pengdivisi')->pengdiv_no,
                     'barangId' => $det_barang->id,
+                    'barangCabangId' => $row->barang_id,
                     'barangName' => $det_barang->mi_name,
                     'qtyMinta' => $row->barang_qty_minta,
                     'qtyKirim' => $row->barang_qty_kirim,

@@ -386,7 +386,7 @@ class Gd_txfaktur extends Auth_Controller {
         $detail_faktur = $this->Gdtxfaktur_model->get_detail('id', $id, 'trx_faktur');
 
         $data_minta_anggaran = array(
-            'id' => $detail_faktur->faktur_tgl,
+            //'id' => $detail_faktur->faktur_tgl,
             'tgl_trx' => mdate('%Y-%m-%d %H:%i:%s', now()),
             'trx_cabangid' => $this->user->cabang_id,
             'trx_type' => 1,
@@ -402,9 +402,9 @@ class Gd_txfaktur extends Auth_Controller {
         );
 
         $id_ma = $this->Gdtxfaktur_model->insert($data_minta_anggaran, 'trx_agrplan');
-
+        
         $params = array();
-        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_ma);
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_ma.'.'.$this->user->cabang_id);
         $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'trx_agrplan');
         foreach ($data_po as $key) {
 

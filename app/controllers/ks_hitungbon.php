@@ -14,6 +14,7 @@ class Ks_hitungbon extends Auth_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('Kshitungbon_model');
+        $this->Kshitungbon_model->cms_db = $this->load->database('outgoing', TRUE);
     }
     
     function trx_kas_list() {
@@ -59,7 +60,7 @@ class Ks_hitungbon extends Auth_Controller {
 //            }
 //        }
 
-        $result = $this->Kshitungbon_model->gets($params, NULL, 'trx_detail_kasbon');
+        $result = $this->Kshitungbon_model->gets($params, NULL, 'detail_kas_bon');
 
         foreach ($result as $row) {
             $listkb[] = array(
@@ -123,11 +124,60 @@ class Ks_hitungbon extends Auth_Controller {
 
         $opt[] = array('field' => 'kasbon_id', 'param' => 'where', 'operator' => '', 'value' => $kasbon_id);
         if ($this->Kshitungbon_model->update($data_detail_kab, $opt, NULL, 'detail_kas_bon')) {
+            $params = array();
+            $params[] = array('field' => 'kasbon_id', 'param' => 'where', 'operator' => '', 'value' => $kasbon_id);
+            $data_po = $this->Gdtt_model->gets($params, NULL, 'detail_kas_bon');
+            foreach ($data_po as $key) {
+                $data_json = json_encode($key);
+
+                $data = array();
+
+                $data['jumlah'] = 1;
+
+                $data['tujuan'] = 1;
+                $data['id_cabang'] = $this->user->cabang_id;
+
+                $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                $data['primary_key'] = $key->id;
+                $data['table_name'] = 'detail_kas_bon';
+
+                $this->Gdtt_model->insert_outgoing($data, 'detail');
+            }
+
             $data_kas = array(
                 'kas_kbapproval' => 1
             );
             $opts[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $kasbon_id);
             if ($this->Kshitungbon_model->update($data_kas, $opts, NULL, 'trx_kas')) {
+
+                $params = array();
+                $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $kasbon_id);
+                $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_kas');
+                foreach ($data_po as $key) {
+                    $data_json = json_encode($key);
+
+                    $data = array();
+
+                    $data['jumlah'] = 1;
+
+                    $data['tujuan'] = 1;
+                    $data['id_cabang'] = $this->user->cabang_id;
+
+                    $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+                    $data = array();
+                    $data['data'] = $data_json;
+                    $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                    $data['primary_key'] = $key->id;
+                    $data['table_name'] = 'trx_kas';
+
+                    $this->Gdtt_model->insert_outgoing($data, 'detail');
+                }
+
                 $detail_kb = $this->Kshitungbon_model->get_detail('id', $kasbon_id, 'trx_kas');
 
                 $data_kas = array(
@@ -154,6 +204,25 @@ class Ks_hitungbon extends Auth_Controller {
                 );
 
                 $id = $this->Kshitungbon_model->insert($data_kas, 'trx_kas');
+                $data_json = json_encode($data_kas);
+
+                $data = array();
+
+                $data['jumlah'] = 1;
+
+                $data['tujuan'] = 1;
+                $data['id_cabang'] = $this->user->cabang_id;
+
+                $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                $data['primary_key'] = $id;
+                $data['table_name'] = 'trx_kas';
+
+                $this->Gdtt_model->insert_outgoing($data, 'detail');
+
                 if ($id != NULL) {
                     echo json_encode(array('success' => 'true', 'idKb' => $id, 'title' => 'Info', 'message' => "SUKSES"));
                 } else {
@@ -172,7 +241,57 @@ class Ks_hitungbon extends Auth_Controller {
 
         $opt[] = array('field' => 'kasbon_id', 'param' => 'where', 'operator' => '', 'value' => $idKb);
         $opt[] = array('field' => 'appr_status', 'param' => 'where', 'operator' => '', 'value' => 0);
-        $this->Kshitungbon_model->delete($opt, NULL, 'trx_detail_kasbon');
+        $this->Kshitungbon_model->delete($opt, NULL, 'detail_kas_bon');
         echo json_encode(array('success' => 'true', 'title' => 'Info', 'message' => 'Transaksi Batal'));
+    }
+
+    public function detail_kb() {
+        $datestring = "%Y-%m-%d %H:%i:%s";
+        $time = date('H:i:s');
+
+
+        $date = strtotime($this->input->post('tglTransaksi') . ' ' . $time);
+        $jumlah = $this->Kshitungbon_model->money_formatter($this->input->post('jumlah_trx'));
+        $jumlah_kb = $this->Kshitungbon_model->money_formatter($this->input->post('selisih'));
+        $tgl = mdate($datestring, $date);
+        $keterangan = $this->input->post('keterangan');
+        $idKb = $this->input->post('kasbon_id');
+        $id = $this->input->post('id');
+        
+        $data_detail_kab = array(
+            'jumlah_trx' => $jumlah,
+            'keterangan' => $keterangan,
+            'cabang_id'=> $this->user->cabang_id
+        );
+
+        if ($id == "") {
+            $new_data = array(
+                'kasbon_id' => $idKb,
+                'tgl_trx' => $tgl,
+                'created' => mdate('%Y-%m-%d %H:%i:%s', now()),
+                'modified' => mdate('%Y-%m-%d %H:%i:%s', now())
+            );
+
+            $insert_kb = array_merge($data_detail_kab, $new_data);
+
+            if ($this->Kshitungbon_model->insert($insert_kb, 'detail_kas_bon')) {
+                echo json_encode(array('success' => 'true', 'idKb' => $idKb, 'jumlahKb' => $jumlah_kb, 'title' => 'Info', 'message' => 'data ditambahkan'));
+            } else {
+                echo json_encode(array('success' => 'false', 'idKb' => $idKb, 'jumlahKb' => $jumlah_kb, 'title' => 'Info', 'message' => $this->catch_db_err()));
+            }
+        } else {
+            $edit_data = array(
+                'modified' => mdate('%Y-%m-%d %H:%i:%s', now())
+            );
+
+            $update_kb = array_merge($data_detail_kab, $edit_data);
+            $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+
+            if ($this->Kshitungbon_model->update($update_kb, $opt, NULL, 'detail_kas_bon')) {
+                echo json_encode(array('success' => 'true', 'idKb' => $idKb, 'jumlahKb' => $jumlah_kb, 'title' => 'Info', 'message' => 'data ditambahkan'));
+            } else {
+                echo json_encode(array('success' => 'false', 'idKb' => $idKb, 'jumlahKb' => $jumlah_kb, 'title' => 'Info', 'message' => $this->catch_db_err()));
+            }
+        }
     }
 }

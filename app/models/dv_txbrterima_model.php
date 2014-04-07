@@ -7,7 +7,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @author Coepoe
  */
-class Dv_txbrkeluar_model extends MY_Model {
+class Dv_txbrterima_model extends MY_Model {
 
     function __construct() {
         parent::__construct();
@@ -70,24 +70,6 @@ class Dv_txbrkeluar_model extends MY_Model {
             return $query->result();
         } else {
             return false;
-        }
-    }
-
-     public function get_item_div($record, $id_barang, $type) {
-        $tablename = 'trx_stok_div';
-
-        $this->db->select_sum('trx_stok');
-        $this->db->from($tablename);
-        if ($record != NULL) {
-            foreach ($record as $data) {
-                $this->db->$data['param']($data['field'] . $data['operator'], $data['value']);
-            }
-        }
-        $this->db->where('id_barang', $id_barang);
-        $this->db->where('jenis_trx', $type);
-        $query = $this->db->get();
-        if ($query->num_rows() > 0) {
-            return $query->row()->trx_stok;
         }
     }
 }

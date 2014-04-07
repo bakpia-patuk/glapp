@@ -1,9 +1,9 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.divbarangkeluar.newWindow', {
+Ext.define('GlApp.view.dvtxbrkeluar.newWindow', {
     extend: 'Ext.window.Window',
-    alias: 'widget.divbarangkeluar.newwindow',
+    alias: 'widget.dvtxbrkeluar.newwindow',
     modal: true,
     resizable: false,
     border: true,

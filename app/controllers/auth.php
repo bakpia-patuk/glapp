@@ -28,6 +28,7 @@ class Auth extends MY_Controller {
         $data['cabang_name'] = "";
         $data['cabang_id'] = "0";
         $data['ttd_string'] = '';
+        $data['divisi_id'] = '0';
         $this->load->view('app_page', $data);
     }
 

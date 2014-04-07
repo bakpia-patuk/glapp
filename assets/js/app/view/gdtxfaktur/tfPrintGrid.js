@@ -79,6 +79,7 @@ Ext.define('GlApp.view.gdtxfaktur.tfPrintGrid', {
                 {
                     iconCls: 'icon-btn-print',
                     ui: 'blue-button',
+                    text:'print',
                     action: 'cetakFkt'
                 },
                 '-',

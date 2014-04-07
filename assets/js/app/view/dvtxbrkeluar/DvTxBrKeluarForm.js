@@ -51,6 +51,12 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     hidden: true
                 },
                 {
+                    xtype: 'textfield',
+                    fieldLabel: 'Id Ruang ',
+                    name: 'barangCabangId',
+                    hidden: true
+                },
+                {
                     xtype: 'datefield',
                     fieldLabel: 'Tanggal ',
                     name: 'tglTransaksi',

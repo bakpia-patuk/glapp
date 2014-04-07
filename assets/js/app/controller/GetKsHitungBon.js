@@ -104,7 +104,7 @@ Ext.define('GlApp.controller.GetKsHitungBon', {
                         store = grid.getStore();
                 
                     Ext.Ajax.request({
-                        url: BASE_PATH + 'ks_hitungbon/add_detailkasbon',
+                        url: BASE_PATH + 'ks_hitungbon/detail_kb',
                         method: 'POST',
                         params: form.getValues(),
                         callback: function (options, success, response) {
@@ -119,11 +119,11 @@ Ext.define('GlApp.controller.GetKsHitungBon', {
                                 });
 
                                 store.clearFilter(true);
-                                store.filter('kasbon_id', resp.kasbon_id);
+                                store.filter('kasbon_id', resp.idKb);
                                 grid.getSelectionModel().clearSelections();
                                 form.getForm().reset();
-                                form.getForm().findField('kasbon_id').setValue(resp.kasbon_id);
-                                form.getForm().findField('kas_jumlah').setValue(resp.kas_jumlah);
+                                form.getForm().findField('kasbon_id').setValue(resp.idKb);
+                                form.getForm().findField('kas_jumlah').setValue(resp.jumlahKb);
                             } else {
                                 Ext.MessageBox.show({
                                     title: resp.title,
@@ -178,17 +178,18 @@ Ext.define('GlApp.controller.GetKsHitungBon', {
                         grid = this.getKasbonGrid(),
                         store = grid.getStore(),
                         kasbon_id = form.getForm().findField('kasbon_id').getValue(),
+                        jumlahKbL = form.getForm().findField('kas_jumlah').getValue(),
                         kbGrid = this.getKsHitungBonGrid(),
                         kbdGrid = this.getKsHitungBonDetailGrid();
 
                     Ext.Ajax.request({
                         url: BASE_PATH + 'ks_hitungbon/approve_kasbon',
                         method: 'POST',
-                        params: {idKb : id},
+                        params: {kasbon_id : kasbon_id,jumlahKbL:jumlahKbL},
                         callback: function (options, success, response) {
                             var resp = Ext.decode(response.responseText);
 
-                            if (resp.success === 'true') {
+                            if (resp.success == 'true') {
                                 itemkasbonwin.close();
                                 kbGrid.getStore().load();
                                 kbGrid.getSelectionModel().clearSelections();
@@ -223,7 +224,7 @@ Ext.define('GlApp.controller.GetKsHitungBon', {
 
                             if (resp.success === 'true') {
                                 store.removeAll();
-                                itemkasbonwin.up('window').close();
+                                itemkasbonwin.close();
                             } else {
                                 Ext.MessageBox.show({
                                     title: resp.title,

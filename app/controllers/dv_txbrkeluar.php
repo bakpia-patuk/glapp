@@ -21,17 +21,20 @@ class Dv_txbrkeluar extends Auth_Controller {
         $id_barang = $this->input->post('pengBarang');
         $qty_kirim = $this->input->post('jumlah');
         $ruang_keluar = $this->input->post('idRuang');
-
-        $checking_stok = $this->Dv_txbrkeluar_model->get_last_stockdiv($id_barang, $ruang_keluar);
+        $record[] = array('field' => 'mi_id', 'param' => 'where', 'operator' => '', 'value' => $id_barang);
+        $record[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $user->cabang_id);
+        
+        $det_barang = $this->Dv_txbrkeluar_model->get($record, null, 'dt_item_cabang' );
+        $checking_stok = $this->Dv_txbrkeluar_model->get_last_stockdiv($det_barang->id, $ruang_keluar);
 
         if ($checking_stok > 0) {
             if ($qty_kirim > $checking_stok) {
                 echo json_encode(array('success' => 'false', 'title' => 'Error', 'msg' => 'Jumlah yang anda keluarkan melebihi jumlah stock'));
                 return;
             } else {
-                $stok_max_min = $this->Dv_txbrkeluar_model->get_detail('id', $id_barang, 'master_item_' . $user->cabang_id); //CEK STOK MAX MIN
+                $stok_max_min = $this->Dv_txbrkeluar_model->get_detail('id', $det_barang->id, 'dt_item_cabang'); //CEK STOK MAX MIN
 
-                if ($checking_stok < $stok_max_min->mi_minstock) {
+                if ($checking_stok < $stok_max_min->stock_min) {
                     echo json_encode(array('success' => 'false', 'title' => 'Error', 'msg' => 'Barang stock anda di bawah stok minimal'));
                     return;
                 } else {
@@ -43,6 +46,7 @@ class Dv_txbrkeluar extends Auth_Controller {
         }
     }
     public function getsdiv_lot() {
+        $user = $this->ion_auth->user()->row();
         $records = isset($_GET['filter']);
         $record = array();
         $listpo = array();
@@ -59,7 +63,7 @@ class Dv_txbrkeluar extends Auth_Controller {
             }
         }
 
-        $result = $this->Dv_txbrkeluar_model->getsdiv_lot($record, NULL, 'trx_stock_lotdiv');
+        $result = $this->Dv_txbrkeluar_model->getsdiv_lot($record, NULL, 'trx_stock_lot',$user->cabang_id);
 
         if ($result != NULL) {
             foreach ($result as $row) {
@@ -68,11 +72,11 @@ class Dv_txbrkeluar extends Auth_Controller {
                 $listpo[] = array(
                     'id' => $row->id,
                     'noLot' => $row->stl_nolot,
-                    'idRuang' => $row->stl_ruang_id,
+                    'idRuang' => $row->stl_ruangid,
                     'idBarang' => $row->stl_barangid,
                     'namaBarang' => $param_barang->mi_name,
                     'qtyLot' => $row->stl_barangqty,
-                    'qtyKeluar' => $row->stl_barangkeluar,
+                    'qtyKeluar' => $row->stl_qtylast,
                     'qtyOld' => $row->stl_barangqty,
                     'tglEd' => $row->stl_baranged,
                     'noBarcode' => $row->stl_barcode,

@@ -15,8 +15,8 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
         'dvtxbrkeluar.DvTxBrKeluarForm',
         'dvtxbrkeluar.DvTxBrKeluarGrid',
         'dvtxbrkeluar.DvTxBrKeluarDetailGrid',
-//        'dvtxbrkeluar.divBkEdGrid',
-//        'dvtxbrkeluar.newWindow'
+       'dvtxbrkeluar.divBkEdGrid',
+       'dvtxbrkeluar.newWindow'
     ],
     refs: [
         {ref: 'DvTxBrKeluarForm', selector: '#dvtxbrkeluarform'},
@@ -106,6 +106,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                     form.findField('pengBarang').getStore().load();
                     if (records[0]) {
                         form.findField('pengBarang').setValue(records[0].get('barangId'));
+                        form.findField('barangCabangId').setValue(records[0].get('barangCabangId'));
                         form.findField('jumlah').setValue(records[0].get('qtyMinta'));
                         form.findField('jumlahOld').setValue(records[0].get('qtyMinta'));
                     }
@@ -120,16 +121,16 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                 idRuang = form.findField('idRuang').getValue(),
                 divisi = form.findField('divisi').getValue(),
                 ruangan = form.findField('ruangan').getValue(),
-                pengBarang = form.findField('pengBarang').getValue(),
+                pengBarang = form.findField('barangCabangId').getValue(),
                 jumlah = form.findField('jumlah').getValue(),
                 jumlahOld = form.findField('jumlahOld').getValue(),
-                grid = new Ext.widget('divbarangkeluar.divbkedgrid', {
+                grid = new Ext.widget('dvtxbrkeluar.divbkedgrid', {
                     height: 267
                 }),
         store = grid.getStore(),
                 filterCollection = [];
 
-        var win = new Ext.widget('divbarangkeluar.newwindow', {
+        var win = new Ext.widget('dvtxbrkeluar.newwindow', {
             layout: 'hbox',
             align: 'stretch',
             border: false,
@@ -217,7 +218,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
         formGrid.findField('jumlahOld').setValue(jumlahOld);
 
         var statusFilter = new Ext.util.Filter({
-            property: 'stl_ruang_id',
+            property: 'stl_ruangid',
             value: idRuang
         });
         filterCollection.push(statusFilter);

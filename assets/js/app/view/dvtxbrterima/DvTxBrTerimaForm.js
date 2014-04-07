@@ -27,7 +27,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'dmbSave'
+                   action: 'dmbSave'
                 },
                 {
                     xtype: 'button',
@@ -35,7 +35,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     text: 'Baru',
                     hidden: true,
                     iconCls: 'icon-btn-add',
-//                    action: 'dmbNew'
+                   action: 'dmbNew'
                 }
             ],
             items: [
@@ -43,6 +43,12 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Id ',
                     name: 'id',
+                    hidden: true
+                },
+                 {
+                    xtype: 'textfield',
+                    fieldLabel: 'Id ',
+                    name: 'barangCabangId',
                     hidden: true
                 },
                 {
@@ -62,7 +68,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore',
+                   store: 'dvtxbrterima.DivisiStore',
                     displayField: 'divisiName',
                     valueField: 'divisiId',
                     emptyText: 'Pilih Divisi',
@@ -71,35 +77,35 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                            cmb.setValue(parseInt(userDivisi));
-//                            cmb.setReadOnly(true);
-//                        },
-//                        'change': function(cmb, rec, opt){
-//                            var myVal = cmb.getValue(),
-//                                ruanganStore = this.up('form').getForm().findField('ruangan').getStore(), 
-//                                filterCollection = [];
-//
-//                            this.up('form').getForm().findField('ruangan').setReadOnly(false);
-//                            
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'divisi_code',
-//                                value: myVal
-//                            });
-//                            filterCollection.push(statusFilter);
-//                    
-//                            ruanganStore.clearFilter(true);
-//                            ruanganStore.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       'afterrender': function(cmb, rec, opt) {
+                           cmb.getStore().load();
+                           cmb.setValue(parseInt(USER_DIVISI));
+                           cmb.setReadOnly(true);
+                       },
+                       'change': function(cmb, rec, opt){
+                           var myVal = cmb.getValue(),
+                               ruanganStore = this.up('form').getForm().findField('ruangan').getStore(), 
+                               filterCollection = [];
+
+                           this.up('form').getForm().findField('ruangan').setReadOnly(false);
+                           
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'cabang_id',
+                               value: CABANG_ID
+                           });
+                           filterCollection.push(statusFilter);
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'divisi_code',
+                               value: myVal
+                           });
+                           filterCollection.push(statusFilter);
+                   
+                           ruanganStore.clearFilter(true);
+                           ruanganStore.filter(filterCollection);
+                       }
+                   }
                 },
                 {
                     xtype: 'combobox',
@@ -110,7 +116,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiRuanganStore',
+                   store: 'dvtxbrterima.DivisiRuanganStore',
                     displayField: 'ruangName',
                     valueField: 'id',
                     emptyText: 'Pilih Ruangan',
@@ -131,7 +137,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     hideTrigger: true,
                     mode: 'remote',
                     minChars: 2,
-//                    store: 'ItemStore',
+                   store: 'dvtxbrterima.ItemStore',
                     displayField: 'itemName',
                     valueField: 'id',
                     forceSelection: true,
@@ -150,13 +156,13 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     readOnly: true,
                     name: 'jumlah',
                     allowBlank: false,
-//                    listeners:{
-//                        'change' : function() {
-//                            if(this.getValue() !== 0) {
-//                                this.up('form').down('#pengDivBarangMasuk').enable();
-//                            }
-//                        }
-//                    }
+                   listeners:{
+                       'change' : function() {
+                           if(this.getValue() !== 0) {
+                               this.up('form').down('#pengDivBarangMasuk').enable();
+                           }
+                       }
+                   }
                 },
                 {
                     xtype: 'numberfield',
@@ -187,7 +193,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                             disabled: true,
                             text: 'OK',
                             margins: '0 0 0 5',
-//                            action: 'pengDivBarangMasuk'
+                           action: 'pengDivBarangMasuk'
                         }
                     ]
                 }
