@@ -96,7 +96,6 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
                     dataIndex: 'no_rekbg'
                 },
                 {
-                    xtype: 'datecolumn',
                     width: 120,
                     text: 'JTH TEMPO BG',
                     dataIndex: 'bg_ed'
