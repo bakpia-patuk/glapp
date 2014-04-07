@@ -18,8 +18,6 @@ class Bk_rencanaagr extends Auth_Controller {
 
     public function ma_non_tree() {
         $detail_anggaran = array();
-
-//        $cabang = $this->user->cabang_id;
         $node = $this->input->post('node');
 
         if ($node == 0) {
@@ -39,26 +37,17 @@ class Bk_rencanaagr extends Auth_Controller {
 
     public function ma_tree() {
         $detail_anggaran = array();
-
-        /* $options['sortBy'] = 'akun_head_status';
-          $options['sortBy'] = 'akun_code';
-          $options['sortDirection'] = 'ASC';
-          $result = $this->Bkrencanaagr_model->gets($params, $options, $tablename); */
-        $cabang = $this->user->cabang_id;
         $node = $this->input->post('node');
 
         if ($node == 0) {
-            $rec[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $cabang);
-
-            $cabang_result = $this->Bkrencanaagr_model->gets($rec, NULL, 'dt_cabang');
-
-            foreach ($cabang_result as $row) {
-                $detail_anggaran[] = array(
-                    'id' => $row->id,
-                    'name' => $row->cabang_alias,
-                    'leaf' => false,
-                    'expanded' => false
-                );
+            $detail_anggaran = $this->Bkrencanaagr_model->list_cabang();
+        } else {
+            if (!$this->__check_node($node)) {
+                $data = $this->__check_node($node);
+                $detail_anggaran = $this->Bkrencanaagr_model->type_bayar($node, $data);
+            } else {
+                $data = $this->__check_node($node);
+                $detail_anggaran = $this->Bkrencanaagr_model->list_ma($node, $data);
             }
         }
 
@@ -110,26 +99,6 @@ class Bk_rencanaagr extends Auth_Controller {
 //        }
     }
 
-    function list_tt($id, $type) {
-        $tablename = 'trx_faktur_detail';
-        $record[] = array('field' => 'trx_fakturid', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $opt['groupBy'] = 'trx_ttid';
-        $data = $this->Bkrencanaagr_model->gets($record, $opt, $tablename);
-
-        if ($type == 0) {
-            return $data;
-        } else {
-            $tt = "";
-            foreach ($data as $row) {
-                $tt_no = $this->Bkrencanaagr_model->get_detail('id', $row->trx_ttid, 'trx_tt')->tt_no;
-
-                $tt .= $tt_no . ', ';
-            }
-
-            return $tt;
-        }
-    }
-
     function no_rekbg($id, $type_bayar) {
         $det_fkt = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_faktur');
         if ($type_bayar == 0 && $det_fkt->faktur_bgstatus == 1) {
@@ -158,16 +127,15 @@ class Bk_rencanaagr extends Auth_Controller {
 
     function app_rencanaanggaran() {
         $id = $this->input->post('id');
-
         $update = array(
             'app_status' => 1
         );
         $upd[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $this->Bkrencanaagr_model->update($update, $upd, NULL, 'trx_agrplan');
 
-        $ma_detail = $this->Bkrencanaagr_model->get_detail('ma_id', $id, 'trx_data_nonfaktur');
+        $ma_detail = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_agrplan');
 
-        if ($ma_detail->cara_bayar == 1) {
+        if ($ma_detail->trx_carabayar == 2) {
             if (!$this->add_permintaan_divisi($id)) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'Info'));
                 return;
@@ -178,27 +146,30 @@ class Bk_rencanaagr extends Auth_Controller {
     }
 
     function add_permintaan_divisi($id) {
-        $dt_ma = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_agrplan');
-//        var_dump($dt_ma->gr_keperluan);
-        $dt_nonfkt = $this->Bkrencanaagr_model->get_detail('ma_id', $id, 'trx_data_nonfaktur');
+        $ma = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_agrplan');
+        $dt_ma = $this->Bkrencanaagr_model->get_detail('agrplan_id', $id, 'trx_agrplan_detail');
         $datestring = '%Y-%m-%d %H:%i:%s';
         $keterangan = "";
-        if ($dt_ma->mkr_pemeriksaan != 0) {
-            $keterangan = "Rujukan a.n. " . $dt_ma->mkr_namapasien . " ke " . $dt_ma->mkr_rujukanke;
+        $last = $this->Bkrencanaagr_model->get_last('trx_minta_kas');
+
+        if ($dt_ma->agrplan_isrujukan != 0) {
+            $keterangan = "Rujukan a.n. " . $dt_ma->agrplan_pasien . " ke " . $dt_ma->agrplan_rujuk;
         } else {
-            $nama_akun = $this->Bkrencanaagr_model->get_detail('id', $dt_ma->dtl_keperluan, 'dt_akun')->akun_name;
-            $keterangan = $nama_akun . ', Ket. Tambahan: ' . $dt_ma->keterangan;
+            $nama_akun = $this->Bkrencanaagr_model->get_detail('id', $dt_ma->agrplan_kprdetail, 'dt_akun')->akun_name;
+            $keterangan = $nama_akun . ', Ket. Tambahan: ' . $dt_ma->agrplan_desc;
         }
+        
         $new = array(
+            'id' => $last . '.' . $ma->trx_cabangid,
             'tgl_trx' => mdate($datestring, now()),
-            'trx_divisi' => $dt_nonfkt->divisi,
-            'mk_keperluan' => $dt_ma->gr_keperluan,
-            'mk_detail' => $dt_ma->dtl_keperluan,
+            'trx_divisi' => $dt_ma->agrplan_divisi,
+            'mk_keperluan' => $dt_ma->agrplan_kpr,
+            'mk_detail' => $dt_ma->agrplan_kprdetail,
             'mk_detailext' => "",
             'mk_exttable' => "",
-            'mkr_pemeriksaan' => $dt_ma->mkr_pemeriksaan,
-            'mkr_namapasien' => $dt_ma->mkr_namapasien,
-            'mkr_rujukanke' => $dt_ma->mkr_rujukanke,
+            'mkr_pemeriksaan' => $dt_ma->agrplan_periksa,
+            'mkr_namapasien' => $dt_ma->agrplan_pasien,
+            'mkr_rujukanke' => $dt_ma->agrplan_rujuk,
             'trx_desc' => $keterangan,
             'trx_realisasi' => 0,
             'trx_realstatus' => 0,
@@ -206,7 +177,7 @@ class Bk_rencanaagr extends Auth_Controller {
             'trx_appr_peg' => 0,
             'created' => mdate($datestring, now()),
             'modified' => mdate($datestring, now()),
-            'cabang_id' => $this->user->cabang_id
+            'cabang_id' => $ma->trx_cabangid
         );
 
         if ($this->Bkrencanaagr_model->insert($new, 'trx_minta_kas')) {

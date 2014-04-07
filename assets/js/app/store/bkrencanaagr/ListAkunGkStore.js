@@ -33,7 +33,7 @@ Ext.define('GlApp.store.bkrencanaagr.ListAkunGkStore', {
     proxy: {
         success: true,
         type: 'ajax',
-        url: BASE_PATH + 'shared/list_akun_gr',
+        url: BASE_PATH + 'shared/get_detail_kp',
         reader: {
             type: 'json',
             root: 'data'

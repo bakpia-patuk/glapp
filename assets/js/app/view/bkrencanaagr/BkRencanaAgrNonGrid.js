@@ -77,13 +77,10 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrNonGrid', {
 
                                 if (resp.success === 'true') {
                                     Ext.Msg.alert('Info', 'Approval Sukses');
-                                    tree.store.setRootNode({idCabang: tree.down('#filterCbPusat2').getValue()});
+                                    tree.store.setRootNode({id: tree.down('#filterCbPusat2').getValue()});
                                 }
                             }
                         });
-
-//                        this.up('treepanel').store.setRootNode({idCabang: this.up('treepanel').down('#filterCbPusat2').getValue()});
-                        // this.up('treepanel').down('#filterCbPusat2').clearValue();
                     }
                 },
                 {
