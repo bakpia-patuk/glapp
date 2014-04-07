@@ -19,6 +19,27 @@ class Bk_rencanaagr extends Auth_Controller {
     public function ma_non_tree() {
         $detail_anggaran = array();
 
+//        $cabang = $this->user->cabang_id;
+        $node = $this->input->post('node');
+
+        if ($node == 0) {
+            $detail_anggaran = $this->Bkrencanaagr_model->list_cabang();
+        } else {
+            if (!$this->__check_node($node)) {
+                $data = $this->__check_node($node);
+                $detail_anggaran = $this->Bkrencanaagr_model->type_bayar($node, $data);
+            } else {
+                $data = $this->__check_node($node);
+                $detail_anggaran = $this->Bkrencanaagr_model->list_ma_non($node, $data);
+            }
+        }
+
+        echo json_encode($detail_anggaran);
+    }
+
+    public function ma_tree() {
+        $detail_anggaran = array();
+
         /* $options['sortBy'] = 'akun_head_status';
           $options['sortBy'] = 'akun_code';
           $options['sortDirection'] = 'ASC';
@@ -26,67 +47,46 @@ class Bk_rencanaagr extends Auth_Controller {
         $cabang = $this->user->cabang_id;
         $node = $this->input->post('node');
 
+        if ($node == 0) {
+            $rec[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $cabang);
+
+            $cabang_result = $this->Bkrencanaagr_model->gets($rec, NULL, 'dt_cabang');
+
+            foreach ($cabang_result as $row) {
+                $detail_anggaran[] = array(
+                    'id' => $row->id,
+                    'name' => $row->cabang_alias,
+                    'leaf' => false,
+                    'expanded' => false
+                );
+            }
+        }
 
         echo json_encode($detail_anggaran);
     }
 
-    function all_cabang($id) {
-        $result = $this->Bkrencanaagr_model->gets(NULL, NULL, 'dt_cabang');
-        $data = array();
-
-        if ($result != NULL) {
-            foreach ($result as $row) {
-                $data[] = $row->id;
-            }
-        }
-
-        if (in_array($id, $data)) {
+    private function __check_node($id) {
+        if (strpos($id, '.') !== FALSE) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
 
-    public function jbt($id) {
-        $data[] = array('type' => 1002, 'nama' => "TRANSFER", 'id' => $id);
-        $data[] = array('type' => 1001, 'nama' => "TUNAI", 'id' => $id);
-        $data[] = array('type' => 1000, 'nama' => "BG", 'id' => $id);
+    private function __get_ma_non($id) {
+        $data = explode('.', $id);
+        $type_bayar = $data[0];
+        $cabang = $data[1];
 
-        return $data;
-    }
+        $tablename = 'trx_agrplan';
+        $rec[] = array('field' => 'trx_cabangid', 'param' => 'where', 'operator' => '', 'value' => $cabang);
+        $rec[] = array('field' => 'trx_carabayar', 'param' => 'where', 'operator' => '', 'value' => $type_bayar);
+        $rec[] = array('field' => 'app_status', 'param' => 'where', 'operator' => '', 'value' => 0);
+//        $opt['sortBy'] = 'divisi';
+//        $opt['sortDirection'] = 'ASC';
+        $result = $this->Bkrencanaagr_model->gets($rec, NULL, $tablename);
 
-    function get_minta_anggaran($pd, $type) {
-        $jenis_faktur = substr($pd, 0, 4);
-        if (strlen($pd) == 5) {
-            $cabang_id = substr($pd, -1);
-        } else {
-            $cabang_id = substr($pd, -2);
-        }
-
-        if ($type == 1) {
-            $tablename = 'trx_faktur';
-            $record[] = array('field' => 'faktur_cabang', 'param' => 'where', 'operator' => '', 'value' => $cabang_id);
-            $record[] = array('field' => 'faktur_bayar', 'param' => 'where', 'operator' => '', 'value' => substr($jenis_faktur, -1));
-            if (substr($jenis_faktur, -1) == 0) {
-                $record[] = array('field' => 'faktur_bgstatus', 'param' => 'where', 'operator' => '', 'value' => 1);
-            }
-            $record[] = array('field' => 'faktur_agrstat', 'param' => 'where', 'operator' => '', 'value' => 0);
-            $opt['sortBy'] = 'faktur_suppid';
-            $opt['sortDirection'] = 'ASC';
-            $data = $this->Bkrencanaagr_model->gets($record, $opt, $tablename);
-
-            return $data;
-        } else {
-            $tablename = 'trx_data_nonfaktur';
-            $rec[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $cabang_id);
-            $rec[] = array('field' => 'agr_status', 'param' => 'where', 'operator' => '', 'value' => 0);
-            $rec[] = array('field' => 'cara_bayar', 'param' => 'where', 'operator' => '', 'value' => substr($jenis_faktur, -1));
-            $opt['sortBy'] = 'divisi';
-            $opt['sortDirection'] = 'ASC';
-            $data = $this->Bkrencanaagr_model->gets($rec, $opt, $tablename);
-
-            return $data;
-        }
+        return $result;
     }
 
     function list_po($id, $type) {

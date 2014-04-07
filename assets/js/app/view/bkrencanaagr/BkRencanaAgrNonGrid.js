@@ -12,19 +12,16 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrNonGrid', {
     store: 'bkrencanaagr.MaNonStoreTree',
     useArrows: true,
     border: false,
-    //componentCls: 'border-right',
     rootVisible: false,
     multiSelect: false,
     singleExpand: true,
     stripeRows: true,
     columnLines: false,
     cls: 'akunGrid',
-    /*flex: 1,
-     forceFit: true,*/
 
     initComponent: function() {
         var me = this;
-
+        var tree = me;
         Ext.applyIf(me, {
             tbar: [
                 {
@@ -40,21 +37,21 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrNonGrid', {
                     itemId: 'filterCbPusat2',
                     allowBlank: true,
                     triggerAction: 'all',
-//                    hidden: userCabang === '14' ? false : true,
-//                    valueNotFoundText: 'Tidak ada Data',
+                    hidden: CABANG_ID === 1 ? false : true,
+                    valueNotFoundText: 'Tidak ada Data',
                     store: 'bkrencanaagr.CabangStore',
                     listeners: {
                         afterrender: function() {
                             this.setValue(parseInt(CABANG_ID));
                         },
                         change: function() {
-                            this.up('treepanel').store.setRootNode({idCabang: this.getValue()});
+                            this.up('treepanel').store.setRootNode({id: this.getValue()});
                         }
                     }
                 },
                 '->',
                 {
-                    text: 'Approve',
+                    text: 'APPROVE',
                     ui: 'orange-button',
                     handler: function() {
                         var tree = this.up('treepanel'),
@@ -65,7 +62,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrNonGrid', {
                             return;
                         }
 
-                        if (sel[0].get('no_tt') === '1') {
+                        if (sel[0].get('app_status') === 1) {
                             Ext.Msg.alert('Info', 'Data sudah di Approve');
                             return;
                         }
@@ -73,7 +70,7 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrNonGrid', {
                         Ext.Ajax.request({
                             url: BASE_PATH + 'bk_rencanaagr/app_rencanaanggaran',
                             method: 'POST',
-                            params: {id: sel[0].data.cabang_city},
+                            params: {id: sel[0].data.id_trx},
                             scope: this,
                             callback: function(options, success, response) {
                                 var resp = Ext.decode(response.responseText);
@@ -93,57 +90,52 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrNonGrid', {
                     xtype: 'button',
                     ui: 'orange-button',
                     iconCls: 'icon-btn-refresh',
-                    text: 'Refresh',
+                    text: 'REFRESH',
                     handler: function() {
-                        this.up('treepanel').store.setRootNode({idCabang: this.up('treepanel').down('#filterCbPusat2').getValue()});
-                        // this.up('treepanel').down('#filterCbPusat2').clearValue();
+                        tree.store.setRootNode({id: tree.down('#filterCbPusat2').getValue()});
                     }
                 }
             ],
             columns: [
                 {
                     xtype: 'treecolumn',
-                    width: 300,
+                    width: 180,
                     text: '',
-                    dataIndex: 'displayName'
+                    dataIndex: 'name'
+                },
+                {
+                    width: 50,
+                    text: 'ID TRX',
+                    hidden: false,
+                    dataIndex: 'id_trx'
                 },
                 {
                     width: 300,
                     text: 'KEPERLUAN',
-                    dataIndex: 'list_po'
+                    dataIndex: 'keterangan'
                 },
                 {
                     text: 'JADWAL BYR',
                     width: 200,
-                    dataIndex: 'tgldari'
+                    dataIndex: 'jadwal_bayar'
                 },
                 {
                     text: 'NO REK/BG',
-                    width: 150,
+                    width: 100,
                     dataIndex: 'no_rekbg'
                 },
                 {
-                    width: 120,
+                    width: 100,
                     text: 'JTH TEMPO BG',
-                    dataIndex: 'faktur_bgstatus'
+                    dataIndex: 'bg_ed'
                 },
                 {
                     text: 'JUMLAH',
                     xtype: 'numbercolumn',
-                    width: 150,
+                    width: 120,
                     align: 'right',
-                    dataIndex: 'hp_cicilan_amt',
-                    format: '0.000,00/i'
-                }/*,
-                 {
-                 text: 'Sisa Bayar',
-                 xtype: 'numbercolumn',
-                 width: 100,
-                 align: 'right',
-                 dataIndex: 'fakturSisaBayar',
-                 format: '0.000,00/i',
-                 hidden: true
-                 }*/
+                    dataIndex: 'ma_value'
+                }
             ]
         });
 

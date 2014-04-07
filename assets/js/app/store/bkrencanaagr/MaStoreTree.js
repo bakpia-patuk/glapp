@@ -38,7 +38,7 @@ Ext.define('GlApp.store.bkrencanaagr.MaStoreTree', {
     },
     proxy: {
         type: 'ajax',
-        url: BASE_PATH + 'bk_rencanaagr/minta_anggaran_tree/1',
+        url: BASE_PATH + 'bk_rencanaagr/ma_tree',
         actionMethods: 'POST',
         reader: {
             type: 'json'
