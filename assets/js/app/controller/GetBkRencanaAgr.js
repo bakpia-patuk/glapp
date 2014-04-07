@@ -9,6 +9,7 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
     stores: [
         'bkrencanaagr.MaStoreTree',
         'bkrencanaagr.MaNonStoreTree',
+        'bkrencanaagr.MaStoreTree',
         'bkrencanaagr.CabangStore',
         'bkrencanaagr.GrkBkStore',
         'bkrencanaagr.AkunHeaderStore',
@@ -147,7 +148,7 @@ Ext.define('GlApp.controller.GetBkRencanaAgr', {
         if (idForm === 1) {
             form.getForm().reset();
             tabs.setActiveTab(1);
-            storeMa.setRootNode({idCabang: '0'});
+            storeMa.setRootNode({id: CABANG_ID});
             form.down('#isRujukan').disable();
             form.down('#isRujukan').hide();
             form.down('#agrplan_kprdetail').setReadOnly(true);

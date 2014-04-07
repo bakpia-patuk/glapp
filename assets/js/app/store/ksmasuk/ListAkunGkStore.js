@@ -23,17 +23,17 @@ var GroupPerlu = Ext.define('GlApp.model.GrkModel', {
     idProperty: 'id'
 });
 
-Ext.define('GlApp.store.bkrencanaagr.ListAkunGkStore', {
+Ext.define('GlApp.store.ksmasuk.ListAkunGkStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.bkrencanaagr.listakungkstore',
+    alias: 'store.ksmasuk.KsMklistakungkstore',
     model: GroupPerlu,
-    storeId: 'ListAkunGkStore',
+    storeId: 'KsKmListAkunGkStore',
     autoLoad: false,
     remoteFilter: true,
     proxy: {
         success: true,
         type: 'ajax',
-        url: BASE_PATH + 'shared/get_detail_kp',
+        url: BASE_PATH + 'shared/list_akun_gr',
         reader: {
             type: 'json',
             root: 'data'

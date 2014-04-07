@@ -12,19 +12,16 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
     store: 'bkrencanaagr.MaStoreTree',
     useArrows: true,
     border: false,
-    //componentCls: 'border-right',
     rootVisible: false,
     multiSelect: false,
     singleExpand: true,
     stripeRows: true,
     columnLines: false,
     cls: 'akunGrid',
-    /*flex: 1,
-     forceFit: true,*/
-
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
+        var tree = me;
         Ext.applyIf(me, {
             tbar: [
                 {
@@ -40,15 +37,15 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
                     itemId: 'filterCbPusat1',
                     allowBlank: true,
                     triggerAction: 'all',
-//                    hidden: userCabang === '1' ? false : true,
-//                    valueNotFoundText: 'Tidak ada Data',
+                    hidden: CABANG_ID === 1 ? false : true,
+                    valueNotFoundText: 'Tidak ada Data',
                     store: 'bkrencanaagr.CabangStore',
                     listeners: {
                         afterrender: function() {
                             this.setValue(parseInt(CABANG_ID));
                         },
                         change: function() {
-                            this.up('treepanel').store.setRootNode({idCabang: this.getValue()});
+                            this.up('treepanel').store.setRootNode({id: this.getValue()});
                         }
                     }
                 },
@@ -57,9 +54,9 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
                     xtype: 'button',
                     ui: 'orange-button',
                     iconCls: 'icon-btn-refresh',
-                    text: 'Refresh',
-                    handler: function () {
-                        this.up('treepanel').store.setRootNode({idCabang: this.up('treepanel').down('#filterCbPusat1').getValue()});
+                    text: 'REFRESH',
+                    handler: function() {
+                        tree.store.setRootNode({id: tree.down('#filterCbPusat1').getValue()});
                     }
                 }
             ],
@@ -68,12 +65,12 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
                     xtype: 'treecolumn',
                     width: 300,
                     text: '',
-                    dataIndex: 'displayName'
+                    dataIndex: 'name'
                 },
                 {
                     width: 150,
                     text: 'NO FAKTUR',
-                    dataIndex: 'faktur_no'
+                    dataIndex: 'keterangan'
                 },
                 {
                     width: 150,
@@ -86,45 +83,27 @@ Ext.define('GlApp.view.bkrencanaagr.BkRencanaAgrGrid', {
                     dataIndex: 'list_tt'
                 },
                 {
-                    xtype: 'datecolumn',
-                    width: 120,
-                    text: 'JTH TEMPO',
-                    dataIndex: 'faktur_ed',
-                    format: 'd/M/Y',
-                    hidden: true
-                },
-                {
                     text: 'JADWAL BYR',
                     width: 200,
-                    dataIndex: 'tgldari'
+                    dataIndex: 'jadwal_bayar'
                 },
                 {
                     text: 'NO REK/BG',
-                    width: 150,
+                    width: 100,
                     dataIndex: 'no_rekbg'
                 },
                 {
-                    width: 120,
+                    width: 100,
                     text: 'JTH TEMPO BG',
-                    dataIndex: 'faktur_bgstatus'
+                    dataIndex: 'bg_ed'
                 },
-                 {
-                 text: 'JUMLAH',
-                 xtype: 'numbercolumn',
-                 width: 150,
-                 align: 'right',
-                 dataIndex: 'hp_cicilan_amt',
-                 format: '0.000,00/i'
-                 }/*,
-                 {
-                 text: 'Sisa Bayar',
-                 xtype: 'numbercolumn',
-                 width: 100,
-                 align: 'right',
-                 dataIndex: 'fakturSisaBayar',
-                 format: '0.000,00/i',
-                 hidden: true
-                 }*/
+                {
+                    text: 'JUMLAH',
+                    xtype: 'numbercolumn',
+                    width: 120,
+                    align: 'right',
+                    dataIndex: 'ma_value'
+                }
             ]
         });
 

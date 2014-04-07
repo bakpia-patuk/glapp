@@ -42,7 +42,7 @@ class Bkrencanaagr_model extends MY_Model {
                 return FALSE;
             }
 
-            $insert['id'] = $id;
+            $insert['id'] = $last_no . '.' . $user->cabang_id;
         } else {
             $unset = array($general_ma['app_status'], $general_ma['ma_status']);
             unset($unset);
@@ -67,7 +67,7 @@ class Bkrencanaagr_model extends MY_Model {
 
     private function __insert_detail_ma($insert, $user) {
         $last_no = $this->get_last('trx_agrplan_detail');
-        
+
         if ($insert['agrplan_kprdetail'] == 877) {
             $is_rujukan = 1;
             $mkr_namapasien = $insert['agrplan_periksa'];
@@ -79,8 +79,8 @@ class Bkrencanaagr_model extends MY_Model {
             $mkr_pemeriksaan = 0;
             $mkr_rujukanke = 0;
         }
-        
-        if($insert['agrplan_kprdetail'] == 980 || $insert['agrplan_kprdetail'] == 981 || $insert['agrplan_kprdetail'] == 982) {
+
+        if ($insert['agrplan_kprdetail'] == 980 || $insert['agrplan_kprdetail'] == 981 || $insert['agrplan_kprdetail'] == 982) {
             $is_telisa = 1;
             $telisa_id = $insert['agrplan_idtelisa'];
         } else {
@@ -94,7 +94,7 @@ class Bkrencanaagr_model extends MY_Model {
             'agrplan_from' => mdate('%Y-%m-%d', strtotime($insert['agrplan_from'])),
             'agrplan_to' => mdate('%Y-%m-%d', strtotime($insert['agrplan_to'])),
             'agrplan_created' => $user->id,
-            'agrplan_divisi' => $user->divisi_id,
+            'agrplan_divisi' => $insert['agrplan_divisi'],
             'agrplan_kpr' => $insert['agrplan_kpr'],
             'agrplan_kprdetail' => $insert['agrplan_kprdetail'],
             'agrplan_desc' => $insert['agrplan_desc'],
@@ -106,7 +106,7 @@ class Bkrencanaagr_model extends MY_Model {
             'agrplan_rujuk' => $mkr_rujukanke,
             'simpan_status' => 1
         );
-        if($this->get_detail('agrplan_id', $general_mad['agrplan_id'], 'trx_agrplan_detail') == NULL)  {
+        if ($this->get_detail('agrplan_id', $general_mad['agrplan_id'], 'trx_agrplan_detail') == NULL) {
             $this->insert($general_mad, 'trx_agrplan_detail');
         } else {
             $upd[] = array('field' => 'agrplan_id', 'param' => 'where', 'operator' => '', 'value' => $insert['agrplan_id']);
@@ -145,4 +145,260 @@ class Bkrencanaagr_model extends MY_Model {
         }
         return TRUE;
     }
+
+    //TREE BEGIN
+    //CABANG ALL
+
+    public function list_cabang() {
+        $cabang_result = $this->gets(NULL, NULL, 'dt_cabang');
+        $data = array();
+
+        foreach ($cabang_result as $row) {
+            $data[] = array(
+                'id' => $row->id,
+                'id_trx' => '',
+                'name' => $row->cabang_alias,
+                'keterangan' => '',
+                'jadwal_bayar' => '',
+                'no_rekbg' => '',
+                'bg_ed' => '',
+                'ma_value' => '',
+                'app_status' => '',
+                'test' => true,
+                'leaf' => false,
+                'expanded' => false
+            );
+        }
+
+        return $data;
+    }
+
+    public function type_bayar($node, $test) {
+        $type[] = array('type' => 1, 'nama' => "BG", 'id' => 1);
+        $type[] = array('type' => 2, 'nama' => "TUNAI", 'id' => 2);
+        $type[] = array('type' => 3, 'nama' => "TRANSFER", 'id' => 3);
+        $data = array();
+
+        foreach ($type as $row) {
+            $data[] = array(
+                'id' => $node . '.' . $row['id'],
+                'id_trx' => '',
+                'name' => $row['nama'],
+                'keterangan' => '',
+                'jadwal_bayar' => '',
+                'no_rekbg' => '',
+                'bg_ed' => '',
+                'ma_value' => '',
+                'app_status' => '',
+                'test' => $test,
+                'leaf' => false,
+                'expanded' => false
+            );
+        }
+
+        return $data;
+    }
+
+    public function list_ma($id, $test) {
+        $data = explode('.', $id);
+        $type_bayar = $data[1];
+        $cabang = $data[0];
+        $data_return = array();
+        $rec[] = array('field' => 'trx_cabangid', 'param' => 'where', 'operator' => '', 'value' => $cabang);
+        $rec[] = array('field' => 'trx_type', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $rec[] = array('field' => 'trx_carabayar', 'param' => 'where', 'operator' => '', 'value' => $type_bayar);
+        $rec[] = array('field' => 'app_status', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $opt['sortBy'] = 'faktur_suppid';
+        $opt['sortDirection'] = 'ASC';
+        $result = $this->__ma_all($rec, $opt);
+
+        if ($result != NULL) {
+            foreach ($result as $row) {
+
+                $data_return[] = array(
+                    'id' => $row->id . '.' . $id,
+                    'id_trx' => $row->trx_typeref,
+                    'name' => $this->get_detail('id', $row->faktur_suppid, 'dt_supplier')->ms_name,
+                    'keterangan' => $row->faktur_no,
+                    'list_po' => '-',
+                    'list_tt' => $this->get_tt_list($row->trx_typeref),
+                    'jadwal_bayar' => mdate("%d/%M/%Y", strtotime($row->faktur_bayartgl)),
+                    'no_rekbg' => $row->trx_carabayar == 1 ? $this->faktur_bg_ed($row->trx_typeref)->faktur_bayarno : '-',
+                    'bg_ed' => $row->trx_carabayar == 1 ? mdate("%d/%M/%Y", strtotime($this->faktur_bg_ed($row->trx_typeref)->faktur_bayared)) : '-',
+                    'ma_value' => $row->trx_nilai,
+                    'app_status' => 1,
+                    'test' => $test,
+                    'leaf' => true,
+                    'expanded' => false
+                );
+            }
+        } else {
+            $data_return[] = $this->tree_false($id, $test);
+        }
+        return $data_return;
+    }
+
+    private function __ma_all($params, $options) {
+        $this->db->select('trx_agrplan.no AS no, trx_agrplan.id AS id, trx_typeref, faktur_suppid, trx_nilai, trx_carabayar, faktur_no,'
+                . 'faktur_bayartgl');
+        $this->db->from('trx_agrplan');
+        $this->db->join('trx_faktur', 'trx_faktur.id = trx_agrplan.trx_typeref');
+        if ($params != NULL) {
+            foreach ($params as $data) {
+                $this->db->$data['param']($data['field'] . $data['operator'], $data['value']);
+            }
+        }
+        // If limit / offset are declared (usually for pagination) then we need to take them into account
+        if (isset($options['limit']) && isset($options['offset'])) {
+            $this->db->limit($options['limit'], $options['offset']);
+        } else if (isset($options['limit'])) {
+            $this->db->limit($options['limit']);
+        }
+
+        // sort
+        if (isset($options['sortBy'])) {
+            $this->db->order_by($options['sortBy'], $options['sortDirection']);
+        }
+
+        // group
+        if (isset($options['groupBy'])) {
+            $this->db->group_by($options['groupBy']);
+        }
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function faktur_bg_ed($id) {
+        $data = $this->get_detail('faktur_id', $id, 'trx_faktur_bayar');
+
+        if ($data != NULL) {
+            return $data;
+        } else {
+            return '-';
+        }
+    }
+
+    public function get_tt_list($id) {
+        $tablename = 'trx_faktur_detail';
+        $record[] = array('field' => 'trx_fakturid', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $opt['groupBy'] = 'trx_ttid';
+        $data = $this->gets($record, $opt, $tablename);
+
+        $tt = "";
+        if ($data != NULL) {
+            foreach ($data as $row) {
+                $tt_no = $this->get_detail('id', $row->trx_ttid, 'trx_tt');
+                if ($tt_no != NULL) {
+                    $tt .= $tt_no->tt_no . ', ';
+                } else {
+                    $tt .= '-';
+                }
+            }
+        } else {
+            $tt = '-';
+        }
+
+        return rtrim($tt, ',');
+    }
+
+    public function list_ma_non($id, $test) {
+        $data = explode('.', $id);
+        $type_bayar = $data[1];
+        $cabang = $data[0];
+        $data_return = array();
+        $rec[] = array('field' => 'trx_cabangid', 'param' => 'where', 'operator' => '', 'value' => $cabang);
+        $rec[] = array('field' => 'trx_type', 'param' => 'where', 'operator' => '', 'value' => 2);
+        $rec[] = array('field' => 'trx_carabayar', 'param' => 'where', 'operator' => '', 'value' => $type_bayar);
+        $rec[] = array('field' => 'app_status', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $opt['sortBy'] = 'trx_agrplan_detail.agrplan_divisi';
+        $opt['sortDirection'] = 'ASC';
+        $result = $this->__manon_all($rec, $opt);
+
+        if ($result != NULL) {
+            foreach ($result as $row) {
+                $keperluan = $this->get_detail('id', $row->agrplan_kpr, 'ms_group_keperluan')->grk_name;
+                $dt_perlu = $this->get_detail('id', $row->agrplan_kprdetail, 'dt_akun')->akun_name;
+
+                $data_return[] = array(
+                    'id' => $row->id . '.' . $id,
+                    'id_trx' => $row->id,
+                    'name' => 'DIVISI ' . $this->get_detail('id', $row->agrplan_divisi, 'dt_divisi')->divisi_name,
+                    'keterangan' => $keperluan . ', untuk ' . $dt_perlu . ' Ket. Tambahan : ' . $row->agrplan_desc,
+                    'jadwal_bayar' => mdate("%d/%M/%Y", strtotime($row->agrplan_from)) . ' s/d ' . mdate("%d/%M/%Y", strtotime($row->agrplan_to)),
+                    'no_rekbg' => $row->trx_carabayar != 2 ? $row->trx_no : '-',
+                    'bg_ed' => $row->trx_carabayar == 1 ? mdate("%d/%M/%Y", strtotime($row->trx_bged)) : '-',
+                    'ma_value' => $row->trx_nilai,
+                    'app_status' => $row->app_status,
+                    'test' => $test,
+                    'leaf' => true,
+                    'expanded' => false
+                );
+            }
+        } else {
+            $data_return[] = $this->tree_false($id, $test);
+        }
+        return $data_return;
+    }
+
+    private function __manon_all($params, $options) {
+        $this->db->select('trx_agrplan.no AS no, trx_agrplan.id AS id, agrplan_divisi, app_status, trx_nilai, trx_carabayar, trx_bged, trx_no,'
+                . 'agrplan_from, agrplan_to, agrplan_desc, agrplan_kpr, agrplan_kprdetail');
+        $this->db->from('trx_agrplan');
+        $this->db->join('trx_agrplan_detail', 'trx_agrplan_detail.agrplan_id = trx_agrplan.trx_typeref');
+        if ($params != NULL) {
+            foreach ($params as $data) {
+                $this->db->$data['param']($data['field'] . $data['operator'], $data['value']);
+            }
+        }
+        // If limit / offset are declared (usually for pagination) then we need to take them into account
+        if (isset($options['limit']) && isset($options['offset'])) {
+            $this->db->limit($options['limit'], $options['offset']);
+        } else if (isset($options['limit'])) {
+            $this->db->limit($options['limit']);
+        }
+
+        // sort
+        if (isset($options['sortBy'])) {
+            $this->db->order_by($options['sortBy'], $options['sortDirection']);
+        }
+
+        // group
+        if (isset($options['groupBy'])) {
+            $this->db->group_by($options['groupBy']);
+        }
+
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            return $query->result();
+        } else {
+            return false;
+        }
+    }
+
+    public function tree_false($id, $test) {
+        $data = array(
+            'id' => $id . '01X',
+            'id_trx' => '',
+            'name' => 'TIDAK ADA DATA',
+            'keterangan' => '',
+            'jadwal_bayar' => '',
+            'no_rekbg' => '',
+            'bg_ed' => '',
+            'ma_value' => '',
+            'app_status' => '',
+            'test' => $test,
+            'leaf' => true,
+            'expanded' => false
+        );
+
+        return $data;
+    }
+
 }

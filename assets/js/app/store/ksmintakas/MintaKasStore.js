@@ -8,6 +8,7 @@ var MintaKas = Ext.define('GlApp.model.MintaKasModel', {
         {name: 'nama_divisi', type: 'string'},
         {name: 'mk_keperluan', type: 'int'},
         {name: 'mk_detail', type: 'int'},
+        {name: 'mk_detailext', type: 'int'},
         {name: 'mkr_pemeriksaan', type: 'string'},
         {name: 'mkr_namapasien', type: 'string'},
         {name: 'mkr_rujukanke', type: 'string'},

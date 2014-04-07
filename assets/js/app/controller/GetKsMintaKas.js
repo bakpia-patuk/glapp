@@ -1,5 +1,5 @@
 /**
- * @author Isht Ae
+ * @author coepoe
  **/
 
 Ext.define('GlApp.controller.GetKsMintaKas', {
@@ -10,28 +10,25 @@ Ext.define('GlApp.controller.GetKsMintaKas', {
         'ksmintakas.GrkBkStore',
         'ksmintakas.MasterTelisaStore',
         'ksmintakas.MintaKasStore',
-        'ksmintakas.CabangStore'
+        'ksmintakas.CabangStore',
+        'ksmintakas.AkunHeaderStore',
+        'ksmintakas.GrkAkunStore',
+        'ksmintakas.ListAkunGkStore'
     ],
     views: [
         'ksmintakas.GetKsMintaKas',
         'ksmintakas.KsMintaKasForm',
         'ksmintakas.KsMintaKasGrid',
-//        'ksmintakas.newWindow',
-//        'ksmintakas.appForm',
-//        'ksmintakas.app2Form',
-        //shared Window
-//        'shared.newWindow',
-        'ksmintakas.GkMasterGrid',
-        'ksmintakas.GkMasterAkunGrid',
-        'ksmintakas.GkMasterDetailGrid'
+        'ksmintakas.KsListAkunWin',
+        'ksmintakas.KsGroupKpWin'
     ],
     refs: [
         {ref: 'GetKsMintaKas', selector: '#GetKsMintaKas'},
         {ref: 'KsMintaKasForm', selector: '#ksmintakasform'},
         {ref: 'KsMintaKasGrid', selector: '#ksmintakasgrid'},
-        {ref: 'GridKeperluan', selector: '#gkmastergrid'},
-        {ref: 'GridAkunKeperluan', selector: '#gkmasterakungrid'},
-        {ref: 'GridAkunDetail', selector: '#gkmasterdetailgrid'}
+        {ref: 'KsGkGrid', selector: '#gridGk'},
+        {ref: 'KsGkAkunGrid', selector: '#gridGkAkun'},
+        {ref: 'KsheaderAkunGrid', selector: '#gridHeaderAkun'}
     ],
     init: function() {
         this.control({
@@ -322,6 +319,16 @@ Ext.define('GlApp.controller.GetKsMintaKas', {
                                 }
                             }
                         });
+                    }
+                }
+            },
+            '#gridGk': {
+                selectionchange: function(m, r) {
+                    var grid = this.getKsGkAkunGrid();
+
+                    if (r[0]) {
+                        grid.getStore().clearFilter(true);
+                        grid.getStore().filter('kp_id', r[0].get('id'));
                     }
                 }
             }

@@ -6,8 +6,6 @@ var MaStore = Ext.define('GlApp.model.MaStoreModel', {
         {name: 'id_trx', type: 'string'},
         {name: 'name', type: 'string'},
         {name: 'keterangan', type: 'string'},
-        {name: 'list_po', type: 'string'},
-        {name: 'list_tt', type: 'string'},
         {name: 'jadwal_bayar', type: 'string'},
         {name: 'no_rekbg', type: 'string'},
         {name: 'bg_ed', type: 'string'},
@@ -20,7 +18,7 @@ var MaStore = Ext.define('GlApp.model.MaStoreModel', {
     idProperty: 'id'
 });
 
-Ext.define('GlApp.store.bkrencanaagr.MaStoreTree', {
+Ext.define('GlApp.store.bkanggaran.MaNonStoreTree', {
     extend: 'Ext.data.TreeStore',
     model: MaStore,
     root: {
@@ -30,7 +28,7 @@ Ext.define('GlApp.store.bkrencanaagr.MaStoreTree', {
     },
     proxy: {
         type: 'ajax',
-        url: BASE_PATH + 'bk_rencanaagr/ma_tree',
+        url: BASE_PATH + 'bk_anggaran/ma_non_tree',
         actionMethods: 'POST',
         reader: {
             type: 'json'

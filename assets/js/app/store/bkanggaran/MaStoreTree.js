@@ -20,7 +20,7 @@ var MaStore = Ext.define('GlApp.model.MaStoreModel', {
     idProperty: 'id'
 });
 
-Ext.define('GlApp.store.bkrencanaagr.MaStoreTree', {
+Ext.define('GlApp.store.bkanggaran.MaStoreTree', {
     extend: 'Ext.data.TreeStore',
     model: MaStore,
     root: {
@@ -30,7 +30,7 @@ Ext.define('GlApp.store.bkrencanaagr.MaStoreTree', {
     },
     proxy: {
         type: 'ajax',
-        url: BASE_PATH + 'bk_rencanaagr/ma_tree',
+        url: BASE_PATH + 'bk_anggaran/ma_tree',
         actionMethods: 'POST',
         reader: {
             type: 'json'
