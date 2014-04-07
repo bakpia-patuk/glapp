@@ -6,6 +6,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
     xtype: 'check-tree',
     alias: 'widget.bkanggaran.bkanggarangrid',
     itemId: 'bkanggarangrid',
+    id: 'bkanggarangrid',
     store: 'bkanggaran.MaStoreTree',
     useArrows: true,
     ui: 'orange-panel',
@@ -48,6 +49,15 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
                         },
                         change: function() {
                             this.up('treepanel').store.setRootNode({id: this.getValue()});
+
+                            Ext.getCmp('bankDebetTujuanAg').getStore().clearFilter(true);
+                            Ext.getCmp('bankDebetTujuanAg').getStore().filter('bank_cabang', this.getValue());
+                            
+                            Ext.getCmp('bankDebetAsalAg').getStore().clearFilter(true);
+                            Ext.getCmp('bankDebetAsalAg').getStore().filter('bank_cabang', this.getValue());
+                            
+                            Ext.getCmp('bkanggaranform').getForm().reset();
+                            Ext.getCmp('bkanggaranform').getForm().findField('supplier').hide();
                         }
                     }
                 },

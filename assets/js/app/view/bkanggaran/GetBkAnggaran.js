@@ -36,6 +36,7 @@ Ext.define('GlApp.view.bkanggaran.GetBkAnggaran', {
                     ui: 'orange-tab',
                     activeTab: 0,
                     id: 'anggaranTab',
+                    itemId: 'anggaranTab',
                     items: [
                         {
                             xtype: 'bkanggaran.supplierpanel'

@@ -56,7 +56,7 @@ class Bkanggaran_model extends MY_Model {
         }
     }
 
-    function anggaran_process() {
+    function anggaran_process($insert) {
         $trx_jenisbayar = $this->input->post('trx_jenisbayar');
         $trx_supp_id = $this->input->post('trx_supp_id');
         $trx_agrdata = $this->input->post('trx_agrdata');
@@ -106,7 +106,7 @@ class Bkanggaran_model extends MY_Model {
         ////UPDATE FAKTUR/MINTA ANGGARAN DATA UNTUK DATA SELAIN TRANSFER
 
         if ($supplier != "") {
-            if ($trx_jenisbayar == 1001) {
+            if ($trx_jenisbayar == 2) {
                 $no_faktur = explode(';', $trx_agrdata);
                 for ($i = 0; $i < count($no_faktur) - 1; $i++) {
                     $status_faktur = array(
@@ -114,12 +114,14 @@ class Bkanggaran_model extends MY_Model {
                         'faktur_agrid' => $id
                     );
 
-                    $opts[$i][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur[$i]);
+                    $no_faktur_i = $this->get_detail('id', $no_faktur[$i], 'trx_agrplan')->trx_typeref;
+
+                    $opts[$i][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_i);
                     if (!$this->update($status_faktur, $opts[$i], NULL, 'trx_faktur')) {
                         return false;
                     }
                 }
-            } else if ($trx_jenisbayar == 1000) {
+            } else if ($trx_jenisbayar == 1) {
                 $no_bg = explode(';', $trx_agrdata);
                 for ($j = 0; $j < count($no_bg) - 1; $j++) {
                     $status_bg = array(
@@ -127,7 +129,9 @@ class Bkanggaran_model extends MY_Model {
                         'faktur_byragr' => $id
                     );
 
-                    $opts[$j][] = array('field' => 'faktur_bayarno', 'param' => 'where', 'operator' => '', 'value' => $no_bg[$j]);
+                    $no_faktur_i = $this->get_detail('id', $no_bg[$j], 'trx_agrplan')->trx_typeref;
+
+                    $opts[$j][] = array('field' => 'faktur_bayarno', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_j);
                     if (!$this->update($status_bg, $opts[$j], NULL, 'trx_faktur_bayar')) {
                         return false;
                     }
@@ -154,8 +158,9 @@ class Bkanggaran_model extends MY_Model {
                     $status_faktur = array(
                         'faktur_agrid' => $id
                     );
+                    $no_faktur_s = $this->get_detail('id', $no_faktur[$s], 'trx_agrplan')->trx_typeref;
 
-                    $optk[$s][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur[$s]);
+                    $optk[$s][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_s);
                     if (!$this->update($status_faktur, $optk[$s], NULL, 'trx_faktur')) {
                         return false;
                     }
@@ -167,26 +172,25 @@ class Bkanggaran_model extends MY_Model {
                         'faktur_agrstat' => 1
                     );
 
-                    $optc[$z][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur[$z]);
+                    $no_faktur_z = $this->get_detail('id', $no_faktur[$z], 'trx_agrplan')->trx_typeref;
+                    $optc[$z][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_z);
                     if (!$this->update($status_faktur, $optc[$z], NULL, 'trx_faktur')) {
                         return false;
                     }
                 }
             }
-        } else {
-            $no_permintaan = explode(';', $trx_agrdata);
-            for ($k = 0; $k < count($no_permintaan) - 1; $k++) {
-                $realisasi = $this->get_detail('id', $no_permintaan[$k], 'trx_data_nonfaktur')->nilai_trans;
-                $status_faktur = array(
-                    'trx_realisasi' => $realisasi,
-                    'agr_status' => 1,
-                    'agr_id' => $id
-                );
+        }
 
-                $optd[$k][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $no_permintaan[$k]);
-                if (!$this->update($status_faktur, $optd[$k], NULL, 'trx_data_nonfaktur')) {
-                    return false;
-                }
+        $rcn_agr = explode(';', rtrim($trx_agrdata, ';'));
+        for ($k = 0; $k < count($rcn_agr); $k++) {
+            $status_faktur = array(
+                'app_agrstatus' => 1,
+                'app_agrid' => $id
+            );
+
+            $optd[$k][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $rcn_agr[$k]);
+            if (!$this->update($status_faktur, $optd[$k], NULL, 'trx_agrplan')) {
+                return false;
             }
         }
 
@@ -266,6 +270,7 @@ class Bkanggaran_model extends MY_Model {
         $rec[] = array('field' => 'trx_type', 'param' => 'where', 'operator' => '', 'value' => 1);
         $rec[] = array('field' => 'trx_carabayar', 'param' => 'where', 'operator' => '', 'value' => $type_bayar);
         $rec[] = array('field' => 'app_status', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $rec[] = array('field' => 'app_agrstatus', 'param' => 'where', 'operator' => '', 'value' => 0);
         $opt['sortBy'] = 'faktur_suppid';
         $opt['sortDirection'] = 'ASC';
         $result = $this->__ma_all($rec, $opt);
@@ -275,7 +280,8 @@ class Bkanggaran_model extends MY_Model {
 
                 $data_return[] = array(
                     'id' => $row->id . '.' . $id,
-                    'id_trx' => $row->trx_typeref,
+                    'id_trx' => $row->id,
+                    'name_id' => $row->faktur_suppid,
                     'name' => $this->get_detail('id', $row->faktur_suppid, 'dt_supplier')->ms_name,
                     'keterangan' => $row->faktur_no,
                     'list_po' => '-',
@@ -283,6 +289,7 @@ class Bkanggaran_model extends MY_Model {
                     'jadwal_bayar' => mdate("%d/%M/%Y", strtotime($row->faktur_bayartgl)),
                     'no_rekbg' => $row->trx_carabayar == 1 ? $this->faktur_bg_ed($row->trx_typeref)->faktur_bayarno : '-',
                     'bg_ed' => $row->trx_carabayar == 1 ? mdate("%d/%M/%Y", strtotime($this->faktur_bg_ed($row->trx_typeref)->faktur_bayared)) : '-',
+                    'cara_bayar' => $row->trx_carabayar,
                     'ma_value' => $row->trx_nilai,
                     'app_status' => 1,
                     'test' => $test,
@@ -375,6 +382,7 @@ class Bkanggaran_model extends MY_Model {
         $rec[] = array('field' => 'trx_type', 'param' => 'where', 'operator' => '', 'value' => 2);
         $rec[] = array('field' => 'trx_carabayar', 'param' => 'where', 'operator' => '', 'value' => $type_bayar);
         $rec[] = array('field' => 'app_status', 'param' => 'where', 'operator' => '', 'value' => 1);
+        $rec[] = array('field' => 'app_agrstatus', 'param' => 'where', 'operator' => '', 'value' => 0);
         $opt['sortBy'] = 'trx_agrplan_detail.agrplan_divisi';
         $opt['sortDirection'] = 'ASC';
         $result = $this->__manon_all($rec, $opt);
@@ -388,10 +396,12 @@ class Bkanggaran_model extends MY_Model {
                     'id' => $row->id . '.' . $id,
                     'id_trx' => $row->id,
                     'name' => 'DIVISI ' . $this->get_detail('id', $row->agrplan_divisi, 'dt_divisi')->divisi_name,
+                    'name_id' => $row->agrplan_divisi,
                     'keterangan' => $keperluan . ', untuk ' . $dt_perlu . ' Ket. Tambahan : ' . $row->agrplan_desc,
                     'jadwal_bayar' => mdate("%d/%M/%Y", strtotime($row->agrplan_from)) . ' s/d ' . mdate("%d/%M/%Y", strtotime($row->agrplan_to)),
                     'no_rekbg' => $row->trx_carabayar != 2 ? $row->trx_no : '-',
                     'bg_ed' => $row->trx_carabayar == 1 ? mdate("%d/%M/%Y", strtotime($row->trx_bged)) : '-',
+                    'cara_bayar' => $row->trx_carabayar,
                     'ma_value' => $row->trx_nilai,
                     'app_status' => $row->app_status,
                     'test' => $test,

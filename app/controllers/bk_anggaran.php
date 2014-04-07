@@ -59,107 +59,6 @@ class Bk_anggaran extends Auth_Controller {
         }
     }
 
-    
-    function get_faktur_anggaran($pd, $type) {
-        $jenis_faktur = substr($pd, 0, 4);
-        if (strlen($pd) == 5) {
-            $cabang_id = substr($pd, -1);
-        } else {
-            $cabang_id = substr($pd, -2);
-        }
-
-        if ($type == 1) {
-            if (substr($jenis_faktur, -1) == 0) {
-                $data = $this->Bkanggaran_model->get_bg_faktur($cabang_id, substr($jenis_faktur, -1));
-            } else {
-                $tablename = 'trx_faktur';
-                $record[] = array('field' => 'faktur_agrstat', 'param' => 'where', 'operator' => '', 'value' => 0);
-                $record[] = array('field' => 'faktur_cabang', 'param' => 'where', 'operator' => '', 'value' => $cabang_id);
-                $record[] = array('field' => 'faktur_bayar', 'param' => 'where', 'operator' => '', 'value' => substr($jenis_faktur, -1));
-                $opt['sortBy'] = 'faktur_suppid';
-                $opt['sortDirection'] = 'ASC';
-                $data = $this->Bkanggaran_model->gets($record, $opt, $tablename);
-            }
-
-            return $data;
-        } else {
-            $tablename = 'trx_data_nonfaktur';
-            $record[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $cabang_id);
-            $record[] = array('field' => 'agr_status', 'param' => 'where', 'operator' => '', 'value' => 0);
-            $record[] = array('field' => 'cara_bayar', 'param' => 'where', 'operator' => '', 'value' => substr($jenis_faktur, -1));
-            $opt['sortBy'] = 'divisi';
-            $opt['sortDirection'] = 'ASC';
-            $data = $this->Bkanggaran_model->gets($record, $opt, $tablename);
-
-            return $data;
-        }
-    }
-    
-    function all_cabang($id) {
-        $result = $this->Bkanggaran_model->gets(NULL, NULL, 'dt_cabang');
-        $data = array();
-
-        if ($result != NULL) {
-            foreach ($result as $row) {
-                $data[] = $row->id;
-            }
-        }
-
-        if (in_array($id, $data)) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-    
-    public function jbt($id) {
-        $data[] = array('type' => 1002, 'nama' => "TRANSFER", 'id' => $id);
-        $data[] = array('type' => 1001, 'nama' => "TUNAI", 'id' => $id);
-        $data[] = array('type' => 1000, 'nama' => "BG", 'id' => $id);
-
-        return $data;
-    }
-    
-    function list_po($id, $type) {
-        $tablename = 'trx_faktur_detail';
-        $record[] = array('field' => 'trx_fakturid', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $opt['groupBy'] = 'trx_poid';
-        $data = $this->Bkanggaran_model->gets($record, $opt, $tablename);
-
-//        if ($type == 0) {
-            return "";//$data;
-//        } else {
-//            $po = "";
-//            foreach ($data as $row) {
-//                $po_no = $this->Bkanggaran_model->get_detail('id', $row->trx_poid, 'trx_po')->po_no;
-//
-//                $po .= $po_no . ', ';
-//            }
-//
-//            return $po;
-//        }
-    }
-
-    function list_tt($id, $type) {
-        $tablename = 'trx_faktur_detail';
-        $record[] = array('field' => 'trx_fakturid', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $opt['groupBy'] = 'trx_ttid';
-        $data = $this->Bkanggaran_model->gets($record, $opt, $tablename);
-
-        if ($type == 0) {
-            return $data;
-        } else {
-            $tt = "";
-            foreach ($data as $row) {
-                $tt_no = $this->Bkanggaran_model->get_detail('id', $row->trx_ttid, 'trx_tt')->tt_no;
-
-                $tt .= $tt_no . ', ';
-            }
-
-            return $tt;
-        }
-    }
-
     function no_rekbg($id, $type_bayar) {
         $det_fkt = $this->Bkanggaran_model->get_detail('id', $id, 'trx_faktur');
         if ($type_bayar == 0 && $det_fkt->faktur_bgstatus == 1) {
@@ -178,7 +77,7 @@ class Bk_anggaran extends Auth_Controller {
     
     public function anggaran_supp1() {
         $list_faktur = array();
-        $opt[] = array('field' => 'faktur_bayar', 'param' => 'where', 'operator' => '', 'value' => 2);
+        $opt[] = array('field' => 'faktur_bayar', 'param' => 'where', 'operator' => '', 'value' => 3);
         $opt[] = array('field' => 'faktur_agrstat', 'param' => 'where', 'operator' => '', 'value' => 1);
         $opt[] = array('field' => 'faktur_agrid', 'param' => 'where', 'operator' => '', 'value' => 0);
         $result = $this->Bkanggaran_model->gets($opt, NULL, 'trx_faktur');
@@ -213,7 +112,9 @@ class Bk_anggaran extends Auth_Controller {
     }
     
     function add_anggaran() {
-        $data = $this->Bkanggaran_model->anggaran_process();
+        $insert = $this->input->post(NULL, TRUE);
+
+        $data = $this->Bkanggaran_model->anggaran_process($insert);
         if ($data) {
             echo json_encode(array('success' => 'true', 'data' => $data, 'message' => 'Data Berhasil Di Simpan', 'title' => 'Info'));
         } else {
