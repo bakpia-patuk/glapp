@@ -148,12 +148,13 @@ class Bkanggaran_model extends MY_Model {
                     }
                 }
             } else if ($trx_jenisbayar == 4) {
-                $no_faktur = explode(';', $trx_agrdata);
-                for ($s = 0; $s < count($no_faktur) - 1; $s++) {
+                $no_faktur = explode(';', rtrim($trx_agrdata, ';'));
+                for ($s = 0; $s < count($no_faktur); $s++) {
                     $status_faktur = array(
                         'faktur_agrid' => $id
                     );
-                    $no_faktur_s = $this->get_detail('id', $no_faktur[$s], 'trx_agrplan')->trx_typeref;
+                    
+                    $no_faktur_s = $no_faktur[$s];
 
                     $optk[$s][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_s);
                     if (!$this->update($status_faktur, $optk[$s], NULL, 'trx_faktur')) {

@@ -1,27 +1,21 @@
 var agrsupp = Ext.define('GlApp.model.AgrSuppModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'idCabang', type: 'int'},
-        {name: 'faktur_cabang', type: 'int'},
-        {name: 'kotaCabang', type: 'string'},
-        {name: 'namaCabang', type: 'string'},
-        {name: 'isCabang', type: 'int'},
-        {name: 'isJenis', type: 'int'},
-        {name: 'isData', type: 'int'},
-        {name: 'jenisBayar', type: 'int'},
-        {name: 'faktur_suppid', type: 'int'},
-        {name: 'displayName', type: 'string'},
-        {name: 'faktur_no', type: 'string'},
-        {name: 'noPo', type: 'string'},
-        {name: 'noTt', type: 'string'},
-        {name: 'fakturEd', type: 'date'},
-        {name: 'jadwalBayar', type: 'string'},
-        {name: 'noRekBg', type: 'string'},
-        {name: 'bgEd`', type: 'date'},
-        {name: 'faktur_nototal', type: 'float'},
-        {name: 'fakturRealisasi', type: 'float'}
+        {name: 'id', type: 'string'},
+        {name: 'id_trx', type: 'string'},
+        {name: 'name', type: 'string'},
+        {name: 'name_id', type: 'int'},
+        {name: 'keterangan', type: 'string'},
+        {name: 'list_po', type: 'string'},
+        {name: 'list_tt', type: 'string'},
+        {name: 'jadwal_bayar', type: 'string'},
+        {name: 'no_rekbg', type: 'string'},
+        {name: 'bg_ed', type: 'string'},
+        {name: 'cara_bayar', type: 'int'},
+        {name: 'ma_value', type: 'flaot'},
+        {name: 'test', type: 'boolean'}
     ],
-    idProperty: 'idCabang'
+    idProperty: 'id'
 });
 
 Ext.define('GlApp.store.bkanggaran.AgrSuppStore', {
