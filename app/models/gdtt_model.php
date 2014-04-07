@@ -65,9 +65,9 @@ class Gdtt_model extends MY_Model {
     }
 
     public function get_tt_sisa($id_po, $id_peng, $id_barang) {
-        $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => ' <=', 'value' => $id_po);
-        $params[] = array('field' => 'tt_peng_id', 'param' => 'where', 'operator' => ' <=', 'value' => $id_peng);
-        $params[] = array('field' => 'tt_barang_id', 'param' => 'where', 'operator' => ' <=', 'value' => $id_barang);
+        $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => ' ', 'value' => $id_po);
+        $params[] = array('field' => 'tt_peng_id', 'param' => 'where', 'operator' => ' ', 'value' => $id_peng);
+        $params[] = array('field' => 'tt_barang_id', 'param' => 'where', 'operator' => ' ', 'value' => $id_barang);
         $result = $this->gets($params, NULL, 'trx_tt_detail');
         $total = 0;
         if ($result != null) {
@@ -148,8 +148,25 @@ class Gdtt_model extends MY_Model {
         );
 
         $this->insert($data, 'trx_tt_detail');
+        //cek total barang
+        //Jumlah semua qty terkirim
+        $params=array();
+        $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => '', 'value' => $dtpo->po_id);
+        $result = $this->gets($params, NULL, 'trx_tt_detail');
+        $barang_terkirim=0;
+        foreach ($result as $key) {
 
-        $set_true = array('tt_set' => 1);
+            $barang_terkirim+=$key->tt_qty_kirim;
+        }
+        
+        if($barang_terkirim==$dtpo->barang_qty){
+            $set_true = array('tt_set' => 1,'tt_qty_kirim'=>$dtpo->barang_qty);
+        }
+        else{
+            $set_true = array('tt_set' => 2,'tt_qty_kirim'=>0);
+        }
+
+       
         $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $this->update($set_true, $params1, NULL, 'trx_po_detail');
 

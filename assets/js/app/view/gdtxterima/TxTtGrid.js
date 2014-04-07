@@ -19,6 +19,8 @@ var editorCell = new Ext.grid.plugin.CellEditing({
                         if (resp.success === 'true') {
                             e.grid.getStore().load();
                             e.grid.getSelectionModel().clearSelections();
+                             var rec = Ext.StoreMgr.lookup("gdtxterima.TtLotStore");
+                             rec.load();
                         } else {
                             Ext.MessageBox.show({
                                 title: 'Info',

@@ -56,7 +56,31 @@ class Gd_tt extends Auth_Controller {
 
     public function save() {
         $insert = $this->input->post(NULL, TRUE);
+        $params=array();
+        $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
+        foreach ($data_po as $row) {
+            if($row->tt_qty_kirim==0){
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum memasukan jumlah barang'));
+                return;
+            }
+            $params=array();
+            $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => '', 'value' => $row->po_id);
+            $result = $this->Gdtt_model->gets($params, NULL, 'trx_tt_detail');
+            $barang_terkirim=0;
+            if($result){
+                foreach ($result as $key) {
 
+                    $barang_terkirim+=$key->tt_qty_kirim;
+                }
+
+                if(($barang_terkirim+$row->tt_qty_kirim)>$row->barang_qty){
+                    echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda jumlah barang lebih dari permintaan'));
+                    return;
+                }
+            }
+            
+        }
         if ($insert['id'] == 0) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum melakukan transaksi'));
             return;
@@ -358,13 +382,19 @@ class Gd_tt extends Auth_Controller {
         $insert = $this->input->post(NULL, TRUE);
 
         if ($insert['tt_id'] != 0) {
+            //$this->Gdtt_model->get_detail('id',$insert['id'],'trx_po_detail');
             $data = array(
                 'tt_qty_kirim' => $insert['tt_qty_kirim']
             );
 
             $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
             $this->Gdtt_model->update($data, $opt, NULL, 'trx_po_detail');
+
+            $param_del[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => 'ttgudang');
+            $param_del[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['tt_id']);
+            $this->Gdtt_model->delete($param_del, NULL, 'trx_stock_lot');
         }
+
         echo json_encode(array('success' => 'true', 'data' => $insert['id']));
     }
 
@@ -416,7 +446,7 @@ class Gd_tt extends Auth_Controller {
         $params[] = array('field' => 'po_ed', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d", now()));
         $params[] = array('field' => 'po_cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
 //        $params[] = array('field' => 'tt_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
-        $params[] = array('field' => 'tt_set', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $params[] = array('field' => 'tt_set', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
         $params[] = array('field' => 'simpan_status', 'param' => 'where', 'operator' => '', 'value' => 1);
 
         $opt['sortBy'] = 'po_id';
