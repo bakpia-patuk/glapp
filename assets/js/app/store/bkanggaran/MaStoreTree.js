@@ -4,6 +4,7 @@ var MaStore = Ext.define('GlApp.model.MaStoreModel', {
         //
         {name: 'id', type: 'string'},
         {name: 'id_trx', type: 'string'},
+        {name: 'name_id', type: 'int'},
         {name: 'name', type: 'string'},
         {name: 'keterangan', type: 'string'},
         {name: 'list_po', type: 'string'},
@@ -13,6 +14,7 @@ var MaStore = Ext.define('GlApp.model.MaStoreModel', {
         {name: 'bg_ed', type: 'string'},
         {name: 'ma_value', type: 'float'},
         {name: 'app_status', type: 'int'},
+        {name: 'cara_bayar', type: 'int'},
         {name: 'test', type: 'boolean'},
         {name: 'leaf', type: 'boolean'},
         {name: 'expanded', type: 'boolean', defaultValue: true}

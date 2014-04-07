@@ -6,6 +6,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
     xtype: 'check-tree',
     alias: 'widget.bkanggaran.bkanggarannongrid',
     itemId: 'bkanggarannongrid',
+    id: 'bkanggarannongrid',
     title: 'NON SUPPLIER',
     ui:'orange-panel',
     store: 'bkanggaran.MaNonStoreTree',

@@ -5,6 +5,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.bkanggaran.bkanggaran1grid',
     itemId: 'bkanggaran1grid',
+    id: 'bkanggaran1grid',
     title: 'SUPPLIER ACCOUNT 1',
     autoScroll: true,
     forceFit: true,

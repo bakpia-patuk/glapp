@@ -27,14 +27,14 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                     ui: 'blue-button',
                     text: 'SIMPAN',
                     iconCls: 'icon-btn-save',
-//                    action: 'simpanAnggaran'
+                   action: 'simpanAnggaran'
                 },
                 '-',
                 {
                     ui: 'blue-button',
                     text: 'BATAL',
                     iconCls: 'icon-btn-cancel',
-//                    action: 'resetAnggaran'
+                   action: 'resetAnggaran'
                 }
             ],
             items: [
@@ -81,13 +81,13 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                             'type' //the text value is the value
                         ],
                         data: [
-                            [0, 'PELAYANAN'],
-                            [1, 'MARKETING'],
-                            [2, 'KEUANGAN'],
-                            [3, 'LAB'],
-                            [4, 'SDM'],
-                            [5, 'IT'],
-                            [6, 'RUMAH TANGGA']
+                            [1, 'PELAYANAN'],
+                            [2, 'MARKETING'],
+                            [3, 'KEUANGAN'],
+                            [4, 'LAB'],
+                            [5, 'SDM'],
+                            [6, 'IT'],
+                            [7, 'RUMAH TANGGA']
                         ]
                     })
                 },
@@ -217,8 +217,8 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                     name: 'bank_debet_ke',
                     id: 'bankDebetTujuanAg',
                     editable: false,
-//                    store: 'BankStore1',
-                    displayField: 'bankAlias',
+                   store: 'bkanggaran.BankDebetKeStore',
+                    displayField: 'bank_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     hidden: true,
@@ -274,13 +274,13 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                         shadow: 'side',
                         minWidth: 185
                     },
-//                    listeners: {
-//                        focus: function(cmb, rec, opt) {
-//                            var store = cmb.getStore();
-//                            store.clearFilter(true);
-//                            store.filter('bank_cabang', 14);
-//                        }
-//                    }
+                   listeners: {
+                       focus: function(cmb, rec, opt) {
+                           var store = cmb.getStore();
+                           store.clearFilter(true);
+                           store.filter('bank_cabang', 1);
+                       }
+                   }
                 },
                 {
                     xtype: 'fieldset',
