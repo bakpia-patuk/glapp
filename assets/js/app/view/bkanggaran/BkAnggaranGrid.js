@@ -6,7 +6,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
     xtype: 'check-tree',
     alias: 'widget.bkanggaran.bkanggarangrid',
     itemId: 'bkanggarangrid',
-    store: 'bkanggaran.DaStoreTree',
+    store: 'bkanggaran.MaStoreTree',
     useArrows: true,
     ui: 'orange-panel',
     border: true,
@@ -39,21 +39,15 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
                     name: 'filterCbPusat1',
                     allowBlank: true,
                     triggerAction: 'all',
-//                    hidden: userCabang == 1 ? false : true,
-//                    valueNotFoundText: 'Tidak ada Data',
+                    hidden: CABANG_ID === 1 ? false : true,
+                    valueNotFoundText: 'Tidak ada Data',
                     store: 'bkanggaran.CabangStore',
                     listeners: {
-                        select: function() {
-                            this.up('treepanel').store.setRootNode({idCabang: this.getValue()});
-                            
-//                            Ext.getCmp('bankDebetTujuanAg').getStore().clearFilter(true);
-//                            Ext.getCmp('bankDebetTujuanAg').getStore().filter('bank_cabang', this.getValue());
-//                            
-//                            Ext.getCmp('bankDebetAsalAg').getStore().clearFilter(true);
-//                            Ext.getCmp('bankDebetAsalAg').getStore().filter('bank_cabang', this.getValue());
-//                            
-//                            Ext.getCmp('anggaranform').getForm().reset();
-//                            Ext.getCmp('anggaranform').getForm().findField('rekSuppName').hide();
+                        afterrender: function() {
+                            this.setValue(parseInt(CABANG_ID));
+                        },
+                        change: function() {
+                            this.up('treepanel').store.setRootNode({id: this.getValue()});
                         }
                     }
                 },
@@ -71,19 +65,17 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
                     ui: 'orange-button',
                     text: 'Daftar Terbayar',
                     iconCls: 'icon-btn-report',
-//                    action: 'detailTerbayar',
                     hidden: true
                 },
                 {
                     ui: 'orange-button',
                     text: 'Gagal Bayar',
                     iconCls: 'icon-btn-listdel',
-//                    action: 'gagalTerbayar',
                     hidden: true
                 },
                 {
                     ui: 'orange-button',
-                    text: 'Refresh',
+                    text: 'REFRESH',
                     iconCls: 'icon-btn-refresh',
                     handler: function() {
                         this.up('treepanel').store.setRootNode({idCabang: '0'});
@@ -96,7 +88,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
                     xtype: 'treecolumn',
                     width: 300,
                     text: '',
-                    dataIndex: 'displayName'
+                    dataIndex: 'name'
                 },
                 {
                     width: 150,
@@ -111,21 +103,21 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
                 {
                     width: 150,
                     text: 'NO FAKTUR/ BG',
-                    dataIndex: 'faktur_no'
+                    dataIndex: 'no_rekbg'
                 },
                 {
                     text: 'NOMINAL',
                     xtype: 'numbercolumn',
                     width: 100,
                     align: 'right',
-                    dataIndex: 'faktur_nominal',
-                    renderer: function (value, meta, record) {
-                        if (record.get('isData') == 1) {
-                            return Ext.util.Format.number(value, '0.000,00/i');
-                        }
-                        else {
-                            return "";
-                        }
+                    dataIndex: 'ma_value',
+                    renderer: function(value, meta, record) {
+//                        if (record.get('isData') == 1) {
+                        return Ext.util.Format.number(value, '0.000,00/i');
+//                        }
+//                        else {
+//                            return "";
+//                        }
                     }
                 },
                 {
@@ -134,24 +126,15 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranGrid', {
                     width: 100,
                     align: 'right',
                     dataIndex: 'faktur_byrrealisasi',
-                    renderer: function (value, meta, record) {
-                        if (record.get('isData') == 1) {
-                            return Ext.util.Format.number(value, '0.000,00/i');
-                        }
-                        else {
-                            return "";
-                        }
+                    renderer: function(value, meta, record) {
+//                        if (record.get('isData') == 1) {
+                        return Ext.util.Format.number(value, '0.000,00/i');
+//                        }
+//                        else {
+//                            return "";
+//                        }
                     }
                 }
-                /*{
-                 text: 'Sisa Bayar',
-                 xtype: 'numbercolumn',
-                 width: 100,
-                 align: 'right',
-                 dataIndex: 'fakturSisaBayar',
-                 format: '0.000,00/i',
-                 hidden: true
-                 }*/
             ]
         });
 

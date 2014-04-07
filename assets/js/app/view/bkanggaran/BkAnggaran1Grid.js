@@ -33,23 +33,19 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
                     ui: 'blue-button',
                     text: 'Daftar Terbayar',
                     iconCls: 'icon-btn-report',
-//                    action: 'detailTerbayar'
+                    hidden: true
                 },
-                '-',
                 {
                     ui: 'blue-button',
                     text: 'Gagal Bayar',
                     iconCls: 'icon-btn-listdel',
-//                    action: 'gagalTerbayar'
+                    hidden: true
                 },
-                '-',
                 {
                     ui: 'blue-button',
                     xtype: 'button',
-                    iconCls: 'icon-btn-refresh',
-//                    handler: function() {
-//                        this.up('grid').getStore().load();
-//                    }
+                    text: 'REFRESH',
+                    iconCls: 'icon-btn-refresh'
                 }
             ],
             features: [

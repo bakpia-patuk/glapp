@@ -25,14 +25,14 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
             tbar: [
                 {
                     ui: 'blue-button',
-                    text: 'Simpan',
+                    text: 'SIMPAN',
                     iconCls: 'icon-btn-save',
 //                    action: 'simpanAnggaran'
                 },
                 '-',
                 {
                     ui: 'blue-button',
-                    text: 'Batal',
+                    text: 'BATAL',
                     iconCls: 'icon-btn-cancel',
 //                    action: 'resetAnggaran'
                 }
@@ -317,118 +317,11 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranForm', {
                             readOnly: true
                         }
                     ]
-                },
-                {
-                    xtype: 'fieldcontainer',
-                    width: 300,
-                    layout: 'hbox',
-                    items: [
-                        {
-                            html: 'Tanda Tangan :',
-                            border: false,
-                            width: 115,
-                            bodyStyle: FORM_BG,
-                            padding: '3 0 0 27',
-                            align: 'right'
-                        },
-                        {
-                            xtype: 'button',
-                            iconCls: 'icon-btn-search',
-                            text: 'Ambil TTD',
-                            margins: '0 0 0 5',
-//                            handler: function () {
-//                                var win = new Ext.widget('newwindow', {
-//                                    title: 'Capture TTD',
-//                                    width: 332,
-//                                    closable: false,
-//                                    buttons: [
-//                                        {
-//                                            text: 'Batal',
-//                                            iconCls: 'icon-btn-cross',
-//                                            handler: function() {
-//                                                Ext.Ajax.request({
-//                                                    url: BASE_PATH + 'data/clear_data_sign_img/signNullAnggaran',
-//                                                    scope: this,
-//                                                    callback: function(options, success, response) {
-//                                                        var resp = Ext.decode(response.responseText);
-//
-//                                                        if (resp.success === 'true') {
-//                                                            this.up('window').destroy();
-//                                                        }
-//                                                    }
-//                                                });
-//                                            }
-//                                        },
-//                                        {
-//                                            text: 'Simpan',
-//                                            handler: function () {
-//                                                Ext.Ajax.request({
-//                                                    url: BASE_PATH + 'data/check_ttd/signNullAnggaran',
-//                                                    scope: this,
-//                                                    callback: function(options, success, response) {
-//                                                        var resp = Ext.decode(response.responseText);
-//
-//                                                        if (resp.success === 'true') {
-//                                                            Ext.getCmp('imageTtdAnggaran').setSrc(BASE_URL + 'assets/img_data/signNullAnggaran.png');
-//                                                            this.up('window').destroy();
-//                                                        } else {
-//                                                            Ext.MessageBox.alert('Error', 'Belum ada tanda tangan yang di verifikasi');
-//                                                        }
-//                                                    }
-//                                                });
-//                                                console.log('Simpan upload untuk anggaran');
-//                                            }
-//                                        }
-//                                    ]
-//                                });
-//
-//                                var form = new Ext.widget('app2foranggaran');
-//                                win.add(form);
-//                                win.show();
-//                            }
-                        }
-                    ]
-                },
-                {
-                    xtype: 'fieldcontainer',
-                    width: 300,
-                    layout: 'hbox',
-                    items: [
-                        {
-                            html: 'Preview : ',
-                            border: false,
-                            width: 120,
-                            bodyStyle: FORM_BG,
-                            padding: '3 0 0 61',
-                            align: 'right'
-                        },
-                        Ext.create('Ext.Img', {
-                            baseCls: 'imagefieldthumb',
-//                            src: BASE_PATH + 'assets/img_data/signBlank.png',
-//                            id: 'imageTtdAnggaran'
-                        })
-                    ]
                 }
             ]
         });
 
         me.callParent(arguments);
-    },
-    listeners: {
-        afterRender: function() {
-            /*var jam = function(){
-             Ext.getCmp('jam').setValue(Ext.Date.format(new Date(),'H:i:s'));
-             }
-             //Configuration object for the task
-             var tugas = {
-             run: jam, //the function to run
-             interval: 1000 //every second
-             }
-             //creates a new manager
-             var jalan = new Ext.util.TaskRunner();
-             jalan.start(tugas); //start runing the task every one second
-             //Clock funtion End*/
-        }
     }
 });
 

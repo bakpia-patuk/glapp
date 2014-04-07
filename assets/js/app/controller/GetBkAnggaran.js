@@ -7,9 +7,9 @@ Ext.define('GlApp.controller.GetBkAnggaran', {
     models: [
     ],
     stores: [
-        'bkanggaran.DaStoreTree',
         'bkanggaran.CabangStore',
-        'bkanggaran.DaNonStoreTree',
+        'bkanggaran.MaStoreTree',
+        'bkanggaran.MaNonStoreTree',
         'bkanggaran.CabangNonStore',
         'bkanggaran.AgrSuppStore',
         'bkanggaran.BankPusatStore',

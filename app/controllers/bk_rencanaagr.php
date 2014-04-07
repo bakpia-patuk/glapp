@@ -62,22 +62,6 @@ class Bk_rencanaagr extends Auth_Controller {
         }
     }
 
-    private function __get_ma_non($id) {
-        $data = explode('.', $id);
-        $type_bayar = $data[0];
-        $cabang = $data[1];
-
-        $tablename = 'trx_agrplan';
-        $rec[] = array('field' => 'trx_cabangid', 'param' => 'where', 'operator' => '', 'value' => $cabang);
-        $rec[] = array('field' => 'trx_carabayar', 'param' => 'where', 'operator' => '', 'value' => $type_bayar);
-        $rec[] = array('field' => 'app_status', 'param' => 'where', 'operator' => '', 'value' => 0);
-//        $opt['sortBy'] = 'divisi';
-//        $opt['sortDirection'] = 'ASC';
-        $result = $this->Bkrencanaagr_model->gets($rec, NULL, $tablename);
-
-        return $result;
-    }
-
     function list_po($id, $type) {
         $tablename = 'trx_faktur_detail';
         $record[] = array('field' => 'trx_fakturid', 'param' => 'where', 'operator' => '', 'value' => $id);

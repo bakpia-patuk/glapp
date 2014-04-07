@@ -8,18 +8,15 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
     itemId: 'bkanggarannongrid',
     title: 'NON SUPPLIER',
     ui:'orange-panel',
-    store: 'bkanggaran.DaNonStoreTree',
+    store: 'bkanggaran.MaNonStoreTree',
     useArrows: true,
     border: false,
-    //componentCls: 'border-right',
     rootVisible: false,
     multiSelect: false,
     singleExpand: true,
     stripeRows: true,
     columnLines: true,
     cls: 'akunGrid',
-    /*flex: 1,
-     forceFit: true,*/
 
     initComponent: function() {
         var me = this;
@@ -40,21 +37,15 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
                     name: 'filterCbPusat1',
                     allowBlank: true,
                     triggerAction: 'all',
-//                    hidden: userCabang == 1 ? false : true,
+                    hidden: CABANG_ID === 1 ? false : true,
                     valueNotFoundText: 'Tidak ada Data',
                     store: 'bkanggaran.CabangNonStore',
                     listeners: {
-                        select: function() {
-                            this.up('treepanel').store.setRootNode({idCabang: this.getValue()});
-
-//                            Ext.getCmp('anggaranform').getForm().reset();
-//                            Ext.getCmp('anggaranform').getForm().findField('rekSuppName').hide();
-//
-//                            Ext.getCmp('bankDebetTujuanAg').getStore().clearFilter(true);
-//                            Ext.getCmp('bankDebetTujuanAg').getStore().filter('bank_cabang', this.getValue());
-//                            
-//                            Ext.getCmp('bankDebetAsalAg').getStore().clearFilter(true);
-//                            Ext.getCmp('bankDebetAsalAg').getStore().filter('bank_cabang', this.getValue());
+                        afterrender: function() {
+                            this.setValue(parseInt(CABANG_ID));
+                        },
+                        change: function() {
+                            this.up('treepanel').store.setRootNode({id: this.getValue()});
                         }
                     }
                 },
@@ -63,24 +54,23 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
                     ui: 'blue-button',
                     text: 'Daftar Terbayar',
                     iconCls: 'icon-btn-report',
-//                    action: 'detailTerbayarNon'
+                    hidden: true
                 },
-                '-',
                 {
                     ui: 'blue-button',
                     text: 'Gagal Bayar',
                     iconCls: 'icon-btn-listdel',
-//                    action: 'gagalTerbayar'
+                    hidden: true
                 },
-                '-',
                 {
                     ui: 'blue-button',
                     xtype: 'button',
+                    text: 'REFRESH',
                     iconCls: 'icon-btn-refresh',
-//                    handler: function() {
-//                        this.up('treepanel').store.setRootNode({idCabang: '0'});
-//                        this.up('treepanel').down('#filterAnggaran2').clearValue();
-//                    }
+                    handler: function() {
+                        this.up('treepanel').store.setRootNode({idCabang: '0'});
+                        this.up('treepanel').down('#filterAnggaran2').clearValue();
+                    }
                 }
             ],
             columns: [
@@ -88,17 +78,17 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
                     xtype: 'treecolumn',
                     width: 300,
                     text: '',
-                    dataIndex: 'displayName'
+                    dataIndex: 'name'
                 },
                 {
                     width: 300,
                     text: 'KEPERLUAN',
-                    dataIndex: 'faktur_no'
+                    dataIndex: 'keterangan'
                 },
                 {
                     text: 'JADWAL BYR',
                     width: 200,
-                    dataIndex: 'tgldari'
+                    dataIndex: 'jadwal_bayar'
                 },
                 {
                     text: 'NO REK/BG',
@@ -109,7 +99,7 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
                     xtype: 'datecolumn',
                     width: 120,
                     text: 'JTH TEMPO BG',
-                    dataIndex: 'faktur_bgstatus'
+                    dataIndex: 'bg_ed'
                 },
                 {
                     text: 'REALISASI',
@@ -119,15 +109,6 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaranNonGrid', {
                     dataIndex: 'faktur_byrrealisasi',
                     format: '0.000,00/i'
                 }
-                /*{
-                 text: 'Sisa Bayar',
-                 xtype: 'numbercolumn',
-                 width: 100,
-                 align: 'right',
-                 dataIndex: 'fakturSisaBayar',
-                 format: '0.000,00/i',
-                 hidden: true
-                 }*/
             ]
         });
 
