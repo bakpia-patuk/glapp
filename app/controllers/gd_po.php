@@ -260,6 +260,33 @@ class Gd_po extends Auth_Controller {
         }
         $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $this->Gdpo_model->update($data, $opt, NULL, 'trx_po');
+
+
+        $data_po = $this->Gdpo_model->gets($opt, NULL, 'trx_po');
+        if($data_po){
+            foreach ($data_po as $key) {
+                $data_json = json_encode($key);
+
+                $data = array();
+
+                $data['jumlah'] = 1;
+
+                $data['tujuan'] = $key->po_cabangid;
+                $data['id_cabang'] = $this->user->cabang_id;
+                
+                $no = $this->Gdpo_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                
+                $data['primary_key'] = $insert['id'];
+                $data['table_name'] = 'trx_po';
+
+                $this->Gdpo_model->insert_outgoing($data, 'detail');
+            }
+        }
+
         echo json_encode(array('success' => 'true', 'data' => $data, 'msg' => 'Update Success'));
     }
 
@@ -372,6 +399,9 @@ class Gd_po extends Auth_Controller {
         if ($result != NULL) {
             foreach ($result as $row) {
                 $barang = $this->Gdpo_model->get_item_detail($row->barang_id);
+                if($row->barang_ppn==1){
+                    $result[$no]->barang_ppn=10;
+                }
                 $result[$no]->barang_name = $barang->mi_name;
                 $result[$no]->merk_name = $barang->mi_merk!=0?$this->Gdpo_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name:'-';
                 $result[$no]->barang_netto = $this->Gdpo_model->po_item_netto($row->barang_qty, $row->barang_harga, $row->barang_disc, $row->barang_ppn);

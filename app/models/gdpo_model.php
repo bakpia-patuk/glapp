@@ -19,6 +19,12 @@ class Gdpo_model extends MY_Model {
 
         if ($result != NULL) {
             foreach ($result as $row) {
+                if($row->po_ppn==1){
+                    $ppn=10;
+                }
+                else{
+                    $ppn=0;
+                }
                 $rtrn[] = array(
                     'no' => $row->no,
                     'id' => $row->id,
@@ -32,7 +38,7 @@ class Gdpo_model extends MY_Model {
                     'po_qty' => $row->po_qty,
                     'po_harga' => $row->po_harga,
                     'po_disc' => $row->po_disc,
-                    'po_ppn' => $row->po_ppn,
+                    'po_ppn' => $ppn,
                     'po_netto' => $this->__calc_netto($row->po_qty, $row->po_harga, $row->po_disc, $row->po_ppn),
                     'barang_desc' => $row->barang_desc,
                     'po_id' => $row->po_id,

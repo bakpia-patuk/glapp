@@ -88,7 +88,12 @@ class Gd_txfaktur extends Auth_Controller {
             foreach ($result as $row) {
 //                $item_id = $row->tt_barang_id;
 //                $detail_item = $this->Gdtxfaktur_model->get_detail('id', $item_id, 'master_item_' . $this->ion_auth->user()->row()->cabang_id);
-
+                if($row->tt_ppn=1){
+                    $harga_netto = ($row->tt_harga*$row->tt_qty_kirim)+($row->tt_harga * $row->tt_qty_kirim * 0.1);
+                }
+                else{
+                    $harga_netto = $row->tt_harga*$row->tt_qty_kirim;
+                }
                 $listpo[] = array(
                     'id' => $row->id,
                     'tt_id' => $row->tt_id,
@@ -105,7 +110,8 @@ class Gd_txfaktur extends Auth_Controller {
                     'tt_qty_sisa' => $row->tt_qty_sisa,
                     'tt_harga' => $row->tt_harga,
                     'tt_disc' => $row->tt_disc,
-                    'tt_ppn' => $row->tt_ppn,
+                    'tt_ppn' => $row->tt_ppn==1 ? 10 : 0,
+                    'ttItemNetto' => $harga_netto,
                     'tt_faktur_status' => $row->tt_faktur_status,
                     'simpan_status' => $row->simpan_status
                 );
@@ -212,9 +218,15 @@ class Gd_txfaktur extends Auth_Controller {
         $res = $this->Gdtxfaktur_model->gets($opt, NULL, 'trx_tt_detail');
         if ($res) {
             foreach ($res as $row) {
+                if($row->tt_ppn==1){
+                    $ppn=10;
+                }
+                else{
+                    $ppn=0;
+                }
                 $item_price = $row->tt_harga;
                 $qty = $row->tt_qty_kirim;
-                $ppn = $row->tt_ppn;
+                
                 $disc = $row->tt_disc;
 
                 $netto = $item_price - ($disc / 100 * $item_price);
