@@ -1198,6 +1198,7 @@ class Shared extends Auth_Controller {
 
         $opt['sortBy'] = 'kms_kecil';
         $opt['sortDirection'] = 'ASC';
+
         $data_dokter = $this->Shared_model->gets($record, $opt, 'item_kemasan');
         $list_dokter = array();
 

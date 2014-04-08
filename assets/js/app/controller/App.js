@@ -60,7 +60,19 @@ Ext.define('GlApp.controller.App', {
             global: {
             },
             store: {
-            }
+            },
+            proxy: {
+                '*': {
+                    exception: function( proxy, response, operation, eOpts ) {
+                        Ext.MessageBox.show({
+                            title: 'INFO',
+                            msg: response.responseText,
+                            buttons: Ext.MessageBox.OK,
+                            icon: Ext.MessageBox.ERROR
+                        });
+                    }
+                }
+            } 
         });
     },
     addHistory: function(view, rec, item, index, eventObj) {
