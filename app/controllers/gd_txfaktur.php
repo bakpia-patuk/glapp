@@ -785,7 +785,7 @@ class Gd_txfaktur extends Auth_Controller {
             $record[] = array('field' => 'bank_alias', 'param' => 'like', 'operator' => '', 'value' => $_GET['query']);
         }
 
-        $data_bank = $this->Gdtxfaktur_model->gets($record, NULL, 'master_bank');
+        $data_bank = $this->Gdtxfaktur_model->gets($record, NULL, 'ms_bank');
         $list_bank = array();
 
         if ($data_bank != NULL) {
@@ -793,7 +793,7 @@ class Gd_txfaktur extends Auth_Controller {
                 $list_bank[] = array(
                     'id' => $key->id,
                     'bankGroup' => $key->bank_nama,
-                    'bankGroupNama' => $this->Gdtxfaktur_model->get_detail('id', $key->bank_nama, 'master_banknas')->banknas_name,
+                    'bankGroupNama' => $this->Gdtxfaktur_model->get_detail('id', $key->bank_nama, 'ms_banknas')->banknas_name,
                     'bankAlias' => $key->bank_alias,
                     'bankNama' => $key->bank_reknama,
                     'bankRek' => $key->bank_rekno,

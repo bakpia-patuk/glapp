@@ -26,7 +26,7 @@ class Gdpo_model extends MY_Model {
                     'no_pengadaan' => $row->no_pengadaan,
                     'barang_id' => $row->barang_id,
                     'barang_name' => $this->get_item_detail($row->barang_id)->mi_name,
-                    'po_merk' => $this->get_detail('id', $row->po_merk, 'dt_merk')->merk_name,
+                    'po_merk' => $row->po_merk!=0?$this->get_detail('id', $row->po_merk, 'dt_merk')->merk_name:'-',
                     'po_katalog' => $row->po_katalog,
                     'po_kemasan' => $row->po_kemasan == 0 ? "-" : $row->po_kemasan,
                     'po_qty' => $row->po_qty,

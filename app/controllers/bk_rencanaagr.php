@@ -14,6 +14,7 @@ class Bk_rencanaagr extends Auth_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('Bkrencanaagr_model');
+        $this->Bkrencanaagr_model->cms_db = $this->load->database('outgoing', TRUE);
     }
 
     public function ma_non_tree() {
@@ -103,9 +104,10 @@ class Bk_rencanaagr extends Auth_Controller {
         $input = $this->input->post(NULL, TRUE);
         $data = $this->Bkrencanaagr_model->ma_process($input);
         if ($data) {
+            $id=$data;
             $params = array();
-            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $data['id_agr']);
-            $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_agrplan');
+            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id['id_agr']);
+            $data_po = $this->Bkrencanaagr_model->gets($params, NULL, 'trx_agrplan');
             if($data_po){
                 foreach ($data_po as $key) {
                     $data_json = json_encode($key);
@@ -117,21 +119,21 @@ class Bk_rencanaagr extends Auth_Controller {
                     $data['tujuan'] = 1;
                     $data['id_cabang'] = $this->user->cabang_id;
 
-                    $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+                    $no = $this->Bkrencanaagr_model->insert_outgoing($data, 'head');
 
                     $data = array();
                     $data['data'] = $data_json;
                     $data['head_id '] = $no . '.' . $this->user->cabang_id;
-                    $data['primary_key'] = $data['id_agr'];
+                    $data['primary_key'] = $id['id_agr'];
                     $data['table_name'] = 'trx_agrplan';
 
-                    $this->Gdtt_model->insert_outgoing($data, 'detail');
+                    $this->Bkrencanaagr_model->insert_outgoing($data, 'detail');
                 }
             }
 
             $params = array();
-            $params[] = array('field' => 'agrplan_id', 'param' => 'where', 'operator' => '', 'value' => $data['id_agr']);
-            $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_agrplan_detail');
+            $params[] = array('field' => 'agrplan_id', 'param' => 'where', 'operator' => '', 'value' => $id['id_agr']);
+            $data_po = $this->Bkrencanaagr_model->gets($params, NULL, 'trx_agrplan_detail');
             if($data_po){
                 foreach ($data_po as $key) {
                     $data_json = json_encode($key);
@@ -143,16 +145,16 @@ class Bk_rencanaagr extends Auth_Controller {
                     $data['tujuan'] = 1;
                     $data['id_cabang'] = $this->user->cabang_id;
 
-                    $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+                    $no = $this->Bkrencanaagr_model->insert_outgoing($data, 'head');
 
                     $data = array();
                     $data['data'] = $data_json;
                     $data['head_id'] = $no . '.' . $this->user->cabang_id;
                     $data['nama_column'] = 'agrplan_id';
-                    $data['primary_key'] = $data['id_agr'];
+                    $data['primary_key'] = $id['id_agr'];
                     $data['table_name'] = 'trx_agrplan_detail';
 
-                    $this->Gdtt_model->insert_outgoing($data, 'detail');
+                    $this->Bkrencanaagr_model->insert_outgoing($data, 'detail');
                 }
             }
             
@@ -171,7 +173,7 @@ class Bk_rencanaagr extends Auth_Controller {
         $this->Bkrencanaagr_model->update($update, $upd, NULL, 'trx_agrplan');
         $params = array();
         $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_agrplan_detail');
+        $data_po = $this->Bkrencanaagr_model->gets($params, NULL, 'trx_agrplan');
         if($data_po){
             foreach ($data_po as $key) {
                 $data_json = json_encode($key);
@@ -180,19 +182,19 @@ class Bk_rencanaagr extends Auth_Controller {
 
                 $data['jumlah'] = 1;
 
-                $data['tujuan'] = 1;
-                $data['id_cabang'] = $key->trx_cabangid;
-
-                $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+                $data['tujuan'] = $key->trx_cabangid;
+                $data['id_cabang'] = $this->user->cabang_id;
+                
+                $no = $this->Bkrencanaagr_model->insert_outgoing($data, 'head');
 
                 $data = array();
                 $data['data'] = $data_json;
                 $data['head_id'] = $no . '.' . $this->user->cabang_id;
                 
                 $data['primary_key'] = $id;
-                $data['table_name'] = 'trx_agrplan_detail';
+                $data['table_name'] = 'trx_agrplan';
 
-                $this->Gdtt_model->insert_outgoing($data, 'detail');
+                $this->Bkrencanaagr_model->insert_outgoing($data, 'detail');
             }
         }
         $ma_detail = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_agrplan');
@@ -205,7 +207,7 @@ class Bk_rencanaagr extends Auth_Controller {
             }
             $params = array();
             $params[] = array('field' => 'no', 'param' => 'where', 'operator' => '', 'value' => $no);
-            $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_minta_kas');
+            $data_po = $this->Bkrencanaagr_model->gets($params, NULL, 'trx_minta_kas');
             if($data_po){
                 foreach ($data_po as $key) {
                     $data_json = json_encode($key);
@@ -215,9 +217,9 @@ class Bk_rencanaagr extends Auth_Controller {
                     $data['jumlah'] = 1;
 
                     $data['tujuan'] = $key->cabang_id;
-                    $data['id_cabang'] = $key->trx_cabangid;
+                    $data['id_cabang'] = $this->user->cabang_id;
 
-                    $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+                    $no = $this->Bkrencanaagr_model->insert_outgoing($data, 'head');
 
                     $data = array();
                     $data['data'] = $data_json;
@@ -226,7 +228,7 @@ class Bk_rencanaagr extends Auth_Controller {
                     $data['primary_key'] = $key->id;
                     $data['table_name'] = 'trx_minta_kas';
 
-                    $this->Gdtt_model->insert_outgoing($data, 'detail');
+                    $this->Bkrencanaagr_model->insert_outgoing($data, 'detail');
                 }
             }
         }
