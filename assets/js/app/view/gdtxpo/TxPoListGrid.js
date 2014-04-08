@@ -5,12 +5,12 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.gdtxpo.txpolistgrid',
     itemId: 'txpolistgrid',
+    id:'txpolistgrid',
     border: false,
     store: 'gdtxpo.PoStore',
     autoScroll: true,
     forceFit: true,
     columnLines: true,
-    plugins: 'bufferedrenderer',
     initComponent: function() {
         var me = this;
         
@@ -102,7 +102,19 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
                     flex: 0.5,
                     text: 'SUPPLIER',
                     dataIndex: 'supp_name',
-                    renderer: 'uppercase'
+                    renderer: 'uppercase',
+                    editor: {
+                        xtype: 'combobox',
+                        triggerAction: 'all',
+                        queryMode: 'remote',
+                        minChars: 2,
+                        store: 'gdtxpo.SupplierStore',
+                        displayField: 'ms_name',
+                        valueField: 'id',
+                        matchFieldWidth: false,
+                        emptyText: 'pilih supplier',
+                        allowBlank: false
+                    }
                 },
                 {
                     xtype: 'datecolumn',
@@ -130,6 +142,49 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
                     text: 'NILAI PO',
                     align: 'right',
                     dataIndex: 'po_value'
+                }
+            ],
+            plugins: [
+                {
+                    ptype: 'cellediting',
+                    clicksToEdit: 2,
+                    pluginId: 'poEdit',
+                    listeners: {
+                        'edit': function(editor, e, opt) {
+                            if (e.record.dirty) {
+                                e.record.commit();
+                                Ext.Ajax.request({
+                                    url: BASE_PATH + 'gd_po/edit_po',
+                                    method: 'POST',
+                                    params: e.record.data,
+                                    scope: this,
+                                    callback: function(options, success, response) {
+                                        var resp = Ext.decode(response.responseText);
+
+                                        if (resp.success === 'true') {
+                                            e.grid.getStore().load();
+                                            Ext.MessageBox.show({
+                                                title: 'INFO',
+                                                msg: resp.msg,
+                                                buttons: Ext.MessageBox.OK,
+                                                icon: Ext.MessageBox.INFO
+                                            });
+                                        } else {
+                                            Ext.MessageBox.show({
+                                                title: 'ERROR',
+                                                msg: resp.msg,
+                                                buttons: Ext.MessageBox.OK,
+                                                icon: Ext.MessageBox.ERROR
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                },
+                {
+                    ptype: 'bufferedrenderer'
                 }
             ]
         });

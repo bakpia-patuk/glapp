@@ -24,32 +24,32 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
             tbar: [
                 {
                     xtype: 'button',
-                    text: 'Simpan',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-save',
-                    itemId: 'KasKeluarSave',
-                    id: 'kkSave'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Cetak',
-                    ui: 'blue-button',
-                    iconCls: 'icon-btn-print',
-                    itemId: 'KasKeluarSavePrint',
-                    id: 'kkSavePrint'
-                },
-                {
-                    xtype: 'button',
-                    text: 'Baru',
-                    ui: 'blue-button',
+                    text: 'ADD_NEW',
+                    ui: 'green-button',
                     iconCls: 'icon-btn-add',
                     itemId: 'KasKeluarNew',
                     id: 'kkNew'
                 },
                 {
                     xtype: 'button',
-                    text: 'Hapus',
-                    ui: 'blue-button',
+                    text: 'SAVE',
+                    ui: 'green-button',
+                    iconCls: 'icon-btn-save',
+                    itemId: 'KasKeluarSave',
+                    id: 'kkSave'
+                },
+                {
+                    xtype: 'button',
+                    text: 'PRINT',
+                    ui: 'green-button',
+                    iconCls: 'icon-btn-print',
+                    itemId: 'KasKeluarSavePrint',
+                    id: 'kkSavePrint'
+                },
+                {
+                    xtype: 'button',
+                    text: 'DELETE',
+                    ui: 'green-button',
                     hidden: true,
                     iconCls: 'icon-btn-delete',
                     itemId: 'KasKeluarDelete',
@@ -94,21 +94,22 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     fieldLabel: 'Nama Supplier ',
                     name: 'namaSup',
                     itemId: 'namaSup',
+                    id: 'namaSup',
                     hidden: false,
                     triggerAction: 'all',
                     minChars: 2,
                     store: 'kskeluar.MasterSupplierStore',
                     displayField: 'ms_name',
                     valueField: 'idms',
-                    emptyText: 'Pilih Supplier...',
-                    readOnly: false
+                    emptyText: 'Nama Supplier',
+                    readOnly: true
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Faktur ',
                     name: 'noFaktur',
                     id: 'kkFakNo',
-                    hidden: true
+                    hidden: false
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     hidden: false,
@@ -284,48 +285,12 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                         {
                             xtype: 'button',
                             iconCls: 'icon-btn-search',
-                            ui: 'blue-button',
+                            ui: 'green-button',
                             text: 'Ambil TTD',
                             margins: '0 0 0 5',
-//                            handler: function () {
-//                                var win = new Ext.widget('newwindow', {
-//                                    title: 'Capture TTD',
-//                                    width: 332,
-//                                    closable: false,
-//                                    buttons: [
-//                                        {
-//                                            text: 'Batal',
-//                                            ui: 'blue-button',
-//                                            iconCls: 'icon-btn-cross',
-//                                            handler: function () {
-//                                                Ext.Ajax.request({
-//                                                    url: BASE_PATH + 'data/clear_data_sign_img/signNullKk',
-//                                                    scope: this,
-//                                                    callback: function (options, success, response) {
-//                                                        var resp = Ext.decode(response.responseText);
-//
-//                                                        if (resp.success === 'true') {
-//                                                            this.up('window').destroy();
-//                                                        }
-//                                                    }
-//                                                });
-//                                            }
-//                                        },
-//                                        {
-//                                            text: 'Simpan',
-//                                            handler: function () {
-//                                                this.up('window').destroy();
-//                                                Ext.getCmp('imageTtdKk').setSrc(BASE_URL + 'assets/img_data/signNullKk.png');
-//                                                console.log('Simpan upload untuk kas keluar');
-//                                            }
-//                                        }
-//                                    ]
-//                                });
-//
-//                                var form = new Ext.widget('app2formkk');
-//                                win.add(form);
-//                                win.show();
-//                            }
+                            handler: function () {
+                               var win = new Ext.widget('kskeluar.kksignwin');
+                            }
                         }
                     ]
                 },
@@ -344,9 +309,10 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                             align: 'right'
                         },
                         Ext.create('Ext.Img', {
+                            margin: '0 0 0 0',
                             baseCls: 'imagefieldthumb',
-//                            src: BASE_PATH + 'assets/img_data/signBlank.png',
-                            id: 'imageTtdKk'
+                            src: BASE_PATH + 'assets/appdata/signBlank.png',
+                            id: 'imageTtdTb1'
                         })
                     ]
                 }

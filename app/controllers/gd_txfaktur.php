@@ -402,7 +402,10 @@ class Gd_txfaktur extends Auth_Controller {
         );
 
         $id_ma = $this->Gdtxfaktur_model->insert($data_minta_anggaran, 'trx_agrplan');
-        
+        if($id_ma == NULL) {
+            echo json_encode(array('success' => 'false', 'data' => "", 'message' => $this->catch_db_err()));
+            return FALSE;
+        }
         $params = array();
         $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_ma.'.'.$this->user->cabang_id);
         $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'trx_agrplan');

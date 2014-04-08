@@ -249,6 +249,50 @@ class Gd_po extends Auth_Controller {
         echo json_encode(array('success' => 'true', 'data' => $this->Gdpo_model->total_po($id_po)));
     }
 
+    public function edit_po() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        $data['po_ed'] = $insert['po_ed'];
+
+        if(is_numeric($insert['supp_name'])) {
+            $data['po_suppid'] = $insert['supp_name'];
+            $data['po_supp_email'] = "";
+        }
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $this->Gdpo_model->update($data, $opt, NULL, 'trx_po');
+        echo json_encode(array('success' => 'true', 'data' => $data, 'msg' => 'Update Success'));
+    }
+
+    public function edit_po_item() {
+        $insert = $this->input->post(NULL, TRUE);
+        $po_id = $insert['po_id'];
+
+        if($insert['tt_id'] != 0) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'barang ini sudah di kirim'));
+            return;
+        }
+
+        $data = array(
+            'barang_qty' => $insert['barang_qty'],
+            'barang_harga' => $insert['barang_harga'],
+            'barang_disc' => $insert['barang_disc'],
+            'barang_ppn' => $insert['barang_ppn'],
+            'tt_qty_kirim' => $insert['barang_qty']
+        );
+
+        $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $this->Gdpo_model->update($data, $opt, NULL, 'trx_po_detail');
+
+        //UPDATE PO VALUE
+        $update_po = array(
+            'po_value' => $this->Gdpo_model->total_po_complete($po_id)
+        );
+        $optpo[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $po_id);
+        $this->Gdpo_model->update($update_po, $optpo, NULL, 'trx_po');
+
+        echo json_encode(array('success' => 'true', 'data' => $data, 'message' => 'Update Success'));
+    }
+
     public function list_pengadaan_all() {
         $records = $this->input->get('filter');
         $params = array();
