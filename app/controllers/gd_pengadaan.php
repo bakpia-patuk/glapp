@@ -115,7 +115,7 @@ class Gd_pengadaan extends Auth_Controller {
             'po_qty' => $insert['peng_qty'],
             'po_harga' => $item->mi_item_price,
             'po_disc' => $item->mi_diskon,
-            'po_ppn' => $item->mi_ppn,
+            'po_ppn' => $item->mi_ppn == 1 ? 10 : 0,
             'po_status' => 0,
             'po_id' => 0,
             'barang_desc' => $insert['barang_desc']

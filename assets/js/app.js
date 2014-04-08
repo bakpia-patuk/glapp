@@ -23,7 +23,7 @@ Ext.require([
 ]);
 
 Ext.application({
-    requires: ['Ext.container.Viewport'],
+    requires: ['Ext.container.Viewport', 'GlApp.domain.Proxy'],
     appFolder: BASE_PATH + 'assets/js/app',
     name: 'GlApp',
     controllers: ['App'],
@@ -34,7 +34,7 @@ Ext.application({
             var hash = document.location.hash;
             me.getAppController().fireEvent('tokenchange', hash.replace('#', ''));
         });
-
+        
         Ext.define('Ext.ux.form.ComboBoxEdit', {
             extend: 'Ext.form.field.ComboBox',
             trigger2Cls: 'x-form-new-trigger',
