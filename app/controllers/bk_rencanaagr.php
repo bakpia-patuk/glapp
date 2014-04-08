@@ -103,6 +103,59 @@ class Bk_rencanaagr extends Auth_Controller {
         $input = $this->input->post(NULL, TRUE);
         $data = $this->Bkrencanaagr_model->ma_process($input);
         if ($data) {
+            $params = array();
+            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $data['id_agr']);
+            $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_agrplan');
+            if($data_po){
+                foreach ($data_po as $key) {
+                    $data_json = json_encode($key);
+
+                    $data = array();
+
+                    $data['jumlah'] = 1;
+
+                    $data['tujuan'] = 1;
+                    $data['id_cabang'] = $this->user->cabang_id;
+
+                    $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+                    $data = array();
+                    $data['data'] = $data_json;
+                    $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                    $data['primary_key'] = $data['id_agr'];
+                    $data['table_name'] = 'trx_agrplan';
+
+                    $this->Gdtt_model->insert_outgoing($data, 'detail');
+                }
+            }
+
+            $params = array();
+            $params[] = array('field' => 'agrplan_id', 'param' => 'where', 'operator' => '', 'value' => $data['id_agr']);
+            $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_agrplan_detail');
+            if($data_po){
+                foreach ($data_po as $key) {
+                    $data_json = json_encode($key);
+
+                    $data = array();
+
+                    $data['jumlah'] = 1;
+
+                    $data['tujuan'] = 1;
+                    $data['id_cabang'] = $this->user->cabang_id;
+
+                    $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+                    $data = array();
+                    $data['data'] = $data_json;
+                    $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                    $data['nama_column'] = 'agrplan_id';
+                    $data['primary_key'] = $data['id_agr'];
+                    $data['table_name'] = 'trx_agrplan_detail';
+
+                    $this->Gdtt_model->insert_outgoing($data, 'detail');
+                }
+            }
+            
             echo json_encode(array('success' => 'true', 'data' => $data, 'message' => 'Data Berhasil Di Simpan', 'title' => 'Info'));
         } else {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'gagal bung'));
@@ -116,16 +169,69 @@ class Bk_rencanaagr extends Auth_Controller {
         );
         $upd[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $this->Bkrencanaagr_model->update($update, $upd, NULL, 'trx_agrplan');
+        $params = array();
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_agrplan_detail');
+        if($data_po){
+            foreach ($data_po as $key) {
+                $data_json = json_encode($key);
 
+                $data = array();
+
+                $data['jumlah'] = 1;
+
+                $data['tujuan'] = 1;
+                $data['id_cabang'] = $key->trx_cabangid;
+
+                $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+                $data = array();
+                $data['data'] = $data_json;
+                $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                
+                $data['primary_key'] = $id;
+                $data['table_name'] = 'trx_agrplan_detail';
+
+                $this->Gdtt_model->insert_outgoing($data, 'detail');
+            }
+        }
         $ma_detail = $this->Bkrencanaagr_model->get_detail('id', $id, 'trx_agrplan');
 
         if ($ma_detail->trx_carabayar == 2) {
-            if (!$this->add_permintaan_divisi($id)) {
+            $no = $this->add_permintaan_divisi($id);
+            if (!$no) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'Info'));
                 return;
             }
+            $params = array();
+            $params[] = array('field' => 'no', 'param' => 'where', 'operator' => '', 'value' => $no);
+            $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_minta_kas');
+            if($data_po){
+                foreach ($data_po as $key) {
+                    $data_json = json_encode($key);
+
+                    $data = array();
+
+                    $data['jumlah'] = 1;
+
+                    $data['tujuan'] = $key->cabang_id;
+                    $data['id_cabang'] = $key->trx_cabangid;
+
+                    $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+                    $data = array();
+                    $data['data'] = $data_json;
+                    $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                    
+                    $data['primary_key'] = $key->id;
+                    $data['table_name'] = 'trx_minta_kas';
+
+                    $this->Gdtt_model->insert_outgoing($data, 'detail');
+                }
+            }
         }
 
+        
         echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Data Berhasil Di Simpan', 'title' => 'Info'));
     }
 
@@ -163,9 +269,9 @@ class Bk_rencanaagr extends Auth_Controller {
             'modified' => mdate($datestring, now()),
             'cabang_id' => $ma->trx_cabangid
         );
-
-        if ($this->Bkrencanaagr_model->insert($new, 'trx_minta_kas')) {
-            return TRUE;
+        $no = $this->Bkrencanaagr_model->insert($new, 'trx_minta_kas');
+        if ($no) {
+            return $no;
         } else {
             return FALSE;
         }
