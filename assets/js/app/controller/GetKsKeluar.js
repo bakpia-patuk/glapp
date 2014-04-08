@@ -19,13 +19,9 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         'kskeluar.KsKeluarForm',
         'kskeluar.KsKeluarGrid',
         'kskeluar.DataRujukanGrid',
-//        'kaskeluar.listAkun',
-//        'kaskeluar.akunWindow',
-//        'kaskeluar.newWindow',
         'kskeluar.ListMintaBayar',
         'kskeluar.ListFaktur',
-//        'kaskeluar.fakturWindow',
-//        'kaskeluar.app2Form'
+        'kskeluar.KkSignWin'
     ],
     refs: [
         {ref: 'KsKeluarForm', selector: '#kskeluarform'},
@@ -462,65 +458,15 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                     this.checkTtd(2);
                 }
             },
-            '#namaSup': {
-                select: function(cmb, e, opt) {
-                    var suppId = cmb.getValue(),
-                            form = this.getKsKeluarForm().getForm(),
-                            forem = this.getKsKeluarForm(),
-                            id = form.findField('id'),
-                            grid = this.getListFaktur(),
-                            store = grid.getStore(),
-                            filterCollection = [];
-
-                    Ext.Ajax.request({
-                        url: BASE_PATH + 'ks_keluar/generate_kk/kaskeluar',
-                        method: 'POST',
-                        params: {idSupp: suppId},
-                        scope: this,
-                        callback: function(options, success, response) {
-                            var resp = Ext.decode(response.responseText);
-
-                            if (resp.success === 'true') {
-                                id.setValue(resp.data);
-                                cmb.setReadOnly(true);
-                                forem.saved = false;
-
-                                var statusFilter = new Ext.util.Filter({
-                                    property: 'faktur_suppid',
-                                    value: suppId
-                                });
-                                filterCollection.push(statusFilter);
-
-                                var statusFilter = new Ext.util.Filter({
-                                    property: 'faktur_realstatus',
-                                    value: '1NE'
-                                });
-                                filterCollection.push(statusFilter);
-
-                                var statusFilter = new Ext.util.Filter({
-                                    property: 'faktur_bayar',
-                                    value: '1'
-                                });
-                                filterCollection.push(statusFilter);
-
-                                var statusFilter = new Ext.util.Filter({
-                                    property: 'faktur_cabang',
-                                    value: CABANG_ID
-                                });
-                                filterCollection.push(statusFilter);
-
-                                store.clearFilter(true);
-                                store.filter(filterCollection);
-                            } else {
-                                Ext.MessageBox.show({
-                                    title: resp.title,
-                                    msg: resp.message,
-                                    buttons: Ext.MessageBox.OK,
-                                    icon: Ext.MessageBox.ERROR
-                                });
-                            }
-                        }
-                    });
+            '#fakturCheck': {
+                checkchange: function(cl, rI, checked) {
+                    var grid = this.getListFaktur(),
+                    data = grid.getStore().getAt(rI);
+                    if(checked) {
+                        alert('checked');
+                    } else {
+                        alert('unchecked');
+                    }
                 }
             },
         });
