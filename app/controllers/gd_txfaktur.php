@@ -386,7 +386,7 @@ class Gd_txfaktur extends Auth_Controller {
         $detail_faktur = $this->Gdtxfaktur_model->get_detail('id', $id, 'trx_faktur');
 
         $data_minta_anggaran = array(
-            'id' => $detail_faktur->faktur_tgl,
+            //'id' => $detail_faktur->faktur_tgl,
             'tgl_trx' => mdate('%Y-%m-%d %H:%i:%s', now()),
             'trx_cabangid' => $this->user->cabang_id,
             'trx_type' => 1,
@@ -403,11 +403,11 @@ class Gd_txfaktur extends Auth_Controller {
 
         $id_ma = $this->Gdtxfaktur_model->insert($data_minta_anggaran, 'trx_agrplan');
         if($id_ma == NULL) {
-            echo json_encode(array('success' => 'false', 'data' => "", 'message' => 'Faktur berhasil dibuat'));
+            echo json_encode(array('success' => 'false', 'data' => "", 'message' => $this->catch_db_err()));
             return FALSE;
         }
         $params = array();
-        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_ma);
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_ma.'.'.$this->user->cabang_id);
         $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'trx_agrplan');
         foreach ($data_po as $key) {
 
@@ -823,5 +823,81 @@ class Gd_txfaktur extends Auth_Controller {
         }
         clearstatcache();
     }
+    public function upload_signNullTf1() {
+        /* $stat = stat('C:\Wacom\ttd\signNull.png');
+          $stm = $stat['mtime'];
+          if($stm <= time() - 60)
+          {
+          echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+          return FALSE;
+          } */
+
+        if ($_FILES['fileSgn']['name'] != "signNull.png") {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            return FALSE;
+        }
+
+
+        $config['upload_path'] = './assets/img_data/';
+        $config['allowed_types'] = 'png';
+        $config['file_name'] = 'signNullTf1.png';
+        $config['max_size'] = '20';
+        $config['max_width'] = '300';
+        $config['max_height'] = '150';
+        $config['overwrite'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('fileSgn')) {
+            $data = $this->upload->data();
+            if ($data['image_width'] != 300 || $data['image_height'] != 150) {
+                echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            } else {
+                echo '{success:true, message: "Verifikasi Selesai", url: "assets/img_data/signNullTf1.png"}';
+            }
+        } else {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+        }
+    }
+
+    public function upload_signNullTf2() {
+        /* $stat = stat('C:\Wacom\ttd\signNull.png');
+          $stm = $stat['mtime'];
+          if($stm <= time() - 60)
+          {
+          echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+          return FALSE;
+          } */
+
+        if ($_FILES['fileSgn2']['name'] != "signNull.png") {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            return FALSE;
+        }
+
+
+        $config['upload_path'] = './assets/img_data/';
+        $config['allowed_types'] = 'png';
+        $config['file_name'] = 'signNullTf2.png';
+        $config['max_size'] = '20';
+        $config['max_width'] = '300';
+        $config['max_height'] = '150';
+        $config['overwrite'] = TRUE;
+        $config['remove_spaces'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('fileSgn2')) {
+            $data = $this->upload->data();
+            if ($data['image_width'] != 300 || $data['image_height'] != 150) {
+                echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+            } else {
+                echo '{success:true, message: "Verifikasi Selesai", url: "assets/img_data/signNullTf2.png"}';
+            }
+        } else {
+            echo '{success:false, message: "Tanda Tangan Salah, Ulangi Lagi"}';
+        }
+    }
+
 
 }

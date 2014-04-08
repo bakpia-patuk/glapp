@@ -29,6 +29,7 @@ class Apps extends Auth_Controller {
         $data['logged_user'] = strtoupper($this->the_user->first_name . ' ' . $this->the_user->last_name);
         $data['cabang_name'] = $cabang == 1 ? $detail_cabang : 'CABANG ' . $detail_cabang->cabang_city . ', ' . $detail_cabang->cabang_alias;
         $data['cabang_id'] = $cabang;
+        $data['divisi_id'] = $this->the_user->divisi_id;
 //        $data['ttd_string'] = $this->the_user->ttd_status == 0 ? 'TANDA TANGAN BELUM ADA. GUNAKAN MENU UBAH PROFILE UNTUK UPLOAD TTD' : '';
         $this->load->view('app_page', $data);
     }

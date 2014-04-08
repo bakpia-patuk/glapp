@@ -7,7 +7,7 @@ Ext.define('eTrav.view.dvtxbrkeluar.DvTxBrKeluarDetailGrid', {
     columnLines: true,
     //selModel : smGrid,
     flex: 1,
-//    store: 'PengdivDetailStore',
+   store: 'dvtxbrkeluar.PengdivDetailStore',
     initComponent: function () {
         var me = this;
 

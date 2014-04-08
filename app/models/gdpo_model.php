@@ -148,7 +148,7 @@ class Gdpo_model extends MY_Model {
             'barang_katalog' => $dpeng->po_katalog,
             'tt_status' => 0,
             'tt_id' => 0,
-            'tt_qty_kirim' => $dpeng->po_qty,
+            'tt_qty_kirim' => 0,
             'simpan_status' => 1
         );
 

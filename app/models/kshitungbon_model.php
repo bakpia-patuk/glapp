@@ -56,7 +56,7 @@ class Kshitungbon_model extends MY_Model {
     
     function cek_allkb($id) {
         $this->db->select_sum('jumlah_trx');
-        $this->db->from('trx_detail_kasbon');
+        $this->db->from('detail_kas_bon');
         $this->db->where('kasbon_id', $id);
         $query = $this->db->get();
 

@@ -26,7 +26,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'dmbSave'
+                   action: 'dmbSave'
                 },
                 '-',
                 {
@@ -34,7 +34,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     ui: 'blue-button',
                     text: 'Baru',
                     iconCls: 'icon-btn-add',
-//                    action: 'dmbNew'
+                   action: 'dmbNew'
                 }
             ],
             items: [
@@ -67,7 +67,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore',
+                   store: 'dvtxbrminta.DivisiStore',
                     displayField: 'divisiName',
                     valueField: 'divisiId',
                     emptyText: 'Pilih Divisi',
@@ -76,35 +76,35 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                            cmb.setValue(parseInt(userDivisi));
-//                            cmb.setReadOnly(true);
-//                        },
-//                        'change': function(cmb, rec, opt){
-//                            var myVal = cmb.getValue(),
-//                                ruanganStore = this.up('form').getForm().findField('ruangan').getStore(), 
-//                                filterCollection = [];
-//
-//                            this.up('form').getForm().findField('ruangan').setReadOnly(false);
-//                            
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'divisi_code',
-//                                value: myVal
-//                            });
-//                            filterCollection.push(statusFilter);
-//                    
-//                            ruanganStore.clearFilter(true);
-//                            ruanganStore.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       'afterrender': function(cmb, rec, opt) {
+                           cmb.getStore().load();
+                           cmb.setValue(parseInt(USER_DIVISI));
+                           cmb.setReadOnly(true);
+                       },
+                       'change': function(cmb, rec, opt){
+                           var myVal = cmb.getValue(),
+                               ruanganStore = this.up('form').getForm().findField('ruangan').getStore(), 
+                               filterCollection = [];
+
+                           this.up('form').getForm().findField('ruangan').setReadOnly(false);
+                           
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'cabang_id',
+                               value: CABANG_ID
+                           });
+                           filterCollection.push(statusFilter);
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'divisi_id',
+                               value: myVal
+                           });
+                           filterCollection.push(statusFilter);
+                   
+                           ruanganStore.clearFilter(true);
+                           ruanganStore.filter(filterCollection);
+                       }
+                   }
                 },
                 {
                     xtype: 'combobox',
@@ -114,7 +114,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiRuanganStore',
+                   store: 'dvtxbrminta.DivisiRuanganStore',
                     displayField: 'ruangName',
                     valueField: 'id',
                     emptyText: 'Pilih Ruangan',
@@ -133,7 +133,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore1',
+                   store: 'dvtxbrminta.DivisiStore1',
                     displayField: 'divisiName',
                     valueField: 'divisiId',
                     emptyText: 'Pilih Divisi',
@@ -142,33 +142,33 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                        },
-//                        'select': function(cmb, rec, opt){
-//                            var myVal = cmb.getValue(),
-//                                tujuanStore = this.up('form').getForm().findField('tujuan').getStore(), 
-//                                filterCollection = [];
-//
-//                            this.up('form').getForm().findField('tujuan').setReadOnly(false);
-//                            
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'divisi_code',
-//                                value: myVal
-//                            });
-//                            filterCollection.push(statusFilter);
-//                    
-//                            tujuanStore.clearFilter(true);
-//                            tujuanStore.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       'afterrender': function(cmb, rec, opt) {
+                           cmb.getStore().load();
+                       },
+                       'select': function(cmb, rec, opt){
+                           var myVal = cmb.getValue(),
+                               tujuanStore = this.up('form').getForm().findField('tujuan').getStore(), 
+                               filterCollection = [];
+
+                           this.up('form').getForm().findField('tujuan').setReadOnly(false);
+                           
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'cabang_id',
+                               value: CABANG_ID
+                           });
+                           filterCollection.push(statusFilter);
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'divisi_id',
+                               value: myVal
+                           });
+                           filterCollection.push(statusFilter);
+                   
+                           tujuanStore.clearFilter(true);
+                           tujuanStore.filter(filterCollection);
+                       }
+                   }
                 },
                 {
                     xtype: 'combobox',
@@ -178,7 +178,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiRuanganStore1',
+                   store: 'dvtxbrminta.DivisiRuanganStore1',
                     displayField: 'ruangName',
                     valueField: 'id',
                     emptyText: 'Pilih Ruangan',
@@ -190,11 +190,11 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                        }
-//                    }
+                   listeners: {
+                       'afterrender': function(cmb, rec, opt) {
+                           cmb.getStore().load();
+                       }
+                   }
                 },
                 {
                     xtype: 'combobox',
@@ -205,7 +205,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     hideTrigger: true,
                     mode: 'remote',
                     minChars: 2,
-//                    store: 'ItemStore',
+                   store: 'dvtxbrminta.ItemStore',
                     displayField: 'itemName',
                     valueField: 'id',
                     forceSelection: true,
@@ -223,13 +223,13 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                     hideTrigger: true,
                     name: 'jumlah',
                     allowBlank: false,
-//                    listeners:{
-//                        'change' : function() {
-//                            if(this.getValue() !== 0) {
-//                                this.up('form').down('#pengDivMintaBarang').enable();
-//                            }
-//                        }
-//                    }
+                   listeners:{
+                       'change' : function() {
+                           if(this.getValue() !== 0) {
+                               this.up('form').down('#pengDivMintaBarang').enable();
+                           }
+                       }
+                   }
                 },
                 {
                     xtype: 'fieldcontainer',
@@ -252,7 +252,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaForm', {
                             disabled: true,
                             text: 'Tambah',
                             margins: '0 0 0 5',
-//                            action: 'pengDivMintaBarang'
+                           action: 'pengDivMintaBarang'
                         }
                     ]
                 }
