@@ -22,6 +22,8 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
     initComponent: function() {
         var me = this;
 
+        var grid = me;
+
         Ext.applyIf(me, {
             viewConfig: {
                 autoScroll: true,
@@ -46,7 +48,10 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
                     ui: 'blue-button',
                     xtype: 'button',
                     text: 'REFRESH',
-                    iconCls: 'icon-btn-refresh'
+                    iconCls: 'icon-btn-refresh',
+                    handler: function() {
+                        grid.getStore().load();
+                    }
                 }
             ],
             features: [
@@ -64,12 +69,12 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
                 {
                     width: 200,
                     text: 'NO FAKTUR',
-                    dataIndex: 'faktur_no'
+                    dataIndex: 'keterangan'
                 },
                 {
                     text: 'CABANG',
                     width: 150,
-                    dataIndex: 'kotaCabang',
+                    dataIndex: 'name',
                     summaryRenderer: function (value, summaryData, dataIndex) {
                         return '<span style="font-weight:bold;font-size:12px"> Total</span>';
                     }
@@ -79,13 +84,13 @@ Ext.define('GlApp.view.bkanggaran.BkAnggaran1Grid', {
                     xtype: 'numbercolumn',
                     width: 150,
                     align: 'right',
-                    dataIndex: 'faktur_nototal',
+                    dataIndex: 'ma_value',
                     summaryType: 'sum',
                     renderer: function (value, meta, record) {
-                        return Ext.util.Format.number(value, '0.000,00/i');
+                        return Ext.util.Format.number(value, '0,000.00/i');
                     },
                     summaryRenderer: function (value, summaryData, dataIndex) {
-                        return '<span style="font-weight:bold;font-size:12px">' + Ext.util.Format.number(value, '0.000,00/i') + '</span>';
+                        return '<span style="font-weight:bold;font-size:12px">' + Ext.util.Format.number(value, '0,000.00/i') + '</span>';
                     }
                 }
             ]

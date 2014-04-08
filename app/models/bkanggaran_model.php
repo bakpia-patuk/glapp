@@ -116,51 +116,47 @@ class Bkanggaran_model extends MY_Model {
 
                     $no_faktur_i = $this->get_detail('id', $no_faktur[$i], 'trx_agrplan')->trx_typeref;
 
-                    $opts[$i][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_i);
+                    $opts[$i][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_i);
                     if (!$this->update($status_faktur, $opts[$i], NULL, 'trx_faktur')) {
                         return false;
                     }
                 }
             } else if ($trx_jenisbayar == 1) {
-                $no_bg = explode(';', $trx_agrdata);
-                for ($j = 0; $j < count($no_bg) - 1; $j++) {
+                $no_bg = explode(';', rtrim($trx_agrdata, ';'));
+                for ($j = 0; $j < count($no_bg); $j++) {
+                    $realisasi = $this->get_detail('id', $no_bg[$j], 'trx_agrplan');
                     $status_bg = array(
-                        'faktur_byrrealisasi' => 1,
+                        'faktur_byrrealisasi' => $realisasi->trx_nilai,
                         'faktur_byragr' => $id
                     );
 
-                    $no_faktur_i = $this->get_detail('id', $no_bg[$j], 'trx_agrplan')->trx_typeref;
+                    $no_faktur_j = $realisasi->trx_typeref;
 
-                    $opts[$j][] = array('field' => 'faktur_bayarno', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_j);
+                    $opts[$j][] = array('field' => 'faktur_id', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_j);
                     if (!$this->update($status_bg, $opts[$j], NULL, 'trx_faktur_bayar')) {
                         return false;
                     }
 
-                    $daftar_fk = $this->gets($opts[$j], NULL, 'trx_faktur_bayar');
-                    $ck = 0;
+                    $status_faktur = array(
+                        'faktur_agrstat' => 1,
+                        'faktur_agrid' => $id
+                    );
 
-                    foreach ($daftar_fk as $row) {
-                        $status_faktur = array(
-                            'faktur_agrstat' => 1,
-                            'faktur_agrid' => $id
-                        );
-
-                        $optn[$ck][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $row->faktur_id);
-                        if (!$this->update($status_faktur, $optn[$ck], NULL, 'trx_faktur')) {
-                            return false;
-                        }
-                        $ck++;
+                    $optn[$j][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_j);
+                    if (!$this->update($status_faktur, $optn[$j], NULL, 'trx_faktur')) {
+                        return false;
                     }
                 }
             } else if ($trx_jenisbayar == 4) {
-                $no_faktur = explode(';', $trx_agrdata);
-                for ($s = 0; $s < count($no_faktur) - 1; $s++) {
+                $no_faktur = explode(';', rtrim($trx_agrdata, ';'));
+                for ($s = 0; $s < count($no_faktur); $s++) {
                     $status_faktur = array(
                         'faktur_agrid' => $id
                     );
-                    $no_faktur_s = $this->get_detail('id', $no_faktur[$s], 'trx_agrplan')->trx_typeref;
+                    
+                    $no_faktur_s = $no_faktur[$s];
 
-                    $optk[$s][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_s);
+                    $optk[$s][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_s);
                     if (!$this->update($status_faktur, $optk[$s], NULL, 'trx_faktur')) {
                         return false;
                     }
@@ -173,12 +169,13 @@ class Bkanggaran_model extends MY_Model {
                     );
 
                     $no_faktur_z = $this->get_detail('id', $no_faktur[$z], 'trx_agrplan')->trx_typeref;
-                    $optc[$z][] = array('field' => 'faktur_no', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_z);
+                    $optc[$z][] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $no_faktur_z);
                     if (!$this->update($status_faktur, $optc[$z], NULL, 'trx_faktur')) {
                         return false;
                     }
                 }
             }
+            // var_dump($divisi);
         }
 
         $rcn_agr = explode(';', rtrim($trx_agrdata, ';'));

@@ -14,7 +14,8 @@ Ext.define('GlApp.controller.GetBkAnggaran', {
         'bkanggaran.AgrSuppStore',
         'bkanggaran.BankPusatStore',
         'bkanggaran.BankDebetDariStore',
-        'bkanggaran.BankDebetKeStore'
+        'bkanggaran.BankDebetKeStore',
+        'bkanggaran.BankSupplier1Store'
     ],
     views: [
         'bkanggaran.GetBkAnggaran',
@@ -157,12 +158,12 @@ Ext.define('GlApp.controller.GetBkAnggaran', {
                     var store = this.getBkAnggaran1Grid().getStore();
                     
                     store.load();
-                    store.group('displayName');
+                    store.group('list_po');
                 },
                 beforeselect: function (record, index, eOpts) {
                     var form = this.getBkAnggaranForm().getForm(),
                         suppField = form.findField('trx_supp_id'),
-                        suppId = index.get('suppId');
+                        suppId = index.get('name_id');
                 
                     if(suppField.getValue() == "" || suppField.getValue() == suppId) {
                         suppField.setValue(suppId);
@@ -177,12 +178,12 @@ Ext.define('GlApp.controller.GetBkAnggaran', {
                         fakturField = form.findField('trx_agrdata'),
                         suppField = form.findField('supplier'),
                         nominalField = form.findField('trx_totalagr'),
-                        jenisBayar = index.get('jenisBayar'),
-                        fakturNo =  index.get('faktur_no'),
-                        fakturNominal =  index.get('faktur_nominal');
+                        jenisBayar = index.get('cara_bayar'),
+                        fakturNo =  index.get('id_trx'),
+                        fakturNominal =  index.get('ma_value');
                 
                     jenisField.setValue(jenisBayar);
-                    suppField.setValue(index.get('displayName'));
+                    suppField.setValue(index.get('list_po'));
                     fakturField.setValue(fakturField.getValue() + fakturNo + ';');
                     nominalField.setValue(nominalField.getValue() + fakturNominal);
                 },
