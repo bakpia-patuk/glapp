@@ -107,7 +107,7 @@ class Gd_pengadaan extends Auth_Controller {
             'peng_qty' => $insert['peng_qty'],
             'peng_harga' => $item->mi_item_price,
             'peng_disc' => $item->mi_diskon,
-            'peng_ppn' => $item->mi_ppn,
+            'peng_ppn' => $item->mi_ppn == 1 ? 10 : 0,
             'qty_po' => 0,
             'po_merk' => $item->mi_merk,
             'po_katalog' => $item->mi_katalog,
