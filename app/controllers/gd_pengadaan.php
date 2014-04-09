@@ -234,7 +234,7 @@ class Gd_pengadaan extends Auth_Controller {
             $data_pengadaan_detail = $this->Gdpengadaan_model->gets($params_detail, NULL, 'trx_pengadaan_detail');
             foreach ($data_pengadaan_detail as $key) {
                 $data_json = json_encode($key);
-                $data2[] = array('data' => $data_json,'primary_key' => $row,'nama_column'=>'pengadaan_id','table_name'=>'trx_pengadaan_detail' );
+                $data2[] = array('data' => $data_json,'primary_key' => $key->id,'nama_column'=>'id','table_name'=>'trx_pengadaan_detail' );
                 $jumlah++;
             }
             $data_head = array();

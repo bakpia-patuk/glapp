@@ -63,12 +63,12 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     format: '0,00/i'
                 },
                 {
-                    xtype: 'numbercolumn',
+                    xtype: 'gridcolumn',
                     width: 60,
                     text: 'DISC',
                     align: 'center',
                     dataIndex: 'tt_disc',
-                    format: '0'
+                    //format: '0'
                 },
                 {
                     xtype: 'numbercolumn',

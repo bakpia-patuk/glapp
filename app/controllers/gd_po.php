@@ -258,7 +258,15 @@ class Gd_po extends Auth_Controller {
             $data['po_suppid'] = $insert['supp_name'];
             $data['po_supp_email'] = "";
         }
+        $opt2[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $data_detail_tt = $this->Gdpo_model->gets($opt2,NULL,'trx_tt_detail');
+        if($data_detail_tt)
+        {
+            echo json_encode(array('success' => 'false', 'data' => $data, 'msg' => 'TT sudah telah dibuat'));
+            return;
+        }
         $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        
         $this->Gdpo_model->update($data, $opt, NULL, 'trx_po');
 
 
@@ -306,8 +314,8 @@ class Gd_po extends Auth_Controller {
             'barang_ppn' => $insert['barang_ppn'],
             'tt_qty_kirim' => $insert['barang_qty']
         );
-
         $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+               
         $this->Gdpo_model->update($data, $opt, NULL, 'trx_po_detail');
 
         //UPDATE PO VALUE
