@@ -322,6 +322,42 @@ Ext.define('GlApp.controller.GetKsMintaKas', {
                     }
                 }
             },
+            '#setAkunGk': {
+                click: function() {
+                    var grid = this.getKsGkGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Select Group Keperluan First');
+                        return;
+                    }
+                    var win = Ext.widget('ksmintakas.bklistakunwin');
+                }
+            },
+            '#setAkunKp': {
+                click: function() {
+                    var grid = this.getKsheaderAkunGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Pilih Header Akun Group');
+                        return;
+                    }
+
+                    var data = '';
+                    for (i = 0; i < sel.length; i++) {
+                        data = data + sel[i].get('akun_id') + '-';
+                    }
+
+                    var gd = this.getKsGkGrid(),
+                            sel = gd.getSelectionModel().getSelection();
+
+                    var params = {
+                        idForm: 'mintakasdiv',
+                        idPerlu: sel[0].get('id'),
+                        data: data
+                    };
+                    this.ajaxReq('ks_mintakas/set_akungr', params, 2);
+                }
+            },
             '#gridGk': {
                 selectionchange: function(m, r) {
                     var grid = this.getKsGkAkunGrid();

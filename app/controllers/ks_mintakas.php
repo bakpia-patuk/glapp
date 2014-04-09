@@ -106,4 +106,21 @@ class Ks_mintakas extends Auth_Controller {
 
         echo json_encode(array('success' => 'true'));
     }
+    
+    public function set_akungr() {
+        $insert = $this->input->post(NULL, TRUE);
+        $data = explode('-', rtrim($insert['data'], '-'));
+        foreach ($data as $row) {
+            $this->Ksmintakas_model->add_to_kpakun($row, $insert['idPerlu'], $insert['idForm']);
+        }
+        echo json_encode(array('success' => 'true', 'msg' => 'Add Data Success'));
+    }
+
+    public function del_akun_gr() {
+        $data = $this->input->post('id');
+
+        $rec[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $data);
+        $this->Ksmintakas_model->delete($rec, NULL, 'ms_keperluan_akun');
+        echo json_encode(array('success' => 'true', 'msg' => 'Delete Data Success'));
+    }
 }
