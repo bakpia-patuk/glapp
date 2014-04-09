@@ -17,24 +17,19 @@ class Kskeluar_model extends MY_Model {
         switch ($id) {
             case 1:
                 return "PELAYANAN";
-                break;
             case 2:
                 return "MARKETING";
-                break;
             case 3:
                 return "KEUANGAN";
-                break;
             case 4:
                 return "LAB";
-                break;
             case 5:
                 return "SDM";
-                break;
             case 6:
                 return "IT";
-                break;
             case 7:
                 return "RUMAH TANGGA";
+            default: 
                 break;
         }
     }

@@ -26,7 +26,7 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
                     xtype: 'combobox',
                     emptyText: 'Supplier',
                     width: 180,
-                    itemId: 'ttSupplier',
+                    itemId: 'fkSupplier',
                     triggerAction: 'all',
                     hideTrigger: false,
                     mode: 'remote',
@@ -39,11 +39,10 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
                     text: 'SEARCH',
                     ui: 'green-button',
                     action: 'searchTt',
-                    itemId: 'searchTt',
                     handler: function() {
                             var store = grid.getStore(),
-                            cmb = grid.down('#ttSupplier').getValue();
-                        if( cmb != null) {
+                            cmb = grid.down('#fkSupplier').getValue();
+                        if( cmb !== null) {
 
                             store.clearFilter(true);
                             store.filter('faktur_suppid', cmb);
@@ -54,9 +53,8 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
                 {
                     text: 'REFRESH',
                     ui: 'green-button',
-                    action: 'refreshTt',
                     handler: function() {
-                        if(grid.down('#ttSupplier').getValue() != null) {
+                        if(grid.down('#fkSupplier').getValue() !== null) {
                             grid.getStore().load();
                         }
                     }
@@ -70,25 +68,13 @@ Ext.define('GlApp.view.kskeluar.ListFaktur', {
                     text: '',
                     dataIndex: 'checked',
                     itemId: 'fakturCheck'
-                    // listeners: {
-                    //     checkchange: function (column, recordIndex, checked) {
-                    //         var grid = this.up('grid'),
-                    //             noFak = grid.getStore().getAt(recordIndex).get('id'),
-                    //             valueFak = grid.getStore().getAt(recordIndex).get('faktur_nototal');
-
-                    //         var fakField = Ext.getCmp('kkFakNo'),
-                    //             fakTotal = Ext.getCmp('kkFakTotal'),
-                    //             fakTotal = Ext.getCmp('kkFakTotal');
-
-                    //         if (checked === true) {
-                    //             fakField.setValue(fakField.getValue() + noFak + ';');
-                    //             fakTotal.setValue(fakTotal.getValue() + valueFak);
-                    //         } else {
-                    //             fakField.setValue(fakField.getValue().replace(noFak + ';', ''));
-                    //             fakTotal.setValue(fakTotal.getValue() - valueFak);
-                    //         }
-                    //     }
-                    // }
+                },
+                {
+                    xtype: 'gridcolumn',
+                    flex: 0.3,
+                    text: 'ID FAKTUR',
+                    hidden: true,
+                    dataIndex: 'id'
                 },
                 {
                     xtype: 'gridcolumn',

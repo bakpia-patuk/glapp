@@ -31,8 +31,8 @@ Ext.define('GlApp.view.kskeluar.KkSignWin', {
                     items: [
                         {
                             xtype:'textfield',
-                            name: 'idTt',
-                            itemId: 'idTt',
+                            name: 'idKk',
+                            itemId: 'idKk',
                             hidden: true
                         },
                         {
@@ -56,13 +56,13 @@ Ext.define('GlApp.view.kskeluar.KkSignWin', {
                                     buttonText: 'Verifikasi TTD',
                                     margins: '10 0 0 5',
                                     itemId: 'preTtdAppr',
-                                    name: 'ttSign',
+                                    name: 'kkSign',
                                     onChange: function(value) {
                                         var form = this.up('form'),
-                                                idtt = form.down('#idTt').getValue(),
+                                                idkk = form.down('#idKk').getValue(),
                                                 name = this.getName();
                                         form.getForm().submit({
-                                            url: BASE_URL + 'shared/upload_ttd_trx/' + name + '/' + idtt,
+                                            url: BASE_URL + 'shared/upload_ttd_trx/' + name + '/' + idkk,
                                             waitMsg: 'Verifikasi Tanda Tangan ..',
                                             clientValidation: false,
                                             success: function(form, action) {
@@ -87,7 +87,7 @@ Ext.define('GlApp.view.kskeluar.KkSignWin', {
             buttons: [
                 {
                     text: 'Save',
-                    action: 'ttSave'
+                    action: 'kkSignSave'
                 },
                 {
                     text: 'Cancel',

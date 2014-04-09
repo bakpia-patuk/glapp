@@ -3,7 +3,7 @@
  **/
 
 Ext.define('GlApp.controller.GetKsKeluar', {
-    extend: 'Ext.app.Controller',
+    extend: 'GlApp.controller.Base',
     models: [
     ],
     stores: [
@@ -27,22 +27,18 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         {ref: 'KsKeluarForm', selector: '#kskeluarform'},
         {ref: 'KsKeluarGrid', selector: '#kskeluargrid'},
         {ref: 'KsKeluarTab', selector: '#kskeluartab'},
-        
         // panel button kas keluar grid
         {ref: 'StartKk', selector: '#datestarkk'},
         {ref: 'EndKk', selector: '#dateendkk'},
         {ref: 'CabangKk', selector: '#cabangkk'},
-        
         // panel button data rujukan grid
         {ref: 'StartDr', selector: '#datestartdr'},
         {ref: 'EndDr', selector: '#dateenddr'},
         {ref: 'PeriksaDr', selector: '#drperiksa'},
-        
 //        //daftar Grid selain KK
         {ref: 'ListFaktur', selector: '#listfaktur'},
         {ref: 'ListMintaBayar', selector: '#listmintabayar'},
         {ref: 'DataRujukanGrid', selector: '#datarujukangrid'},
-        
         //panel
         {ref: 'TesPanel1', selector: '#tespanel1'},
         {ref: 'TesPanel2', selector: '#tespanel2'},
@@ -51,10 +47,33 @@ Ext.define('GlApp.controller.GetKsKeluar', {
     ],
     init: function() {
         this.control({
-            '#kskeluartab':{
+            '#kskeluarform': {
+                afterrender: function() {
+                    this.initKey(this.getKsKeluarForm(), '#random_string');
+                }
+            },
+            '#kskeluartab': {
+                beforetabchange: function(tabPanelThis, componentNew, componentCurrent) {
+                    var form = this.getKsKeluarForm();
+                    // add back to ignore activeTab call
+                    if (form.saved === false) {
+                        Ext.Msg.show({
+                            title: 'Konfirmasi',
+                            msg: 'Anda sedang melakukan transaksi. Lanjutakan transaksi ?',
+                            buttons: Ext.Msg.YESNO,
+                            scope: this,
+                            fn: function(btn) {
+                                if (btn === 'no') {
+                                    return true;
+                                }
+                            }
+                        });
+                        return false;
+                    }
+                },
                 tabchange: function(tabPanel, tab) {
                     var id = tab.itemId;
-                    var faktur = 'tespanel1',
+                    var faktur = 'listfaktur',
                             mintabayar = 'tespanel2',
                             kk = 'tespanel3',
                             rujukan = 'tespanel4';
@@ -78,7 +97,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                     }
                 }
             },
-            '#listmintabayar':{
+            '#listmintabayar': {
                 selectionchange: function(model, records) {
                     var form = this.getKsKeluarForm().getForm();
 
@@ -90,7 +109,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                     }
                 }
             },
-            '#datarujukangrid':{
+            '#datarujukangrid': {
                 selectionchange: function(model, records) {
                     var form = this.getKsKeluarForm().getForm();
 
@@ -106,7 +125,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                 }
             },
             '#KasKeluarSearch': {
-                click: function(){
+                click: function() {
                     var grid = this.getKsKeluarGrid(),
                             store = grid.getStore(),
                             filterCollection = [],
@@ -114,7 +133,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                             date2 = this.getEndKk().getValue(),
                             cabang = this.getCabangKk().getValue();
 
-                    if(cabang === null && date1 === null && date2 === null){
+                    if (cabang === null && date1 === null && date2 === null) {
                         Ext.Msg.alert('Perhatian', 'Mohon isi salah satu filter.');
                         return;
                     } else {
@@ -123,8 +142,8 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                             value: 'kaskeluar'
                         });
                         filterCollection.push(statusFilter);
-                        
-                        if(cabang !== null && date1 === null && date2 === null){
+
+                        if (cabang !== null && date1 === null && date2 === null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'cabang_id',
                                 value: cabang
@@ -133,7 +152,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(cabang === null && date1 !== null && date2 === null){
+                        } else if (cabang === null && date1 !== null && date2 === null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'kas_tgltrx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
@@ -142,7 +161,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(cabang === null && date1 === null && date2 !== null){
+                        } else if (cabang === null && date1 === null && date2 !== null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'kas_tgltrx',
                                 value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
@@ -151,25 +170,10 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(cabang === null && date1 !== null && date2 !== null){
+                        } else if (cabang === null && date1 !== null && date2 !== null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'kas_tgltrx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if(cabang !== null && date1 === null && date2 !== null){
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'cabang_id',
-                                value: cabang
                             });
                             filterCollection.push(statusFilter);
 
@@ -181,7 +185,22 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(cabang !== null && date1 !== null && date2 === null){
+                        } else if (cabang !== null && date1 === null && date2 !== null) {
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'cabang_id',
+                                value: cabang
+                            });
+                            filterCollection.push(statusFilter);
+
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'kas_tgltrx',
+                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
+                            });
+                            filterCollection.push(statusFilter);
+
+                            store.clearFilter(true);
+                            store.filter(filterCollection);
+                        } else if (cabang !== null && date1 !== null && date2 === null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'kas_tgltrx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
@@ -196,7 +215,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(cabang !== null && date1 !== null && date2 !== null){
+                        } else if (cabang !== null && date1 !== null && date2 !== null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'kas_tgltrx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
@@ -221,32 +240,23 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                     }
                 }
             },
-            '#KasKeluarRefresh':{
-                click: function(){
+            '#KasKeluarRefresh': {
+                click: function() {
                     var grid = this.getKsKeluarGrid(),
                             store = grid.getStore();
-                    
+
                     store.clearFilter(true);
                     store.filter('kas_type', 'kaskeluar');
                     this.getStartKk().reset(),
-                    this.getEndKk().reset(),
-                    this.getCabangKk().reset();
+                            this.getEndKk().reset(),
+                            this.getCabangKk().reset();
                 }
             },
-            '#FakturRefresh':{
-                click: function(){
-                    var grid = this.getListFaktur(),
-                            store = grid.getStore();
-                    
-                    store.clearFilter(true);
-                    store.load();
-                }
-            },
-            '#ListMkRefresh':{
-                click: function(){
+            '#ListMkRefresh': {
+                click: function() {
                     var grid = this.getListMintaBayar(),
                             store = grid.getStore(),
-                        filterCollection = [];
+                            filterCollection = [];
 
                     var filter2 = new Ext.util.Filter({
                         property: 'mk_keperluan',
@@ -276,11 +286,11 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                     store.filter(filterCollection);
                 }
             },
-            '#DataRujukanRefresh':{
-                click: function(){
+            '#DataRujukanRefresh': {
+                click: function() {
                     var grid = this.getDataRujukanGrid(),
-                        store = grid.getStore(),
-                        filterCollection = [];
+                            store = grid.getStore(),
+                            filterCollection = [];
 
                     var filter2 = new Ext.util.Filter({
                         property: 'mk_keperluan',
@@ -310,8 +320,8 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                     store.filter(filterCollection);
                 }
             },
-            '#DataRujukanSearch':{
-                click: function(){
+            '#DataRujukanSearch': {
+                click: function() {
                     var grid = this.getDataRujukanGrid(),
                             store = grid.getStore(),
                             filterCollection = [],
@@ -319,13 +329,13 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                             date2 = this.getEndDr().getValue(),
                             periksa = this.getPeriksaDr().getValue();
 
-                    if(periksa === '' && date1 === null && date2 === null){
+                    if (periksa === '' && date1 === null && date2 === null) {
                         Ext.Msg.alert('Perhatian', 'Mohon isi salah satu filter.');
                         return;
                     } else {
                         var grid = this.getDataRujukanGrid(),
-                            store = grid.getStore(),
-                            filterCollection = [];
+                                store = grid.getStore(),
+                                filterCollection = [];
 
                         var filter2 = new Ext.util.Filter({
                             property: 'mk_keperluan',
@@ -350,8 +360,8 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                             value: CABANG_ID
                         });
                         filterCollection.push(filter2);
-                        
-                        if(periksa !== '' && date1 === null && date2 === null){
+
+                        if (periksa !== '' && date1 === null && date2 === null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'mkr_pemeriksaan=ll',
                                 value: periksa
@@ -360,7 +370,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(periksa === '' && date1 !== null && date2 === null){
+                        } else if (periksa === '' && date1 !== null && date2 === null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'tgl_trx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
@@ -369,7 +379,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(periksa === '' && date1 === null && date2 !== null){
+                        } else if (periksa === '' && date1 === null && date2 !== null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'tgl_trx',
                                 value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
@@ -378,25 +388,10 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(periksa === '' && date1 !== null && date2 !== null){
+                        } else if (periksa === '' && date1 !== null && date2 !== null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'tgl_trx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if(periksa !== '' && date1 === null && date2 !== null){
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'mkr_pemeriksaan=ll',
-                                value: periksa
                             });
                             filterCollection.push(statusFilter);
 
@@ -408,7 +403,22 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(periksa !== '' && date1 !== null && date2 === null){
+                        } else if (periksa !== '' && date1 === null && date2 !== null) {
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'mkr_pemeriksaan=ll',
+                                value: periksa
+                            });
+                            filterCollection.push(statusFilter);
+
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'tgl_trx',
+                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
+                            });
+                            filterCollection.push(statusFilter);
+
+                            store.clearFilter(true);
+                            store.filter(filterCollection);
+                        } else if (periksa !== '' && date1 !== null && date2 === null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'tgl_trx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
@@ -423,7 +433,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
                             store.clearFilter(true);
                             store.filter(filterCollection);
-                        } else if(periksa !== '' && date1 !== null && date2 !== null){
+                        } else if (periksa !== '' && date1 !== null && date2 !== null) {
                             var statusFilter = new Ext.util.Filter({
                                 property: 'tgl_trx',
                                 value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
@@ -461,45 +471,63 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             '#fakturCheck': {
                 checkchange: function(cl, rI, checked) {
                     var grid = this.getListFaktur(),
-                    data = grid.getStore().getAt(rI);
-                    if(checked) {
-                        alert('checked');
+                            form = this.getKsKeluarForm(),
+                            data = grid.getStore().getAt(rI);
+                    var idfk = data.get('id'),
+                            total = data.get('faktur_nototal'),
+                            supplier = data.get('faktur_suppid');
+
+                    var idfield = form.down('#faktur_id'),
+                            totalfield = form.down('#faktur_nototal'),
+                            suppform = form.down('#faktur_suppid');
+                    if (checked) {
+                        suppform.setValue(parseInt(supplier));
+                        idfield.setValue(idfield.getValue() + idfk + ';');
+                        totalfield.setValue(totalfield.getValue() + total);
+                        form.getForm().findField('kk_type').setValue(1);
+                        form.saved = false;
                     } else {
-                        alert('unchecked');
+                        idfield.setValue(idfield.getValue().replace(idfk + ';', ''));
+                        totalfield.setValue(totalfield.getValue() - total);
+                        if (idfield.getValue() === "") {
+                            form.saved = true;
+                        }
                     }
                 }
-            },
+            }
         });
     },
-    loadFormFaktur: function(id){
-        Ext.getCmp('kkSave').enable();
-        Ext.getCmp('kkSavePrint').enable();
-        Ext.getCmp('kkNew').enable();
-        Ext.getCmp('kkDelete').enable();
+    loadFormFaktur: function(id) {
+        var form = this.getKsKeluarForm();
+        form.body.unmask();
+        this.ajaxReq('ks_keluar/reset', form.getForm().getValues(), 1);
+        form.getForm().reset();
+        this.initKey(form, '#random_string');
         
-        this.getKsKeluarForm().body.unmask();
-        var form = this.getKsKeluarForm().getForm();
-        form.reset();
+        form.down('#KasKeluarNew').enable();
+        form.down('#KasKeluarSave').enable();
+        form.down('#KasKeluarSavePrint').enable();
+        form.down('#KasKeluarDelete').enable();
 
-        form.findField('namaSup').show();
-        form.findField('jumlahTagihan').show();
-        form.findField('jumlahSupLebihBayar').show();
+        form.getForm().findField('faktur_suppid').show();
+        form.getForm().findField('faktur_nototal').show();
+        form.getForm().findField('jumlahSupLebihBayar').show();
 
-        form.findField('nama_divisi').hide();
-        form.findField('trx_desc').hide();
-        form.findField('statusKas').hide();
-        form.findField('statusKas').disable();
-        form.findField('mkr_pemeriksaan').hide();
-        form.findField('mkr_namapasien').hide();
-        form.findField('mkr_rujukanke').hide();
+        form.getForm().findField('divisi_name').hide();
+        form.getForm().findField('trx_desc').hide();
+        form.getForm().findField('kas_akun').hide();
+        form.getForm().findField('kas_akun').disable();
+        form.getForm().findField('agrplan_periksa').hide();
+        form.getForm().findField('agrplan_pasien').hide();
+        form.getForm().findField('agrplan_rujuk').hide();
 
-        form.findField('kkType').setValue(1);
-        
+        form.getForm().findField('kk_type').setValue(1);
+
         var grid = this.getListFaktur(),
-            store = grid.getStore();
+                store = grid.getStore();
 
         store.removeAll();
-        store.load();
+        grid.down('#fkSupplier').reset();
     },
     loadFormPermintaan: function(id) {
         Ext.getCmp('kkSave').enable();
@@ -509,7 +537,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
         this.getKsKeluarForm().body.unmask();
         var form = this.getKsKeluarForm().getForm();
-        form.reset();
+//        form.reset();
 
         form.findField('namaSup').hide();
         form.findField('jumlahTagihan').hide();
@@ -524,10 +552,10 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         form.findField('statusKas').enable();
 
         form.findField('kkType').setValue(2);
-        
+
         var grid = this.getListMintaBayar(),
-            store = grid.getStore(),
-            filterCollection = [];
+                store = grid.getStore(),
+                filterCollection = [];
 
         var filter2 = new Ext.util.Filter({
             property: 'mk_keperluan',
@@ -556,17 +584,17 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         store.clearFilter(true);
         store.filter(filterCollection);
     },
-    disableFormKk: function(id){
+    disableFormKk: function(id) {
         this.getKsKeluarForm().body.mask();
 
         Ext.getCmp('kkSave').disable();
         Ext.getCmp('kkSavePrint').disable();
         Ext.getCmp('kkNew').disable();
         Ext.getCmp('kkDelete').disable();
-        
+
         var grid = this.getKsKeluarGrid(),
-            store = grid.getStore(),
-            filterCollection = [];
+                store = grid.getStore(),
+                filterCollection = [];
 
         var filter2 = new Ext.util.Filter({
             property: 'kas_type',
@@ -577,7 +605,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         store.clearFilter(true);
         store.filter(filterCollection);
     },
-    loadFormRujukan: function(id){
+    loadFormRujukan: function(id) {
         Ext.getCmp('kkSave').enable();
         Ext.getCmp('kkSavePrint').enable();
         Ext.getCmp('kkNew').enable();
@@ -585,7 +613,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
         this.getKsKeluarForm().body.unmask();
         var form = this.getKsKeluarForm().getForm();
-        form.reset();
+//        form.reset();
 
         form.findField('namaSup').hide();
         form.findField('jumlahTagihan').hide();
@@ -600,10 +628,10 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         form.findField('mkr_rujukanke').show();
 
         form.findField('kkType').setValue(3);
-        
+
         var grid = this.getDataRujukanGrid(),
-            store = grid.getStore(),
-            filterCollection = [];
+                store = grid.getStore(),
+                filterCollection = [];
 
         var filter2 = new Ext.util.Filter({
             property: 'mk_keperluan',
@@ -640,11 +668,11 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 //                var resp = Ext.decode(response.responseText);
 //
 //                if (resp.success === 'true') {
-                    if (type === 1) {
-                        this.saveKk();
-                    } else {
-                        this.savePrintKk();
-                    }
+        if (type === 1) {
+            this.saveKk();
+        } else {
+            this.savePrintKk();
+        }
 //                } else {
 //                    Ext.MessageBox.alert('Error', 'Belum ada tanda tangan');
 //                }
@@ -660,26 +688,26 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                 cmb = form.findField('namaSup'), store, filterCollection = [];
 
 //        if (form.isValid()) {
-            Ext.Ajax.request({
-                url: BASE_PATH + 'ks_keluar/add_kaskeluar',
-                method: 'POST',
-                params: form.getValues(),
-                scope: this,
-                callback: function(options, success, response) {
-                    var resp = Ext.decode(response.responseText);
+        Ext.Ajax.request({
+            url: BASE_PATH + 'ks_keluar/add_kaskeluar',
+            method: 'POST',
+            params: form.getValues(),
+            scope: this,
+            callback: function(options, success, response) {
+                var resp = Ext.decode(response.responseText);
 
-                    if (resp.success === 'true') {
-                        Ext.MessageBox.show({
-                            title: resp.title,
-                            msg: resp.message,
-                            buttons: Ext.MessageBox.OK,
-                            icon: Ext.MessageBox.INFO
-                        });
+                if (resp.success === 'true') {
+                    Ext.MessageBox.show({
+                        title: resp.title,
+                        msg: resp.message,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.INFO
+                    });
 
-                        form.reset();
-                        forem.saved = true;
-                        form.findField('kkType').setValue(typeKas);
-                        cmb.setReadOnly(false);
+                    form.reset();
+                    forem.saved = true;
+                    form.findField('kkType').setValue(typeKas);
+                    cmb.setReadOnly(false);
 
 //                        Ext.getCmp('imageTtdKk').setSrc(BASE_URL + 'assets/img_data/signBlank.png');
 
@@ -694,48 +722,47 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 //                                }
 //                            }
 //                        });
-                        tabs.setActiveTab(2);
-                        store = this.getKsKeluarGrid().getStore();
+                    tabs.setActiveTab(2);
+                    store = this.getKsKeluarGrid().getStore();
 
-                        var filter2 = new Ext.util.Filter({
-                            property: 'kas_type',
-                            value: 'kaskeluar'
-                        });
-                        filterCollection.push(filter2);
+                    var filter2 = new Ext.util.Filter({
+                        property: 'kas_type',
+                        value: 'kaskeluar'
+                    });
+                    filterCollection.push(filter2);
 
-                        var filter2 = new Ext.util.Filter({
-                            property: 'kas_tgltrx',
-                            value: Ext.Date.format(new Date(), 'Y-m-d 00:00:00') + 'GT'
-                        });
-                        filterCollection.push(filter2);
+                    var filter2 = new Ext.util.Filter({
+                        property: 'kas_tgltrx',
+                        value: Ext.Date.format(new Date(), 'Y-m-d 00:00:00') + 'GT'
+                    });
+                    filterCollection.push(filter2);
 
-                        var filter2 = new Ext.util.Filter({
-                            property: 'kas_tgltrx',
-                            value: Ext.Date.format(new Date(), 'Y-m-d 23:59:29') + 'LT'
-                        });
-                        filterCollection.push(filter2);
+                    var filter2 = new Ext.util.Filter({
+                        property: 'kas_tgltrx',
+                        value: Ext.Date.format(new Date(), 'Y-m-d 23:59:29') + 'LT'
+                    });
+                    filterCollection.push(filter2);
 
-                        var filter2 = new Ext.util.Filter({
-                            property: 'cabang_id',
-                            value: CABANG_ID
-                        });
-                        filterCollection.push(filter2);
+                    var filter2 = new Ext.util.Filter({
+                        property: 'cabang_id',
+                        value: CABANG_ID
+                    });
+                    filterCollection.push(filter2);
 
-                        store.clearFilter(true);
-                        store.filter(filterCollection);
-                    } else {
-                        Ext.MessageBox.show({
-                            title: resp.title,
-                            msg: resp.message,
-                            buttons: Ext.MessageBox.OK,
-                            icon: Ext.MessageBox.ERROR
-                        });
-                    }
+                    store.clearFilter(true);
+                    store.filter(filterCollection);
+                } else {
+                    Ext.MessageBox.show({
+                        title: resp.title,
+                        msg: resp.message,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.ERROR
+                    });
                 }
-            });
+            }
+        });
 //        }
     },
-    
     // untuk save print belum bisa
     savePrintKk: function(button, e, options) {
         var form = this.getKkForm().getForm(),
@@ -824,7 +851,6 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             alert('form ada yang belum di isi');
         }
     },
-    
     // untuk new, tidak me reset ke database, cuma reset form saja
     newKk: function(button, e, options) {
         var form = this.getKsKeluarForm().getForm(),
@@ -852,7 +878,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 //                var resp = Ext.decode(response.responseText);
 //
 //                if (resp.success === 'true') {
-                    form.reset();
+        form.reset();
 //                    forem.saved = true;
 //                    form.findField('kkType').setValue(typeKas);
 //                    if (typeKas == 1) {
@@ -881,8 +907,20 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 //            }
 //        });
     },
-    
-    // untuk delete tidak ada
+    onSuccess: function(resp, idForm) {
+
+    },
+    onFailure: function(resp, idForm) {
+        Ext.MessageBox.show({
+            title: resp.title,
+            msg: resp.msg,
+            buttons: Ext.MessageBox.OK,
+            icon: Ext.MessageBox.ERROR
+        });
+    },
+    printTt: function(type, id) {
+        window.open(BASE_PATH + 'gd_tt/print_tt/' + type + '/' + id, "Print Preview", "height=" + screen.height + ",width=950,modal=yes,alwaysRaised=yes,scrollbars=yes");
+    }
 });
 
 /* End of file SystemMenu.js */

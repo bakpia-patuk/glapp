@@ -26,34 +26,27 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                     itemId: 'kskeluartab',
                     items: [
                         {
-                            xtype: 'panel',
                             title: 'DATA FAKTUR',
                             layout: 'fit',
-                            itemId: 'tespanel1',
                             name: 'TesPanel1',
                             border: false,
                             xtype: 'kskeluar.listfaktur'
                         },
                         {
-                            xtype: 'panel',
                             title: 'DATA PERMINTAAN',
                             layout: 'fit',
                             border: false,
-                            itemId: 'tespanel2',
                             name: 'TesPanel2',
                             xtype: 'kskeluar.listmintabayar'
                         },
                         {
-                            xtype: 'panel',
                             title: 'DAFTAR KAS KELUAR',
                             layout: 'fit',
-                            itemId: 'tespanel3',
                             name: 'TesPanel4',
                             border: false,
                             xtype: 'kskeluar.kskeluargrid'
                         },
                         {
-                            xtype: 'panel',
                             title: 'DATA RUJUKAN',
                             layout: 'fit',
                             itemId: 'tespanel4',

@@ -15,22 +15,28 @@ class Ks_keluar extends Auth_Controller {
         parent::__construct();
         $this->load->model('Kskeluar_model');
     }
-    
+
+    public function reset() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        $filename = 'assets/ttd_tx/kkSign' . $insert['random_string'] . 'NULL_.png';
+
+        if (file_exists($filename)) {
+            unlink($filename);
+        }
+
+        clearstatcache();
+        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Reset All Data'));
+    }
+
     function trx_kas_list() {
         $records = $this->input->get('filter');
-        $query = $this->input->get('query');
         $params = array();
 
         if ($records) {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
         }
-
-//        if ($query) {
-//            if ($query != "") {
-//                $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $query);
-//            }
-//        }
 
         $result = $this->Kskeluar_model->kastrx_list($params, NULL);
 
@@ -40,7 +46,7 @@ class Ks_keluar extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Tidak ada data Kas Masuk'));
         }
     }
-    
+
     // Faktur
     public function trx_faktur() {
         $records = $this->input->get('filter');
@@ -59,12 +65,12 @@ class Ks_keluar extends Auth_Controller {
         $no = 0;
 
         if ($result != NULL) {
-            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua Detail PO'));
+            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua Faktur'));
         } else {
-            echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Tidak ada data Detail PO'));
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Tidak ada data'));
         }
     }
-    
+
     public function minta_kas_list() {
         $records = $this->input->get('filter');
         $query = $this->input->get('query');
@@ -91,8 +97,7 @@ class Ks_keluar extends Auth_Controller {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Tidak ada data'));
         }
     }
-    
-    
+
     function add_kaskeluar() {
         $data = $this->Kskeluar_model->kk_process();
         if ($data) {
@@ -101,7 +106,7 @@ class Ks_keluar extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'Database Error'));
         }
     }
-    
+
     public function generate_kk($type) {
         $supp_id = $this->input->post('idSupp');
         $cabang_id = $this->user->cabang_id;
@@ -144,4 +149,5 @@ class Ks_keluar extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Tidak ada data Faktur Tunai', 'title' => 'Info'));
         }
     }
+
 }
