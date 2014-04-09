@@ -38,12 +38,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 //        //daftar Grid selain KK
         {ref: 'ListFaktur', selector: '#listfaktur'},
         {ref: 'ListMintaBayar', selector: '#listmintabayar'},
-        {ref: 'DataRujukanGrid', selector: '#datarujukangrid'},
-        //panel
-        {ref: 'TesPanel1', selector: '#tespanel1'},
-        {ref: 'TesPanel2', selector: '#tespanel2'},
-        {ref: 'TesPanel3', selector: '#tespanel3'},
-        {ref: 'TesPanel4', selector: '#tespanel4'},
+        {ref: 'DataRujukanGrid', selector: '#datarujukangrid'}
     ],
     init: function() {
         this.control({
@@ -77,9 +72,9 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                 tabchange: function(tabPanel, tab) {
                     var id = tab.itemId;
                     var faktur = 'listfaktur',
-                            mintabayar = 'tespanel2',
-                            kk = 'tespanel3',
-                            rujukan = 'tespanel4';
+                            mintabayar = 'listmintabayar',
+                            kk = 'kskeluargrid',
+                            rujukan = 'datarujukangrid';
 
                     switch (id) {
                         case faktur:
@@ -129,336 +124,22 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             },
             '#KasKeluarSearch': {
                 click: function() {
-                    var grid = this.getKsKeluarGrid(),
-                            store = grid.getStore(),
-                            filterCollection = [],
-                            date1 = this.getStartKk().getValue(),
-                            date2 = this.getEndKk().getValue(),
-                            cabang = this.getCabangKk().getValue();
-
-                    if (cabang === null && date1 === null && date2 === null) {
-                        Ext.Msg.alert('Perhatian', 'Mohon isi salah satu filter.');
-                        return;
-                    } else {
-                        var statusFilter = new Ext.util.Filter({
-                            property: 'kas_type',
-                            value: 'kaskeluar'
-                        });
-                        filterCollection.push(statusFilter);
-
-                        if (cabang !== null && date1 === null && date2 === null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'cabang_id',
-                                value: cabang
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (cabang === null && date1 !== null && date2 === null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (cabang === null && date1 === null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (cabang === null && date1 !== null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (cabang !== null && date1 === null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'cabang_id',
-                                value: cabang
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (cabang !== null && date1 !== null && date2 === null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'cabang_id',
-                                value: cabang
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (cabang !== null && date1 !== null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'cabang_id',
-                                value: cabang
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'kas_tgltrx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        }
-                    }
                 }
             },
             '#KasKeluarRefresh': {
                 click: function() {
-                    var grid = this.getKsKeluarGrid(),
-                            store = grid.getStore();
-
-                    store.clearFilter(true);
-                    store.filter('kas_type', 'kaskeluar');
-                    this.getStartKk().reset(),
-                            this.getEndKk().reset(),
-                            this.getCabangKk().reset();
                 }
             },
             '#ListMkRefresh': {
                 click: function() {
-                    var grid = this.getListMintaBayar(),
-                            store = grid.getStore(),
-                            filterCollection = [];
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'mk_keperluan',
-                        value: '6NE'
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'trx_realstatus',
-                        value: 0
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'trx_appr_status',
-                        value: 1
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'cabang_id',
-                        value: CABANG_ID
-                    });
-                    filterCollection.push(filter2);
-
-                    store.clearFilter(true);
-                    store.filter(filterCollection);
                 }
             },
             '#DataRujukanRefresh': {
                 click: function() {
-                    var grid = this.getDataRujukanGrid(),
-                            store = grid.getStore(),
-                            filterCollection = [];
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'mk_keperluan',
-                        value: '6'
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'trx_realstatus',
-                        value: 0
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'trx_appr_status',
-                        value: 1
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'cabang_id',
-                        value: CABANG_ID
-                    });
-                    filterCollection.push(filter2);
-
-                    store.clearFilter(true);
-                    store.filter(filterCollection);
                 }
             },
             '#DataRujukanSearch': {
                 click: function() {
-                    var grid = this.getDataRujukanGrid(),
-                            store = grid.getStore(),
-                            filterCollection = [],
-                            date1 = this.getStartDr().getValue(),
-                            date2 = this.getEndDr().getValue(),
-                            periksa = this.getPeriksaDr().getValue();
-
-                    if (periksa === '' && date1 === null && date2 === null) {
-                        Ext.Msg.alert('Perhatian', 'Mohon isi salah satu filter.');
-                        return;
-                    } else {
-                        var grid = this.getDataRujukanGrid(),
-                                store = grid.getStore(),
-                                filterCollection = [];
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'mk_keperluan',
-                            value: '6'
-                        });
-                        filterCollection.push(filter2);
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'trx_realstatus',
-                            value: 0
-                        });
-                        filterCollection.push(filter2);
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'trx_appr_status',
-                            value: 1
-                        });
-                        filterCollection.push(filter2);
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'cabang_id',
-                            value: CABANG_ID
-                        });
-                        filterCollection.push(filter2);
-
-                        if (periksa !== '' && date1 === null && date2 === null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'mkr_pemeriksaan=ll',
-                                value: periksa
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (periksa === '' && date1 !== null && date2 === null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (periksa === '' && date1 === null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (periksa === '' && date1 !== null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (periksa !== '' && date1 === null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'mkr_pemeriksaan=ll',
-                                value: periksa
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (periksa !== '' && date1 !== null && date2 === null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'mkr_pemeriksaan=ll',
-                                value: periksa
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        } else if (periksa !== '' && date1 !== null && date2 !== null) {
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date1, 'Y-m-d 00:00:00') + 'GT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'mkr_pemeriksaan=ll',
-                                value: periksa
-                            });
-                            filterCollection.push(statusFilter);
-
-                            var statusFilter = new Ext.util.Filter({
-                                property: 'tgl_trx',
-                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
-                            });
-                            filterCollection.push(statusFilter);
-
-                            store.clearFilter(true);
-                            store.filter(filterCollection);
-                        }
-                    }
                 }
             },
             '#KasKeluarSave': {
@@ -543,135 +224,88 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         grid.down('#fkSupplier').reset();
     },
     loadFormPermintaan: function(id) {
-        Ext.getCmp('kkSave').enable();
-        Ext.getCmp('kkSavePrint').enable();
-        Ext.getCmp('kkNew').enable();
-        Ext.getCmp('kkDelete').enable();
+        var form = this.getKsKeluarForm();
+        form.body.unmask();
+        form.saved = true;
+        this.ajaxReq('ks_keluar/reset', form.getForm().getValues(), 1);
+        form.getForm().reset();
+        this.initKey(form, '#random_string');
 
-        this.getKsKeluarForm().body.unmask();
-        var form = this.getKsKeluarForm().getForm();
-//        form.reset();
+        form.down('#KasKeluarNew').enable();
+        form.down('#KasKeluarSave').enable();
+        form.down('#KasKeluarSavePrint').enable();
+        form.down('#KasKeluarDelete').enable();
 
-        form.findField('namaSup').hide();
-        form.findField('jumlahTagihan').hide();
-        form.findField('jumlahSupLebihBayar').hide();
-        form.findField('mkr_pemeriksaan').hide();
-        form.findField('mkr_namapasien').hide();
-        form.findField('mkr_rujukanke').hide();
+        form.getForm().findField('faktur_suppid').hide();
+        form.getForm().findField('faktur_nototal').hide();
+        form.getForm().findField('jumlahSupLebihBayar').hide();
+        
+        form.getForm().findField('agrplan_periksa').hide();
+        form.getForm().findField('agrplan_pasien').hide();
+        form.getForm().findField('agrplan_rujuk').hide();
 
-        form.findField('nama_divisi').show();
-        form.findField('trx_desc').show();
-        form.findField('statusKas').show();
-        form.findField('statusKas').enable();
+        form.getForm().findField('divisi_name').show();
+        form.getForm().findField('trx_desc').show();
+        form.getForm().findField('kas_akun').show();
+        form.getForm().findField('kas_akun').enable();
 
-        form.findField('kkType').setValue(2);
+        form.getForm().findField('kk_type').setValue(2);
 
         var grid = this.getListMintaBayar(),
-                store = grid.getStore(),
-                filterCollection = [];
+                store = grid.getStore();
 
-        var filter2 = new Ext.util.Filter({
-            property: 'mk_keperluan',
-            value: '6NE'
-        });
-        filterCollection.push(filter2);
-
-        var filter2 = new Ext.util.Filter({
-            property: 'trx_realstatus',
-            value: 0
-        });
-        filterCollection.push(filter2);
-
-        var filter2 = new Ext.util.Filter({
-            property: 'trx_appr_status',
-            value: 1
-        });
-        filterCollection.push(filter2);
-
-        var filter2 = new Ext.util.Filter({
-            property: 'cabang_id',
-            value: CABANG_ID
-        });
-        filterCollection.push(filter2);
-
-        store.clearFilter(true);
-        store.filter(filterCollection);
+        store.load();
     },
     disableFormKk: function(id) {
-        this.getKsKeluarForm().body.mask();
+        var form = this.getKsKeluarForm();
+        form.body.mask();
+        form.saved = true;
+        this.ajaxReq('ks_keluar/reset', form.getForm().getValues(), 1);
+        form.getForm().reset();
+        this.initKey(form, '#random_string');
 
-        Ext.getCmp('kkSave').disable();
-        Ext.getCmp('kkSavePrint').disable();
-        Ext.getCmp('kkNew').disable();
-        Ext.getCmp('kkDelete').disable();
+        form.down('#KasKeluarNew').disable();
+        form.down('#KasKeluarSave').disable();
+        form.down('#KasKeluarSavePrint').disable();
+        form.down('#KasKeluarDelete').disable();
 
         var grid = this.getKsKeluarGrid(),
-                store = grid.getStore(),
-                filterCollection = [];
+                store = grid.getStore();
 
-        var filter2 = new Ext.util.Filter({
-            property: 'kas_type',
-            value: 'kaskeluar'
-        });
-        filterCollection.push(filter2);
-
-        store.clearFilter(true);
-        store.filter(filterCollection);
+        store.load();
     },
     loadFormRujukan: function(id) {
-        Ext.getCmp('kkSave').enable();
-        Ext.getCmp('kkSavePrint').enable();
-        Ext.getCmp('kkNew').enable();
-        Ext.getCmp('kkDelete').enable();
+        var form = this.getKsKeluarForm();
+        form.body.unmask();
+        form.saved = true;
+        this.ajaxReq('ks_keluar/reset', form.getForm().getValues(), 1);
+        form.getForm().reset();
+        this.initKey(form, '#random_string');
 
-        this.getKsKeluarForm().body.unmask();
-        var form = this.getKsKeluarForm().getForm();
-//        form.reset();
+        form.down('#KasKeluarNew').enable();
+        form.down('#KasKeluarSave').enable();
+        form.down('#KasKeluarSavePrint').enable();
+        form.down('#KasKeluarDelete').enable();
 
-        form.findField('namaSup').hide();
-        form.findField('jumlahTagihan').hide();
-        form.findField('jumlahSupLebihBayar').hide();
+        form.getForm().findField('faktur_suppid').hide();
+        form.getForm().findField('faktur_nototal').hide();
+        form.getForm().findField('jumlahSupLebihBayar').hide();
 
-        form.findField('nama_divisi').show();
-        form.findField('trx_desc').hide();
-        form.findField('statusKas').show();
-        form.findField('statusKas').enable();
-        form.findField('mkr_pemeriksaan').show();
-        form.findField('mkr_namapasien').show();
-        form.findField('mkr_rujukanke').show();
+        form.getForm().findField('agrplan_periksa').show();
+        form.getForm().findField('agrplan_pasien').show();
+        form.getForm().findField('agrplan_rujuk').show();
 
-        form.findField('kkType').setValue(3);
+        form.getForm().findField('divisi_name').show();
+        form.getForm().findField('trx_desc').show();
+        form.getForm().findField('kas_akun').show();
+        form.getForm().findField('kas_akun').enable();
+
+        form.getForm().findField('kk_type').setValue(3);
 
         var grid = this.getDataRujukanGrid(),
-                store = grid.getStore(),
-                filterCollection = [];
+                store = grid.getStore();
 
-        var filter2 = new Ext.util.Filter({
-            property: 'mk_keperluan',
-            value: '6'
-        });
-        filterCollection.push(filter2);
-
-        var filter2 = new Ext.util.Filter({
-            property: 'trx_realstatus',
-            value: 0
-        });
-        filterCollection.push(filter2);
-
-        var filter2 = new Ext.util.Filter({
-            property: 'trx_appr_status',
-            value: 1
-        });
-        filterCollection.push(filter2);
-
-        var filter2 = new Ext.util.Filter({
-            property: 'cabang_id',
-            value: CABANG_ID
-        });
-        filterCollection.push(filter2);
-
-        store.clearFilter(true);
-        store.filter(filterCollection);
+        store.load();
     },
     checkTtd: function(type) {
 //        Ext.Ajax.request({

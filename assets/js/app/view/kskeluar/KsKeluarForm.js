@@ -317,6 +317,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'random Key',
+                    hidden: true,
                     name: 'random_string',
                     itemId: 'random_string'
                 }

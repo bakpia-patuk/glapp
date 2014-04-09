@@ -141,7 +141,7 @@ class Bk_anggaran extends Auth_Controller {
                 $list_bank[] = array(
                     'id' => $key->id,
                     'bank_nama' => $key->bank_nama,
-                    'bankGroupNama' => $key->bank_nama != 0 ? $this->Bkanggaran_model->get_detail('id', $key->bank_nama, 'ms_banknas')->banknas_name : '',
+                    'bankGroupNama' => $this->Bkanggaran_model->get_detail('id', $key->bank_nama, 'ms_banknas') != NULL ? $this->Bkanggaran_model->get_detail('id', $key->bank_nama, 'ms_banknas')->banknas_name : '',
                     'bank_alias' => $key->bank_alias,
                     'bank_reknama' => $key->bank_reknama,
                     'bank_rekno' => $key->bank_rekno,

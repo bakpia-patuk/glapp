@@ -28,7 +28,6 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                         {
                             title: 'DATA FAKTUR',
                             layout: 'fit',
-                            name: 'TesPanel1',
                             border: false,
                             xtype: 'kskeluar.listfaktur'
                         },
@@ -36,21 +35,17 @@ Ext.define('GlApp.view.kskeluar.GetKsKeluar', {
                             title: 'DATA PERMINTAAN',
                             layout: 'fit',
                             border: false,
-                            name: 'TesPanel2',
                             xtype: 'kskeluar.listmintabayar'
                         },
                         {
                             title: 'DAFTAR KAS KELUAR',
                             layout: 'fit',
-                            name: 'TesPanel4',
                             border: false,
                             xtype: 'kskeluar.kskeluargrid'
                         },
                         {
                             title: 'DATA RUJUKAN',
                             layout: 'fit',
-                            itemId: 'tespanel4',
-                            name: 'TesPanel4',
                             border: false,
                             xtype: 'kskeluar.datarujukangrid'
                         }

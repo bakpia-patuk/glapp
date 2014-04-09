@@ -33,6 +33,7 @@ class Ks_keluar extends Auth_Controller {
         $records = $this->input->get('filter');
         $params = array();
 
+        $params[] = array('field' => 'kas_type', 'param' => 'where', 'operator' => '', 'value' => 'kaskeluar');
         if ($records) {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
