@@ -8,10 +8,9 @@ Ext.define('GlApp.view.gdlsstockop.ArusStockGrid', {
     border: false,
 //    store: 'ItemStore',
     autoScroll: true,
-    forceFit: false,
+    forceFit: true,
     columnLines: true,
-
-    initComponent: function () {
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
@@ -21,57 +20,62 @@ Ext.define('GlApp.view.gdlsstockop.ArusStockGrid', {
                 deferEmptyText: false
             },
             tbar: [
+                '->',
                 {
-                    text: 'DELETE'
-                },
-                {
-                    text: 'REFRESH'
+                    text: 'REFRESH',
+                    ui: 'orange-button'
                 }
-                
+
             ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {
                     xtype: 'gridcolumn',
                     width: 200,
-                    text: 'NAMA BARANG',
+                    text: 'TANGGAL',
                     dataIndex: 'namams'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'UNTUK TGL.',
+                    width: 300,
+                    text: 'KETERANGAN',
                     dataIndex: 'alamatms'
                 },
                 {
-                    xtype: 'gridcolumn',
                     width: 100,
-                    text: 'MERK',
-                    dataIndex: 'namakotams'
+                    text: 'JENIS',
+                    columns: [
+                        {
+                            xtype: 'numbercolumn',
+                            align: 'center',
+                            width: 60,
+                            text: 'KELUAR'
+                        },
+                        {
+                            xtype: 'numbercolumn',
+                            align: 'center',
+                            width: 60,
+                            text: 'MASUK'
+                        }
+                    ]
                 },
                 {
-                    xtype: 'gridcolumn',
                     width: 100,
-                    text: 'NO KATALOG',
-                    dataIndex: 'tlpms'
-                },
-                {
-                    xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'KEMASAN',
-                    dataIndex: 'tlp2ms'
-                },
-                {
-                    xtype: 'gridcolumn',
-                    width: 100,
-                    text: 'QTY PESANAN',
-                    dataIndex: 'hpms'
-                },
-                {
-                    xtype: 'gridcolumn',
-                    width: 250,
-                    text: 'KETERANGAN',
-                    dataIndex: 'faxms'
+                    text: 'STOCK',
+                    columns: [
+                        {
+                            xtype: 'numbercolumn',
+                            align: 'center',
+                            width: 60,
+                            text: 'AWAL'
+                        },
+                        {
+                            xtype: 'numbercolumn',
+                            align: 'center',
+                            width: 60,
+                            text: 'AKHIR'
+                        }
+                    ]
                 }
             ]
         });
