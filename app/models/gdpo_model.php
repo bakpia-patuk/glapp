@@ -95,6 +95,20 @@ class Gdpo_model extends MY_Model {
         return $total;
     }
 
+    public function total_po_complete($id) {
+        $params[] = array('field' => 'po_id', 'param' => 'where', 'operator' => '', 'value' => $id);
+        $data = $this->gets($params, NULL, 'trx_po_detail');
+        $total = 0;
+
+        if ($data != NULL) {
+            foreach ($data as $val) {
+                $total += $this->__calc_netto($val->barang_qty, $val->barang_harga, $val->barang_disc, $val->barang_ppn);
+            }
+        }
+
+        return $total;
+    }
+
     public function po_item_netto($qty, $harga, $disc, $ppn) {
         return $this->__calc_netto($qty, $harga, $disc, $ppn);
     }
@@ -148,7 +162,7 @@ class Gdpo_model extends MY_Model {
             'barang_katalog' => $dpeng->po_katalog,
             'tt_status' => 0,
             'tt_id' => 0,
-            'tt_qty_kirim' => $dpeng->po_qty,
+            'tt_qty_kirim' => 0,
             'simpan_status' => 1
         );
 

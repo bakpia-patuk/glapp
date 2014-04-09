@@ -99,6 +99,49 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGridDt', {
                     align: 'right',
                     dataIndex: 'barang_netto'
                 }
+            ],
+            plugins: [
+                {
+                    ptype: 'cellediting',
+                    clicksToEdit: 2,
+                    pluginId: 'poDetailEdit',
+                    listeners: {
+                        'edit': function(editor, e, opt) {
+                            if (e.record.dirty) {
+                                console.log('edited');
+                                e.record.commit();
+                                Ext.Ajax.request({
+                                    url: BASE_PATH + 'gd_po/edit_po_item',
+                                    method: 'POST',
+                                    params: e.record.data,
+                                    scope: this,
+                                    callback: function(options, success, response) {
+                                        var resp = Ext.decode(response.responseText);
+
+                                        if (resp.success === 'true') {
+                                            e.grid.getStore().load();
+                                            Ext.getCmp('txpolistgrid').getStore().load();
+                                            Ext.MessageBox.show({
+                                                title: 'INFO',
+                                                msg: resp.message,
+                                                buttons: Ext.MessageBox.OK,
+                                                icon: Ext.MessageBox.INFO
+                                            });
+                                        } else {
+                                            e.grid.getStore().load();
+                                            Ext.MessageBox.show({
+                                                title: 'ERROR',
+                                                msg: resp.message,
+                                                buttons: Ext.MessageBox.OK,
+                                                icon: Ext.MessageBox.ERROR
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                }
             ]
         });
 

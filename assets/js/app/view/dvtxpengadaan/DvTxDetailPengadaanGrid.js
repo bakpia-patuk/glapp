@@ -1,4 +1,4 @@
-Ext.define('eTrav.view.dvtxpengadaan.DvTxDetailPengadaanGrid', {
+Ext.define('GlApp.view.dvtxpengadaan.DvTxDetailPengadaanGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.dvtxpengadaan.dvtxdetailpengadaangrid',
     border: false,
@@ -7,7 +7,7 @@ Ext.define('eTrav.view.dvtxpengadaan.DvTxDetailPengadaanGrid', {
     itemId: 'dvtxdetailpengadaangrid',
     //selModel : smGrid,
     //flex: 1,
-//    store: 'PengadaanDetailStore',
+   store: 'dvtxpengadaan.PengadaanDetailStore',
     initComponent: function () {
         var me = this;
 

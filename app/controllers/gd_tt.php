@@ -56,7 +56,31 @@ class Gd_tt extends Auth_Controller {
 
     public function save() {
         $insert = $this->input->post(NULL, TRUE);
+        $params=array();
+        $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
+        foreach ($data_po as $row) {
+            if($row->tt_qty_kirim==0){
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum memasukan jumlah barang'));
+                return;
+            }
+            $params=array();
+            $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => '', 'value' => $row->po_id);
+            $result = $this->Gdtt_model->gets($params, NULL, 'trx_tt_detail');
+            $barang_terkirim=0;
+            if($result){
+                foreach ($result as $key) {
 
+                    $barang_terkirim+=$key->tt_qty_kirim;
+                }
+
+                if(($barang_terkirim+$row->tt_qty_kirim)>$row->barang_qty){
+                    echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda jumlah barang lebih dari permintaan'));
+                    return;
+                }
+            }
+            
+        }
         if ($insert['id'] == 0) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum melakukan transaksi'));
             return;
@@ -85,6 +109,37 @@ class Gd_tt extends Auth_Controller {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
             return;
         }
+
+        //Masuk ke trx stock div
+        $params = array();
+        $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        $params[] = array('field' => 'ruang_nama', 'param' => 'where', 'operator' => '', 'value' => 'R. GUDANG');
+        $data_ruang = $this->Gdtt_model->get($params, NULL, 'dt_ruang');
+
+
+        $params = array();
+        $params[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $params[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => 'ttgudang');
+        $data_stok_detail = $this->Gdtt_model->gets($params, NULL, 'trx_stock');
+       
+        $data_stok_syn = array();
+        $data_stok_div_syn = array(); 
+        foreach ($data_stok_detail as $key) {
+            
+            $data_stok_syn[]=array('data'=>$key,'id'=>$key->id);
+            $data = array();
+            $data['id_ruang'] = $key->stk_ruangid;
+            $data['id_cabang '] = $key->stk_cabangid;
+            $data['id_barang'] = $key->stk_barangid;
+            $data['jmlh_stok'] = $key->stk_qty;
+            $data['jenis_trx'] = 1;
+            $data['trx_stok'] = $key->id;
+            $data['simpan_status'] =1;
+            $id_stok_div = $this->Gdtt_model->insert($data, 'trx_stok_div');
+            $id_stok_div = $id_stok_div.'.'.$this->user->cabang_id;
+            $data_stok_div_syn[] = array('data'=>$data,'id'=>$id_stok_div) ;
+        }
+
 
         $params = array();
         $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
@@ -182,6 +237,49 @@ class Gd_tt extends Auth_Controller {
             $this->Gdtt_model->insert_outgoing($data, 'detail');
         }
 
+       
+
+        foreach ($data_stok_syn as $key) {
+            $data_json = json_encode($key['data']);
+
+            $data = array();
+
+            $data['jumlah'] = 1;
+
+            $data['tujuan'] = 1;
+            $data['id_cabang'] = $this->user->cabang_id;
+
+            $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+            $data = array();
+            $data['data'] = $data_json;
+            $data['head_id '] = $no . '.' . $this->user->cabang_id;
+            $data['primary_key'] = $key['id'];
+            $data['table_name'] = 'trx_stock';
+
+            $this->Gdtt_model->insert_outgoing($data, 'detail');
+        }
+
+        foreach ($data_stok_div_syn as $key) {
+            $data_json = json_encode($key['data']);
+
+            $data = array();
+
+            $data['jumlah'] = 1;
+
+            $data['tujuan'] = 1;
+            $data['id_cabang'] = $this->user->cabang_id;
+
+            $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+            $data = array();
+            $data['data'] = $data_json;
+            $data['head_id '] = $no . '.' . $this->user->cabang_id;
+            $data['primary_key'] = $key['id'];
+            $data['table_name'] = 'trx_stok_div';
+
+            $this->Gdtt_model->insert_outgoing($data, 'detail');
+        }
 
         $this->Gdtt_model->generate_user_log($this->user->id, $this->user->cabang_id, 'INSERT', 'TRX_TT');
 
@@ -284,13 +382,19 @@ class Gd_tt extends Auth_Controller {
         $insert = $this->input->post(NULL, TRUE);
 
         if ($insert['tt_id'] != 0) {
+            //$this->Gdtt_model->get_detail('id',$insert['id'],'trx_po_detail');
             $data = array(
                 'tt_qty_kirim' => $insert['tt_qty_kirim']
             );
 
             $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
             $this->Gdtt_model->update($data, $opt, NULL, 'trx_po_detail');
+
+            $param_del[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => 'ttgudang');
+            $param_del[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['tt_id']);
+            $this->Gdtt_model->delete($param_del, NULL, 'trx_stock_lot');
         }
+
         echo json_encode(array('success' => 'true', 'data' => $insert['id']));
     }
 
@@ -342,7 +446,7 @@ class Gd_tt extends Auth_Controller {
         $params[] = array('field' => 'po_ed', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d", now()));
         $params[] = array('field' => 'po_cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
 //        $params[] = array('field' => 'tt_status', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
-        $params[] = array('field' => 'tt_set', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $params[] = array('field' => 'tt_set', 'param' => 'where', 'operator' => ' !=', 'value' => 1);
         $params[] = array('field' => 'simpan_status', 'param' => 'where', 'operator' => '', 'value' => 1);
 
         $opt['sortBy'] = 'po_id';

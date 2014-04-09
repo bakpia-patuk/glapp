@@ -11,6 +11,20 @@ Ext.define('GlApp.controller.Base', {
             }
         });
     },
+    initKey: function(form, field) {
+        Ext.Ajax.request({
+            url: BASE_PATH + 'shared/random_key',
+            method: 'POST',
+            scope: this,
+            callback: function(options, success, response) {
+                var resp = Ext.decode(response.responseText);
+
+                if (resp.success === 'true') {
+                    form.down(field).setValue(resp.data);
+                }
+            }
+        });
+    },
     initForm: function(form, signArea) {
         Ext.Ajax.request({
             url: BASE_PATH + 'shared/check_ttd',

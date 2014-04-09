@@ -26,7 +26,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'dbkSave'
+                   action: 'dbkSave'
                 },
                 {
                     xtype: 'button',
@@ -34,7 +34,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     text: 'Baru',
                     hidden: true,
                     iconCls: 'icon-btn-add',
-//                    action: 'dmbNew'
+                   action: 'dmbNew'
                 }
             ],
             items: [
@@ -48,6 +48,12 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Id Ruang ',
                     name: 'idRuang',
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Id Ruang ',
+                    name: 'barangCabangId',
                     hidden: true
                 },
                 {
@@ -67,7 +73,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore',
+                   store: 'dvtxbrkeluar.DivisiStore',
                     displayField: 'divisiName',
                     valueField: 'divisiId',
                     emptyText: 'Pilih Divisi',
@@ -76,33 +82,34 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                            cmb.setValue(parseInt(userDivisi));
-//                            cmb.setReadOnly(true);
-//                        },
-//                        'change': function(cmb, rec, opt){
-//                            var myVal = cmb.getValue(),
-//                                ruanganStore = this.up('form').getForm().findField('ruangan').getStore(), 
-//                                filterCollection = [];
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'divisi_code',
-//                                value: myVal
-//                            });
-//                            filterCollection.push(statusFilter);
-//                    
-//                            ruanganStore.clearFilter(true);
-//                            ruanganStore.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       'afterrender': function(cmb, rec, opt) {
+                           cmb.getStore().load();
+                           cmb.setValue(parseInt(USER_DIVISI));
+                           cmb.setReadOnly(true);
+                       },
+                       'change': function(cmb, rec, opt){
+                           var myVal = cmb.getValue(),
+                               ruanganStore = this.up('form').getForm().findField('ruangan').getStore(), 
+                               filterCollection = [];
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'cabang_id',
+                               value: CABANG_ID
+                           });
+                           filterCollection.push(statusFilter);
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'divisi_id',
+                               value: myVal
+                           });
+                           filterCollection.push(statusFilter);
+                   
+                           ruanganStore.clearFilter(true);
+                           ruanganStore.filter(filterCollection);
+                         //  this.up('form').getForm().findField('ruangan').setReadOnly(false);
+                       }
+                   }
                 },
                 {
                     xtype: 'combobox',
@@ -113,7 +120,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     queryMode: 'remote',
                     minChars: 2,
                     hidden: false,
-//                    store: 'DivisiRuanganStore',
+                   store: 'dvtxbrkeluar.DivisiRuanganStore',
                     displayField: 'ruangName',
                     valueField: 'id',
                     emptyText: 'Pilih Ruangan',
@@ -122,7 +129,13 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     matchFieldWidth: false,
                     listConfig: {
                         minWidth: 185
-                    }
+                    },
+                   /* listeners: {
+                       
+                       'change': function(cmb, rec, opt){
+                         this.up('form').getForm().findField('pengBarang').setReadOnly(false);
+                       }
+                    }*/
                 },
                 {
                     xtype: 'combobox',
@@ -134,11 +147,11 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     hideTrigger: true,
                     mode: 'remote',
                     minChars: 2,
-//                    store: 'ItemStore',
+                   store: 'dvtxbrkeluar.ItemStore',
                     displayField: 'itemName',
                     valueField: 'id',
                     forceSelection: true,
-                    valueNotFoundText: 'Tidak ada barang',
+                   // valueNotFoundText: 'Tidak ada barang',
                     emptyText: 'ketik nama barang',
                     matchFieldWidth: false,
                     listConfig: {
@@ -153,13 +166,13 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     name: 'jumlah',
                     minValue: 1,
                     allowBlank: false,
-//                    listeners:{
-//                        'change' : function() {
-//                            if(this.getValue() !== 0) {
-//                                this.up('form').down('#pengDivbarangKeluar').enable();
-//                            }
-//                        }
-//                    }
+                   listeners:{
+                       'change' : function() {
+                           if(this.getValue() !== 0) {
+                               this.up('form').down('#pengDivbarangKeluar').enable();
+                           }
+                       }
+                   }
                 },
                 {
                     xtype: 'numberfield',
@@ -188,9 +201,9 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                             ui: 'blue-button',
                             itemId: 'pengDivbarangKeluar',
                             disabled: true,
-                            text: 'OK',
+                            text: 'ok',
                             margins: '0 0 0 5',
-//                            action: 'pengDivbarangKeluar'
+                           action: 'pengDivbarangKeluar'
                         }
                     ]
                 }

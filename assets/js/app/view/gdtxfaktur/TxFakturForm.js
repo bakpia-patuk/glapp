@@ -128,9 +128,9 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                             'type' //the text value is the value
                         ],
                         data: [
-                            [0, 'BG'],
-                            [1, 'TUNAI'],
-                            [2, 'TRANSFER']
+                            [1, 'BG'],
+                            [2, 'TUNAI'],
+                            [3, 'TRANSFER']
                         ]
                     }),
                     listeners: {

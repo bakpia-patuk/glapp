@@ -23,7 +23,8 @@
                     TTD_STRING = "<?php // echo $ttd_string; ?>",
                     TAB_BG = 'background:#3892D3;',
                     FORM_BG = "background:#F8F9F9;",
-                    tinggi = 27;
+                    tinggi = 27,
+                    USER_DIVISI = "<?php echo 3; ?>";
                     
         </script>
         <script type="text/javascript" src="<?php echo base_url("assets/js/$app"); ?>.js"></script>

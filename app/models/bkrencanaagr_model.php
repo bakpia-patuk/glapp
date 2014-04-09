@@ -59,7 +59,8 @@ class Bkrencanaagr_model extends MY_Model {
         $data_ret = array(
             'tgl_dari' => $insert['agrplan_from'],
             'tgl_ke' => $insert['agrplan_to'],
-            'divisi' => $insert['agrplan_divisi']
+            'divisi' => $insert['agrplan_divisi'],
+            'id_agr' => $insert['id']
         );
 
         return $data_ret;
@@ -104,7 +105,8 @@ class Bkrencanaagr_model extends MY_Model {
             'agrplan_periksa' => $mkr_namapasien,
             'agrplan_pasien' => $mkr_pemeriksaan,
             'agrplan_rujuk' => $mkr_rujukanke,
-            'simpan_status' => 1
+            'simpan_status' => 1,
+            'agrplan_cabang' => $user->cabang_id
         );
         if ($this->get_detail('agrplan_id', $general_mad['agrplan_id'], 'trx_agrplan_detail') == NULL) {
             $this->insert($general_mad, 'trx_agrplan_detail');

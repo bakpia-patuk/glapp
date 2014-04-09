@@ -164,7 +164,7 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                             width: 135,
                             triggerAction: 'all',
                             mode: 'remote',
-//                    store: 'KemasanStore',
+                            store: 'gdtxpengadaan.KemasanStore',
                             displayField: 'kemasan_nama',
                             valueField: 'id',
                             forceSelection: true,

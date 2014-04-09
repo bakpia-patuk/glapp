@@ -15,26 +15,21 @@ class Kskeluar_model extends MY_Model {
     
     function get_divisi($id) {
         switch ($id) {
-            case 0:
-                return "PELAYANAN";
-                break;
             case 1:
-                return "MARKETING";
-                break;
+                return "PELAYANAN";
             case 2:
-                return "KEUANGAN";
-                break;
+                return "MARKETING";
             case 3:
-                return "LAB";
-                break;
+                return "KEUANGAN";
             case 4:
-                return "SDM";
-                break;
+                return "LAB";
             case 5:
-                return "IT";
-                break;
+                return "SDM";
             case 6:
+                return "IT";
+            case 7:
                 return "RUMAH TANGGA";
+            default: 
                 break;
         }
     }

@@ -7,7 +7,7 @@ Ext.define('GlApp.view.dvtxbrminta.DvTxBrMintaDetailGrid', {
     columnLines: true,
     //selModel : smGrid,
     flex: 1,
-//    store: 'PengdivDetailStore',
+   store: 'dvtxbrminta.PengdivDetailStore',
     initComponent: function () {
         var me = this;
 

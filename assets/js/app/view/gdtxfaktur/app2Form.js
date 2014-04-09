@@ -76,7 +76,7 @@ Ext.define('GlApp.view.gdtxfaktur.app2Form', {
                                     onChange: function (value) {
                                         var form = this.up('form').getForm();
                                         form.submit({
-                                            url: BASE_URL + 'data/upload_signNullTf1',
+                                            url: BASE_URL + 'gd_txfaktur/upload_signNullTf1',
                                             waitMsg: 'Verifikasi Tanda Tangan ..',
                                             clientValidation: false,
                                             success: function (form, action) {
@@ -155,7 +155,7 @@ Ext.define('GlApp.view.gdtxfaktur.app2Form', {
                                     onChange: function (value) {
                                         var form = this.up('form').getForm();
                                         form.submit({
-                                            url: BASE_URL + 'data/upload_signNullTf2',
+                                            url: BASE_URL + 'gd_txfaktur/upload_signNullTf2',
                                             waitMsg: 'Verifikasi Tanda Tangan ..',
                                             clientValidation: false,
                                             success: function (form, action) {

@@ -26,7 +26,7 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                     text: 'Simpan',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-save',
-//                    action: 'dvtxpengSave'
+                   action: 'divpengSave'
                 },
                 {
                     xtype: 'button',
@@ -76,7 +76,7 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore',
+                   store: 'dvtxpengadaan.DivisiStore',
                     displayField: 'divisiName',
                     valueField: 'divisiId',
                     emptyText: 'Pilih Divisi',
@@ -85,25 +85,25 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                            cmb.setValue(parseInt(userDivisi));
-//                            cmb.setReadOnly(true);
-//                            
-//                            var store = cmb.up('form').getForm().findField('pengBarang').getStore(),
-//                                filterCollection = [];
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'mi_inv_stat=ww',
-//                                value: 0
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                   listeners: {
+                       'afterrender': function(cmb, rec, opt) {
+                           cmb.getStore().load();
+                           cmb.setValue(parseInt(USER_DIVISI));
+                           cmb.setReadOnly(true);
+                           
+                           var store = cmb.up('form').getForm().findField('pengBarang').getStore(),
+                               filterCollection = [];
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'mi_inv_stat=ww',
+                               value: 0
+                           });
+                           filterCollection.push(statusFilter);
+
+                           store.clearFilter(true);
+                           store.filter(filterCollection);
+                       }
+                   }
                 },
                 {
                     xtype: 'combobox',
@@ -114,7 +114,7 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                     hideTrigger: true,
                     mode: 'remote',
                     minChars: 2,
-//                    store: 'ItemStore',
+                   store: 'dvtxpengadaan.ItemStore',
                     displayField: 'itemName',
                     valueField: 'id',
                     forceSelection: true,
@@ -125,49 +125,49 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                         shadow: 'side',
                         minWidth: 185
                     },
-//                    listeners: {
-//                        select: function (cmb, rec, opt) {
-//                            var pengGolongan = this.up('form').getForm().findField('golName');
-//                            var pengMerk = this.up('form').getForm().findField('pengMerk');
-//                            var pengKatalog = this.up('form').getForm().findField('pengKatalog');
-//                            var pengKemasan = this.up('form').getForm().findField('pengKemasan'),
-//                                store = pengKemasan.getStore();
-//
-//                            var val = cmb.getValue(),
-//                                data = cmb.findRecordByValue(val);
-//
-//                            pengGolongan.setValue(data.get('itemParentName'));
-//                            pengMerk.setValue(data.get('itemMerkName'));
-//                            pengKatalog.setValue(data.get('itemCatalog'));
-//
-//                            pengKemasan.clearValue();
-//                            var filterCollection = [];
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'item_id',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var statusPo = new Ext.util.Filter({
-//                                property: 'set_use',
-//                                value: 1
-//                            });
-//                            filterCollection.push(statusPo);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//
-//                            this.up('form').down('#pengNewItem').enable();
-//
-//                            this.up('form').getForm().findField('golName').show();
-//                            this.up('form').getForm().findField('pengMerk').show();
-//                            this.up('form').getForm().findField('pengKatalog').show();
-//                            this.up('form').getForm().findField('pengKemasan').show();
-//                            this.up('form').getForm().findField('qtyBarang').show();
-//                            this.up('form').getForm().findField('tglKebutuhan').show();
-//                        }
-//                    }
+                   listeners: {
+                       select: function (cmb, rec, opt) {
+                           var pengGolongan = this.up('form').getForm().findField('golName');
+                           var pengMerk = this.up('form').getForm().findField('pengMerk');
+                           var pengKatalog = this.up('form').getForm().findField('pengKatalog');
+                           var pengKemasan = this.up('form').getForm().findField('pengKemasan'),
+                               store = pengKemasan.getStore();
+
+                           var val = cmb.getValue(),
+                               data = cmb.findRecordByValue(val);
+
+                           pengGolongan.setValue(data.get('itemParentName'));
+                           pengMerk.setValue(data.get('itemMerkName'));
+                           pengKatalog.setValue(data.get('itemCatalog'));
+
+                           pengKemasan.clearValue();
+                           var filterCollection = [];
+
+                           var statusFilter = new Ext.util.Filter({
+                               property: 'item_id',
+                               value: this.getValue()
+                           });
+                           filterCollection.push(statusFilter);
+
+                           /*var statusPo = new Ext.util.Filter({
+                               property: 'set_use',
+                               value: 1
+                           });
+                           filterCollection.push(statusPo);*/
+
+                           store.clearFilter(true);
+                           store.filter(filterCollection);
+
+                           this.up('form').down('#pengNewItem').enable();
+
+                           this.up('form').getForm().findField('golName').show();
+                           this.up('form').getForm().findField('pengMerk').show();
+                           this.up('form').getForm().findField('pengKatalog').show();
+                           this.up('form').getForm().findField('pengKemasan').show();
+                           this.up('form').getForm().findField('qtyBarang').show();
+                           this.up('form').getForm().findField('tglKebutuhan').show();
+                       }
+                   }
                 },
                 {
                     xtype: 'textfield',
@@ -200,7 +200,7 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                     hidden: true,
                     triggerAction: 'all',
                     mode: 'remote',
-//                    store: 'KemasanStore',
+                   store: 'dvtxpengadaan.KemasanStore',
                     displayField: 'kemasan_kecil',
                     valueField: 'id',
                     forceSelection: true,
@@ -261,7 +261,7 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                             disabled: true,
                             text: 'Tambah',
                             margins: '0 0 0 10',
-//                            action: 'divpengNewItem'
+                            action: 'divpengNewItem'
                         }
                     ]
                 },
@@ -295,7 +295,7 @@ Ext.define('GlApp.view.dvtxpengadaan.DvTxPengadaanForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Petugas ',
                     name: 'petugas',
-//                    value: petugas,
+                   value: USER_NAME,
                     emptyText: 'auto generate',
                     readOnly: true,
                     fieldCls: 'x-item-readonly'

@@ -85,25 +85,20 @@ class Bk_anggaran extends Auth_Controller {
         if ($result != NULL) {
             foreach ($result as $row) {
                 $list_faktur[] = array(
-                    'idCabang' => $row->id,
-                    'faktur_cabang' => $row->faktur_cabang,
-                    'kotaCabang' => $this->Bkanggaran_model->get_detail('id', $row->faktur_cabang, 'dt_cabang')->cabang_alias,
-                    'namaCabang' => "",
-                    'isCabang' => 0,
-                    'isJenis' => 0,
-                    'isData' => 1,
-                    'jenisBayar' => 4,
-                    'faktur_suppid' => $row->faktur_suppid,
-                    'displayName' => $this->Bkanggaran_model->get_detail('id', $row->faktur_suppid, 'dt_supplier')->ms_name,
-                    'faktur_no' => $row->faktur_no,
-                    'noPo' => "",
-                    'noTt' => "",
-                    'fakturEd' => "",
-                    'jadwalBayar' => "",
-                    'noRekBg' => "",
-                    'bgEd' => "",
-                    'faktur_nototal' => $row->faktur_nototal,
-                    'fakturRealisasi' => 0
+                    'id' => $row->id,
+                    'id_trx' => $row->id,
+                    'name' => $this->Bkanggaran_model->get_detail('id', $row->faktur_cabang, 'dt_cabang')->cabang_alias,
+                    'name_id' => $row->faktur_suppid,
+                    'keterangan' => $row->faktur_no,
+                    'list_po' => $this->Bkanggaran_model->get_detail('id', $row->faktur_suppid, 'dt_supplier')->ms_name,
+                    'list_tt' => $this->Bkanggaran_model->get_tt_list($row->id),
+                    'jadwal_bayar' => 0,
+                    'no_rekbg' => 0,
+                    'bg_ed' => 0,
+                    'cara_bayar' => 4,
+                    'ma_value' => $row->faktur_nototal,
+                    'app_status' => 1,
+                    'test' => true
                 );
             }
         }
