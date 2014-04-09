@@ -51,7 +51,7 @@ Ext.define('GlApp.view.ksmintakas.KsGroupKpWin', {
                                             grk_name: "NAMA",
                                             grk_desc: "Deskripsi",
                                             grk_status: 0,
-                                            form_id: 'mintabayar',
+                                            form_id: "mintakasdiv",
                                             grk_active: 1
                                         };
 
@@ -182,7 +182,7 @@ Ext.define('GlApp.view.ksmintakas.KsGroupKpWin', {
                                         var sm = this.up('grid').getSelectionModel();
 
                                         Ext.Ajax.request({
-                                            url: BASE_PATH + 'bk_rencanaagr/del_akun_gr',
+                                            url: BASE_PATH + 'ks_mintakas/del_akun_gr',
                                             method: 'POST',
                                             params: {id: sm.getSelection()[0].get('id')},
                                             scope: this,
