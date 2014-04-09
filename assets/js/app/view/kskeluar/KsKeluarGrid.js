@@ -37,7 +37,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarGrid', {
                     width: 300,
                     hidden: false,
                     text: 'KEPERLUAN',
-//                    dataIndex: 'keteranganKd'
+                    dataIndex: 'keteranganKd'
                 },
                 {
                     width: 150,

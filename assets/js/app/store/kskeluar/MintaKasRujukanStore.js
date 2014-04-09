@@ -35,7 +35,7 @@ Ext.define('GlApp.store.kskeluar.MintaKasRujukanStore', {
     proxy: {
         success: true,
         type: 'ajax',
-        url: BASE_PATH + 'ks_keluar/minta_kas_list',
+        url: BASE_PATH + 'ks_keluar/minta_kas_rujukan',
         reader: {
             type: 'json',
             root: 'data'

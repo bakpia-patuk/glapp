@@ -73,7 +73,6 @@ class Ks_keluar extends Auth_Controller {
 
     public function minta_kas_list() {
         $records = $this->input->get('filter');
-        $query = $this->input->get('query');
         $params = array();
 
         if ($records) {
@@ -81,17 +80,45 @@ class Ks_keluar extends Auth_Controller {
             $params = $this->generate_db_query($raw_record);
         }
 
-        if ($query) {
-            if ($query != "") {
-                $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $query);
-                $params[] = array('field' => 'tgl_trx', 'param' => 'where', 'operator' => '', 'value' => $query);
-                $params[] = array('field' => 'mk_keperluan', 'param' => 'where', 'operator' => '', 'value' => $query);
+        $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        $params[] = array('field' => 'mkr_pemeriksaan', 'param' => 'where', 'operator' => '', 'value' => '0');
+        $params[] = array('field' => 'trx_realisasi', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $params[] = array('field' => 'trx_realstatus', 'param' => 'where', 'operator' => '', 'value' => 0);
+
+        $result = $this->Kskeluar_model->gets($params, NULL, 'trx_minta_kas');
+        $no = 0;
+        if ($result) {
+            foreach ($result as $value) {
+                $result[$no]->tgl_trx= explode(' ', $value->tgl_trx)[0];
+                $no++;
             }
+            echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua data'));
+        } else {
+            echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Tidak ada data'));
+        }
+    }
+
+    public function minta_kas_rujukan() {
+        $records = $this->input->get('filter');
+        $params = array();
+
+        if ($records) {
+            $raw_record = json_decode($records, true);
+            $params = $this->generate_db_query($raw_record);
         }
 
-        $result = $this->Kskeluar_model->get_minta_kas($params, NULL);
+        $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        $params[] = array('field' => 'mkr_pemeriksaan', 'param' => 'where', 'operator' => ' <>', 'value' => '0');
+        $params[] = array('field' => 'trx_realisasi', 'param' => 'where', 'operator' => '', 'value' => 0);
+        $params[] = array('field' => 'trx_realstatus', 'param' => 'where', 'operator' => '', 'value' => 0);
 
+        $result = $this->Kskeluar_model->gets($params, NULL, 'trx_minta_kas');
+        $no = 0;
         if ($result) {
+            foreach ($result as $value) {
+                $result[$no]->tgl_trx= explode(' ', $value->tgl_trx)[0];
+                $no++;
+            }
             echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua data'));
         } else {
             echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Tidak ada data'));

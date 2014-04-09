@@ -54,22 +54,25 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             },
             '#kskeluartab': {
                 beforetabchange: function(tabPanelThis, componentNew, componentCurrent) {
+                    var bReturn = true;
+//                    // add back to ignore activeTab call
+//                    //if (null != componentCurrent)  { 
+//                    //}
                     var form = this.getKsKeluarForm();
-                    // add back to ignore activeTab call
                     if (form.saved === false) {
-                        Ext.Msg.show({
-                            title: 'Konfirmasi',
-                            msg: 'Anda sedang melakukan transaksi. Lanjutakan transaksi ?',
-                            buttons: Ext.Msg.YESNO,
-                            scope: this,
-                            fn: function(btn) {
-                                if (btn === 'no') {
-                                    return true;
-                                }
-                            }
-                        });
-                        return false;
+                        bReturn = confirm('Anda sedang melakukan transaksi. Pindah tab?');
+//                        Ext.Msg.show({
+//                            title: 'Konfirmasi',
+//                            msg: 'Anda sedang melakukan transaksi. Lanjutakan transaksi ?',
+//                            buttons: Ext.Msg.YESNO,
+//                            scope: this,
+//                            fn: function(btn) {
+//                                bReturn = btn;
+//                            }
+//                        });
+
                     }
+                    return bReturn;
                 },
                 tabchange: function(tabPanel, tab) {
                     var id = tab.itemId;
@@ -494,16 +497,26 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                         }
                     }
                 }
+            },
+            '#kkSignSave': {
+                click: function(btn) {
+                    var form = this.getKsKeluarForm(),
+                            id = form.down('#random_string').getValue();
+
+                    form.down('#imageTtdKk1').setSrc('assets/ttd_tx/kkSign' + id + 'NULL.png');
+                    btn.up('window').close();
+                }
             }
         });
     },
     loadFormFaktur: function(id) {
         var form = this.getKsKeluarForm();
         form.body.unmask();
+        form.saved = true;
         this.ajaxReq('ks_keluar/reset', form.getForm().getValues(), 1);
         form.getForm().reset();
         this.initKey(form, '#random_string');
-        
+
         form.down('#KasKeluarNew').enable();
         form.down('#KasKeluarSave').enable();
         form.down('#KasKeluarSavePrint').enable();
