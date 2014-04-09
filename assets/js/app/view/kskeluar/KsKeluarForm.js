@@ -18,8 +18,9 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
     },
     autoScroll: true,
     initComponent: function () {
-        var me = this;
-
+        var me = this,
+                form = me;
+        
         Ext.applyIf(me, {
             tbar: [
                 {
@@ -27,24 +28,21 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     text: 'ADD_NEW',
                     ui: 'green-button',
                     iconCls: 'icon-btn-add',
-                    itemId: 'KasKeluarNew',
-                    id: 'kkNew'
+                    itemId: 'KasKeluarNew'
                 },
                 {
                     xtype: 'button',
                     text: 'SAVE',
                     ui: 'green-button',
                     iconCls: 'icon-btn-save',
-                    itemId: 'KasKeluarSave',
-                    id: 'kkSave'
+                    itemId: 'KasKeluarSave'
                 },
                 {
                     xtype: 'button',
                     text: 'PRINT',
                     ui: 'green-button',
                     iconCls: 'icon-btn-print',
-                    itemId: 'KasKeluarSavePrint',
-                    id: 'kkSavePrint'
+                    itemId: 'KasKeluarSavePrint'
                 },
                 {
                     xtype: 'button',
@@ -52,15 +50,14 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     ui: 'green-button',
                     hidden: true,
                     iconCls: 'icon-btn-delete',
-                    itemId: 'KasKeluarDelete',
-                    id: 'kkDelete'
+                    itemId: 'KasKeluarDelete'
                 }
             ],
             items: [
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Form ID ',
-                    name: 'formId',
+                    name: 'kas_type',
                     value: 'kaskeluar',
                     hidden: true,
                     allowBlank: false,
@@ -69,7 +66,8 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Type Kas Keluar ',
-                    name: 'kkType',
+                    name: 'kk_type',
+                    itemId: 'kk_type',
                     hidden: true,
                     allowBlank: false,
                     readOnly: true
@@ -92,32 +90,31 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Nama Supplier ',
-                    name: 'namaSup',
-                    itemId: 'namaSup',
-                    id: 'namaSup',
+                    name: 'faktur_suppid',
+                    itemId: 'faktur_suppid',
                     hidden: false,
                     triggerAction: 'all',
                     minChars: 2,
                     store: 'kskeluar.MasterSupplierStore',
                     displayField: 'ms_name',
-                    valueField: 'idms',
+                    valueField: 'id',
                     emptyText: 'Nama Supplier',
                     readOnly: true
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'No Faktur ',
-                    name: 'noFaktur',
-                    id: 'kkFakNo',
-                    hidden: false
+                    name: 'faktur_id',
+                    itemId: 'faktur_id',
+                    hidden: true
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     hidden: false,
                     fieldLabel: 'Jumlah Tagihan ',
-                    name: 'jumlahTagihan',
-                    id: 'kkFakTotal',
+                    name: 'faktur_nototal',
+                    itemId: 'faktur_nototal',
                     decimalPrecision: 2,
-                    decimalSeparator: ',',
+                    decimalSeparator: '.',
                     alwaysDisplayDecimals: true,
                     allowNegative: false,
                     minValue: 0, //prevents negative numbers
@@ -132,9 +129,9 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     listeners: {
                         'change': function () {
                             var iki = this.getValue(),
-                                iku = this.up('form').getForm().findField('jumlahSupLebihBayar').getValue();
+                                iku = form.getForm().findField('jumlahSupLebihBayar').getValue();
 
-                            this.up('form').getForm().findField('trx_value').setValue(iki - iku);
+                            form.getForm().findField('kas_jumlah').setValue(iki - iku);
                         }
                     }
                 }),
@@ -143,7 +140,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     fieldLabel: 'Kelebihan Bayar ',
                     name: 'jumlahSupLebihBayar',
                     decimalPrecision: 2,
-                    decimalSeparator: ',',
+                    decimalSeparator: '.',
                     alwaysDisplayDecimals: true,
                     allowNegative: false,
                     minValue: 0, //prevents negative numbers
@@ -159,12 +156,12 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'ID Minta Bayar',
-                    name: 'idMintaBayar',
+                    name: 'ma_id',
                     hidden: true,
                     listeners: {
                         change: function () {
                             if (this.getValue() !== "") {
-                                this.up('form').getForm().findField('trx_value').setReadOnly(true);
+                                this.up('form').getForm().findField('kas_jumlah').setReadOnly(true);
                             }
                         }
                     }
@@ -172,15 +169,15 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Divisi ',
-                    name: 'nama_divisi',
+                    name: 'divisi_name',
                     readOnly: true,
                     fieldCls: 'x-item-readonly',
                     hidden: true
                 },
                 {
                     xtype: 'textfield',
-                    name: 'mkr_pemeriksaan',
-                    itemId: 'mkr_pemeriksaan',
+                    name: 'agrplan_periksa',
+                    itemId: 'agrplan_periksa',
                     fieldLabel: 'Nama Pmriksaan ',
                     readOnly: true,
                     hidden: true,
@@ -188,8 +185,8 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'mkr_namapasien',
-                    itemId: 'mkr_namapasien',
+                    name: 'agrplan_pasien',
+                    itemId: 'agrplan_pasien',
                     fieldLabel: 'Nama Pasien ',
                     readOnly: true,
                     hidden: true,
@@ -197,8 +194,8 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 },
                 {
                     xtype: 'textfield',
-                    name: 'mkr_rujukanke',
-                    itemId: 'mkr_rujukanke',
+                    name: 'agrplan_rujuk',
+                    itemId: 'agrplan_rujuk',
                     fieldLabel: 'Di Rujuk Ke ',
                     readOnly: true,
                     hidden: true,
@@ -211,7 +208,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     displayField: 'type',
                     valueField: 'typeCode',
                     queryMode: 'local',
-                    name: 'statusKas',
+                    name: 'kas_akun',
                     forceSelection: true,
                     hidden: true,
                     typeAhead: true,
@@ -231,7 +228,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                 },
                 Ext.create('Ext.ux.form.NumericField', {
                     fieldLabel: 'Nominal ',
-                    name: 'trx_value',
+                    name: 'kas_jumlah',
                     decimalPrecision: 2,
                     decimalSeparator: ',',
                     alwaysDisplayDecimals: true,
@@ -290,6 +287,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                             margins: '0 0 0 5',
                             handler: function () {
                                var win = new Ext.widget('kskeluar.kksignwin');
+                               win.down('#idKk').setValue(form.down('#random_string').getValue());
                             }
                         }
                     ]
@@ -312,9 +310,15 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                             margin: '0 0 0 0',
                             baseCls: 'imagefieldthumb',
                             src: BASE_PATH + 'assets/appdata/signBlank.png',
-                            id: 'imageTtdTb1'
+                            itemId: 'imageTtdKk1'
                         })
                     ]
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'random Key',
+                    name: 'random_string',
+                    itemId: 'random_string'
                 }
             ]
         });

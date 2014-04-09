@@ -22,6 +22,16 @@ Ext.define('GlApp.view.kskeluar.DataRujukanGrid', {
                 emptyText: 'Tidak ada data Rujukan',
                 deferEmptyText: false
             },
+            tbar: [
+                '->',
+                {
+                    text: 'REFRESH',
+                    ui: 'green-button',
+                    handler: function() {
+                        grid.getStore().load();
+                    }
+                }
+            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {

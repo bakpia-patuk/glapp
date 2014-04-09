@@ -990,6 +990,12 @@ class Shared extends Auth_Controller {
         }
     }
 
+    public function random_key() {
+        $this->load->helper('string');
+        $value = random_string('alnum', 20);
+        echo json_encode(array('success' => 'true', 'data' => $value));
+    }
+
     public function list_akun() {
         $records = $this->input->get('filter');
         $query = $this->input->get('query');

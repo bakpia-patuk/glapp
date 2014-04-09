@@ -94,4 +94,21 @@ class Ksmintakas_model extends MY_Model {
 
         return TRUE;
     }
+    
+    public function add_to_kpakun($id_akun, $id_keperluan, $id_form) {
+        $opt[] = array('field' => 'kp_id', 'param' => 'where', 'operator' => '', 'value' => $id_keperluan);
+        $opt[] = array('field' => 'akun_header', 'param' => 'where', 'operator' => '', 'value' => $id_akun);
+        $exsist = $this->gets($opt, NULL, 'ms_keperluan_akun');
+
+        if ($exsist == NULL) {
+            $data = array(
+                'kp_id' => $id_keperluan,
+                'form_id' => $id_form,
+                'akun_header' => $id_akun
+            );
+
+            $this->insert($data, 'ms_keperluan_akun');
+        }
+        return TRUE;
+    }
 }

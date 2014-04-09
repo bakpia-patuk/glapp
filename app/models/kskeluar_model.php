@@ -12,33 +12,28 @@ class Kskeluar_model extends MY_Model {
     function __construct() {
         parent::__construct();
     }
-    
+
     function get_divisi($id) {
         switch ($id) {
             case 1:
                 return "PELAYANAN";
-                break;
             case 2:
                 return "MARKETING";
-                break;
             case 3:
                 return "KEUANGAN";
-                break;
             case 4:
                 return "LAB";
-                break;
             case 5:
                 return "SDM";
-                break;
             case 6:
                 return "IT";
-                break;
             case 7:
                 return "RUMAH TANGGA";
+            default:
                 break;
         }
     }
-    
+
     public function kastrx_list($record, $options) {
         $tablename = 'trx_kas';
         $datestring = "%Y-%m-%d";
@@ -79,45 +74,8 @@ class Kskeluar_model extends MY_Model {
             return $listkm;
         }
     }
-    
-    public function get_minta_kas($record) {
-        $tablename = 'trx_minta_kas';
-        $list = array();
-        $opt['sortBy'] = 'tgl_trx';
-        $opt['sortDirection'] = 'DESC';
-        $results = $this->gets($record, $opt, $tablename);
 
-        if ($results != NULL) {
-            foreach ($results as $key) {
-                $list[] = array(
-                    'id' => $key->id,
-                    'tgl_trx' => explode(" ", $key->tgl_trx)[0],
-                    'trx_divisi' => $key->trx_divisi,
-                    'nama_divisi' => $this->get_divisi($key->trx_divisi),
-                    'mk_keperluan' => $key->mk_keperluan,
-                    'mk_detail' => $key->mk_detail,
-//                    'kdDetail' => $key->mb_detailext,
-//                    'refTrx' => $key->mb_exttable,
-                    'mkr_pemeriksaan' => $key->mkr_pemeriksaan,
-                    'mkr_namapasien' => $key->mkr_namapasien,
-                    'mkr_rujukanke' => $key->mkr_rujukanke,
-                    'trx_desc' => $key->trx_desc,
-                    'trx_value' => $key->trx_value,
-                    'trx_realisasi' => $key->trx_realisasi,
-                    'trx_realstatus' => $key->trx_realstatus,
-                    'trx_penerima' => $key->trx_penerima,
-                    'trx_appr_status' => $key->trx_appr_status,
-                    'trx_appr_peg' => $key->trx_appr_peg,
-                    'cabang_id' => $key->cabang_id,
-                    'status_simpan' => $key->status_simpan
-                );
-            }
-            return $list;
-        } else {
-            return FALSE;
-        }
-    }
-    
+   
     function kk_process() {
         $datestring = "%Y-%m-%d %H:%i:%s";
         $time = date('H:i:s');
@@ -250,7 +208,7 @@ class Kskeluar_model extends MY_Model {
                 'tgl_trx' => mdate($datestring, $date),
                 'jumlah_trx' => $jumlah,
                 'no_ref_trx' => $invoice,
-                'keterangan_trx' => 'Kas Keluar untuk ',// . $this->get_detail('id', $dtil_keperluan, 'master_keperluan_detail')->kd_name,
+                'keterangan_trx' => 'Kas Keluar untuk ', // . $this->get_detail('id', $dtil_keperluan, 'master_keperluan_detail')->kd_name,
                 'jenis_trx' => $form,
                 'created' => date('Y-m-d H:i:s', now()),
                 'modified' => date('Y-m-d H:i:s', now()),
@@ -291,7 +249,7 @@ class Kskeluar_model extends MY_Model {
 
         return $noID;
     }
-    
+
     public function insert_kas($data, $type) {
         $id = $this->insert($data, 'trx_kas');
 
@@ -338,4 +296,5 @@ class Kskeluar_model extends MY_Model {
 
         return $invoice;
     }
+
 }
