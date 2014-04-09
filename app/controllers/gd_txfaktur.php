@@ -88,7 +88,17 @@ class Gd_txfaktur extends Auth_Controller {
             foreach ($result as $row) {
 //                $item_id = $row->tt_barang_id;
 //                $detail_item = $this->Gdtxfaktur_model->get_detail('id', $item_id, 'master_item_' . $this->ion_auth->user()->row()->cabang_id);
-
+                if($row->tt_ppn==1){
+                    $data_diskon = $row->tt_disc*$row->tt_harga/100;
+                    $harga_netto = ($row->tt_harga*$row->tt_qty_kirim)+($row->tt_harga * $row->tt_qty_kirim * 0.1)-$data_diskon;
+                }
+                else{
+                    $data_diskon = $row->tt_disc*$row->tt_harga/100;
+                    $harga_netto = $row->tt_harga*$row->tt_qty_kirim-($data_diskon);
+                }
+                $nama_barang = $this->Gdtxfaktur_model->get_detail('id',$row->tt_barang_id,'dt_item_cabang');
+                $nama_barang = $this->Gdtxfaktur_model->get_detail('id',$nama_barang->mi_id,'dt_item');
+                
                 $listpo[] = array(
                     'id' => $row->id,
                     'tt_id' => $row->tt_id,
@@ -98,14 +108,15 @@ class Gd_txfaktur extends Auth_Controller {
 //                    'ttPoExp' => $this->Gdtxfaktur_model->get_detail('id', $row->tt_po_id, 'trx_po')->po_ed,
                     'tt_peng_id' => $row->tt_peng_id,
                     'tt_barang_id' => $row->tt_barang_id,
-//                    'ttBarangName' => $detail_item->mi_name,
+                    'ttBarangName' => $nama_barang->mi_name,
                     'tt_supp_id' => $row->tt_supp_id,
                     'tt_qty_pesan' => $row->tt_qty_pesan,
                     'tt_qty_kirim' => $row->tt_qty_kirim,
                     'tt_qty_sisa' => $row->tt_qty_sisa,
                     'tt_harga' => $row->tt_harga,
                     'tt_disc' => $row->tt_disc,
-                    'tt_ppn' => $row->tt_ppn,
+                    'tt_ppn' => $row->tt_ppn==1 ? 10 : 0,
+                    'ttItemNetto' => $harga_netto,
                     'tt_faktur_status' => $row->tt_faktur_status,
                     'simpan_status' => $row->simpan_status
                 );
@@ -212,9 +223,15 @@ class Gd_txfaktur extends Auth_Controller {
         $res = $this->Gdtxfaktur_model->gets($opt, NULL, 'trx_tt_detail');
         if ($res) {
             foreach ($res as $row) {
+                if($row->tt_ppn==1){
+                    $ppn=10;
+                }
+                else{
+                    $ppn=0;
+                }
                 $item_price = $row->tt_harga;
                 $qty = $row->tt_qty_kirim;
-                $ppn = $row->tt_ppn;
+                
                 $disc = $row->tt_disc;
 
                 $netto = $item_price - ($disc / 100 * $item_price);

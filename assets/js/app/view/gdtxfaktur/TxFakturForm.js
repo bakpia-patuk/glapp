@@ -135,13 +135,13 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     }),
                     listeners: {
                         select: function(cmb, rec, opt) {
-                            if (cmb.getValue() === 1) {
+                            if (cmb.getValue() === 2) {
                                 this.up('form').getForm().findField('tglBayar').show();
                             } else {
                                 this.up('form').getForm().findField('tglBayar').hide();
                             }
 
-                            if (cmb.getValue() === 2) {
+                            if (cmb.getValue() === 3) {
                                 this.up('form').getForm().findField('tglTransfer').show();
                             } else {
                                 this.up('form').getForm().findField('tglTransfer').hide();

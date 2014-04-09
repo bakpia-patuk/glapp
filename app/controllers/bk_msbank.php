@@ -14,6 +14,7 @@ class Bk_msbank extends Auth_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model('Bkmsbank_model');
+        $this->Bkmsbank_model->cms_db = $this->load->database('outgoing', TRUE);
     }
     
     public function list_bank() {
@@ -99,9 +100,34 @@ class Bk_msbank extends Auth_Controller {
             }
         } else {
             unset($input['id']);
-            if (!$this->Bkmsbank_model->insert($input, 'ms_bank')) {
+            $id=$this->Bkmsbank_model->insert($input, 'ms_bank');
+            if (!$id) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
             } else {
+                $params = array();
+                $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+                $data_po = $this->Bkmsbank_model->gets($params, NULL, 'ms_bank');
+                foreach ($data_po as $key) {
+
+                    $data_json = json_encode($key);
+
+                    $data = array();
+
+                    $data['jumlah'] = 1;
+
+                    $data['tujuan'] = $key->bank_cabang;
+                    $data['id_cabang'] = $this->user->cabang_id;
+
+                    $no = $this->Bkmsbank_model->insert_outgoing($data, 'head');
+
+                    $data = array();
+                    $data['data'] = $data_json;
+                    $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                    $data['primary_key'] = $key->id;
+                    $data['table_name'] = 'ms_bank';
+
+                    $this->Bkmsbank_model->insert_outgoing($data, 'detail');
+                }
                 echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Success'));
             }
         }
