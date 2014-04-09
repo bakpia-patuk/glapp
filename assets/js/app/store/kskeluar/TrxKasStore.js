@@ -31,7 +31,7 @@ Ext.define('GlApp.store.kskeluar.TrxKasStore', {
     alias: 'store.kskeluar.trxkasstore',
     model: TrxKas,
     storeId: 'KsKkTrxKasStore',
-    autoLoad: true,
+    autoLoad: false,
     remoteFilter: true,
     proxy: {
         success: true,
