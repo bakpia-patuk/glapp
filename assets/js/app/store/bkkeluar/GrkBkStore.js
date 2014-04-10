@@ -5,6 +5,7 @@ var GroupPerlu = Ext.define('GlApp.model.GrkModel', {
         {name: 'grk_name', type: 'string'},
         {name: 'grk_desc', type: 'string'},
         {name: 'grk_status', type: 'int'},
+        {name: 'form_id', type: 'string'},
         {name: 'grk_active', type: 'int'}
     ],
     idProperty: 'id'
@@ -12,7 +13,7 @@ var GroupPerlu = Ext.define('GlApp.model.GrkModel', {
 
 Ext.define('GlApp.store.bkkeluar.GrkBkStore', {
     extend: 'Ext.data.Store',
-    alias: 'store.bkkeluar.grkbmtore',
+    alias: 'store.bkkeluar.grkbkstore',
     model: GroupPerlu,
     storeId: 'BkKlGrkBkStore',
     autoLoad: false,
