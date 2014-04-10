@@ -6,7 +6,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
     alias: 'widget.gdlsstockop.stockopgrid',
     itemId: 'stockopgrid',
     border: false,
-//    store: 'ItemStore',
+    store: 'gdlsstockop.BarangStore',
     autoScroll: true,
     forceFit: true,
     columnLines: true,
@@ -53,29 +53,30 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                 
             ],
             columns: [
+                Ext.create('Ext.grid.RowNumberer', {width: 40}),
                 {
                     xtype: 'gridcolumn',
-                    width: 120,
+                    width: 200,
                     text: 'NAMA BARANG',
-                    dataIndex: 'namams'
+                    dataIndex: 'mi_name'
+                },
+                {
+                    xtype: 'gridcolumn',
+                    width: 70,
+                    text: 'STOCK',
+                    dataIndex: 'stock_last'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
-                    text: 'STOCK AKHIR',
-                    dataIndex: 'alamatms'
-                },
-                {
-                    xtype: 'gridcolumn',
-                    width: 150,
                     text: 'MERK',
-                    dataIndex: 'namakotams'
+                    dataIndex: 'mi_merk_name'
                 },
                 {
                     xtype: 'gridcolumn',
-                    width: 150,
+                    width: 100,
                     text: 'KATALOG',
-                    dataIndex: 'tlpms'
+                    dataIndex: 'mi_katalog'
                 }
             ]
         });

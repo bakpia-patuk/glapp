@@ -5,7 +5,7 @@ var MintaKas = Ext.define('GlApp.model.MintaKasModel', {
         {name: 'id', type: 'int'},
         {name: 'tgl_trx', type: 'date'},
         {name: 'trx_divisi', type: 'int'},
-        {name: 'nama_divisi', type: 'string'},
+        {name: 'divisi_name', type: 'string'},
         {name: 'mk_keperluan', type: 'int'},
         {name: 'mk_detail', type: 'int'},
         {name: 'mkr_pemeriksaan', type: 'string'},

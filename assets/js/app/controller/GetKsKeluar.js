@@ -35,7 +35,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         {ref: 'StartDr', selector: '#datestartdr'},
         {ref: 'EndDr', selector: '#dateenddr'},
         {ref: 'PeriksaDr', selector: '#drperiksa'},
-//        //daftar Grid selain KK
+        //daftar Grid selain KK
         {ref: 'ListFaktur', selector: '#listfaktur'},
         {ref: 'ListMintaBayar', selector: '#listmintabayar'},
         {ref: 'DataRujukanGrid', selector: '#datarujukangrid'}
@@ -50,22 +50,9 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             '#kskeluartab': {
                 beforetabchange: function(tabPanelThis, componentNew, componentCurrent) {
                     var bReturn = true;
-//                    // add back to ignore activeTab call
-//                    //if (null != componentCurrent)  { 
-//                    //}
                     var form = this.getKsKeluarForm();
                     if (form.saved === false) {
                         bReturn = confirm('Anda sedang melakukan transaksi. Pindah tab?');
-//                        Ext.Msg.show({
-//                            title: 'Konfirmasi',
-//                            msg: 'Anda sedang melakukan transaksi. Lanjutakan transaksi ?',
-//                            buttons: Ext.Msg.YESNO,
-//                            scope: this,
-//                            fn: function(btn) {
-//                                bReturn = btn;
-//                            }
-//                        });
-
                     }
                     return bReturn;
                 },
@@ -95,56 +82,14 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                     }
                 }
             },
-            '#listmintabayar': {
-                selectionchange: function(model, records) {
-                    var form = this.getKsKeluarForm().getForm();
-
-                    if (records[0]) {
-                        form.findField('idMintaBayar').setValue(records[0].get('id'));
-                        form.findField('nama_divisi').setValue(records[0].get('nama_divisi'));
-                        form.findField('trx_value').setValue(records[0].get('trx_value'));
-                        form.findField('trx_desc').setValue(records[0].get('trx_desc'));
-                    }
-                }
-            },
-            '#datarujukangrid': {
-                selectionchange: function(model, records) {
-                    var form = this.getKsKeluarForm().getForm();
-
-                    if (records[0]) {
-                        form.findField('idMintaBayar').setValue(records[0].get('id'));
-                        form.findField('nama_divisi').setValue(records[0].get('nama_divisi'));
-                        form.findField('trx_value').setValue(records[0].get('trx_value'));
-
-                        form.findField('mkr_pemeriksaan').setValue(records[0].get('mkr_pemeriksaan'));
-                        form.findField('mkr_namapasien').setValue(records[0].get('mkr_namapasien'));
-                        form.findField('mkr_rujukanke').setValue(records[0].get('mkr_rujukanke'));
-                    }
-                }
-            },
-            '#KasKeluarSearch': {
+            '#KasKeluarNew': {
                 click: function() {
-                }
-            },
-            '#KasKeluarRefresh': {
-                click: function() {
-                }
-            },
-            '#ListMkRefresh': {
-                click: function() {
-                }
-            },
-            '#DataRujukanRefresh': {
-                click: function() {
-                }
-            },
-            '#DataRujukanSearch': {
-                click: function() {
+                    this.ajaxReq('ks_keluar/reset', this.getKsKeluarForm().getForm().getValues(), 1);
                 }
             },
             '#KasKeluarSave': {
                 click: function() {
-                    this.checkTtd(1);
+                    this.saveKk();
                 }
             },
             '#KasKeluarSavePrint': {
@@ -176,6 +121,33 @@ Ext.define('GlApp.controller.GetKsKeluar', {
                         if (idfield.getValue() === "") {
                             form.saved = true;
                         }
+                    }
+                }
+            },
+            '#listmintabayar': {
+                selectionchange: function(model, records) {
+                    var form = this.getKsKeluarForm().getForm();
+
+                    if (records[0]) {
+                        form.findField('ma_id').setValue(records[0].get('id'));
+                        form.findField('divisi_name').setValue(records[0].get('divisi_name'));
+                        form.findField('kas_jumlah').setValue(records[0].get('trx_value'));
+                        form.findField('trx_desc').setValue(records[0].get('trx_desc'));
+                    }
+                }
+            },
+            '#datarujukangrid': {
+                selectionchange: function(model, records) {
+                    var form = this.getKsKeluarForm().getForm();
+
+                    if (records[0]) {
+                        form.findField('ma_id').setValue(records[0].get('id'));
+                        form.findField('divisi_name').setValue(records[0].get('divisi_name'));
+                        form.findField('kas_jumlah').setValue(records[0].get('trx_value'));
+
+                        form.findField('agrplan_periksa').setValue(records[0].get('mkr_pemeriksaan'));
+                        form.findField('agrplan_pasien').setValue(records[0].get('mkr_namapasien'));
+                        form.findField('agrplan_rujuk').setValue(records[0].get('mkr_rujukanke'));
                     }
                 }
             },
@@ -239,7 +211,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         form.getForm().findField('faktur_suppid').hide();
         form.getForm().findField('faktur_nototal').hide();
         form.getForm().findField('jumlahSupLebihBayar').hide();
-        
+
         form.getForm().findField('agrplan_periksa').hide();
         form.getForm().findField('agrplan_pasien').hide();
         form.getForm().findField('agrplan_rujuk').hide();
@@ -290,13 +262,13 @@ Ext.define('GlApp.controller.GetKsKeluar', {
         form.getForm().findField('faktur_suppid').hide();
         form.getForm().findField('faktur_nototal').hide();
         form.getForm().findField('jumlahSupLebihBayar').hide();
+        form.getForm().findField('trx_desc').hide();
 
         form.getForm().findField('agrplan_periksa').show();
         form.getForm().findField('agrplan_pasien').show();
         form.getForm().findField('agrplan_rujuk').show();
 
         form.getForm().findField('divisi_name').show();
-        form.getForm().findField('trx_desc').show();
         form.getForm().findField('kas_akun').show();
         form.getForm().findField('kas_akun').enable();
 
@@ -307,108 +279,12 @@ Ext.define('GlApp.controller.GetKsKeluar', {
 
         store.load();
     },
-    checkTtd: function(type) {
-//        Ext.Ajax.request({
-//            url: BASE_PATH + 'data/check_ttd/signNullKk',
-//            scope: this,
-//            callback: function(options, success, response) {
-//                var resp = Ext.decode(response.responseText);
-//
-//                if (resp.success === 'true') {
-        if (type === 1) {
-            this.saveKk();
-        } else {
-            this.savePrintKk();
-        }
-//                } else {
-//                    Ext.MessageBox.alert('Error', 'Belum ada tanda tangan');
-//                }
-//            }
-//        });
-    },
     saveKk: function(button, e, options) {
-        var form = this.getKsKeluarForm().getForm(),
-                forem = this.getKsKeluarForm(),
-                id = form.findField('id').getValue(),
-                tabs = this.getKsKeluarTab(),
-                typeKas = form.findField('kkType').getValue(),
-                cmb = form.findField('namaSup'), store, filterCollection = [];
+        var form = this.getKsKeluarForm().getForm();
 
-//        if (form.isValid()) {
-        Ext.Ajax.request({
-            url: BASE_PATH + 'ks_keluar/add_kaskeluar',
-            method: 'POST',
-            params: form.getValues(),
-            scope: this,
-            callback: function(options, success, response) {
-                var resp = Ext.decode(response.responseText);
-
-                if (resp.success === 'true') {
-                    Ext.MessageBox.show({
-                        title: resp.title,
-                        msg: resp.message,
-                        buttons: Ext.MessageBox.OK,
-                        icon: Ext.MessageBox.INFO
-                    });
-
-                    form.reset();
-                    forem.saved = true;
-                    form.findField('kkType').setValue(typeKas);
-                    cmb.setReadOnly(false);
-
-//                        Ext.getCmp('imageTtdKk').setSrc(BASE_URL + 'assets/img_data/signBlank.png');
-
-//                        Ext.Ajax.request({
-//                            url: BASE_PATH + 'data/clear_data_sign_img/signNullKk',
-//                            scope: this,
-//                            callback: function(options, success, response) {
-//                                var resp = Ext.decode(response.responseText);
-//
-//                                if (resp.success === 'true') {
-//                                    console.log('Kk Saved');
-//                                }
-//                            }
-//                        });
-                    tabs.setActiveTab(2);
-                    store = this.getKsKeluarGrid().getStore();
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'kas_type',
-                        value: 'kaskeluar'
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'kas_tgltrx',
-                        value: Ext.Date.format(new Date(), 'Y-m-d 00:00:00') + 'GT'
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'kas_tgltrx',
-                        value: Ext.Date.format(new Date(), 'Y-m-d 23:59:29') + 'LT'
-                    });
-                    filterCollection.push(filter2);
-
-                    var filter2 = new Ext.util.Filter({
-                        property: 'cabang_id',
-                        value: CABANG_ID
-                    });
-                    filterCollection.push(filter2);
-
-                    store.clearFilter(true);
-                    store.filter(filterCollection);
-                } else {
-                    Ext.MessageBox.show({
-                        title: resp.title,
-                        msg: resp.message,
-                        buttons: Ext.MessageBox.OK,
-                        icon: Ext.MessageBox.ERROR
-                    });
-                }
-            }
-        });
-//        }
+        if (form.isValid()) {
+            this.ajaxReq('ks_keluar/add_kaskeluar', form.getValues(), 2);
+        }
     },
     // untuk save print belum bisa
     savePrintKk: function(button, e, options) {
@@ -498,64 +374,15 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             alert('form ada yang belum di isi');
         }
     },
-    // untuk new, tidak me reset ke database, cuma reset form saja
-    newKk: function(button, e, options) {
-        var form = this.getKsKeluarForm().getForm(),
-                forem = this.getKsKeluarForm(),
-                id = form.findField('id'),
-                typeKas = form.findField('kkType').getValue(),
-                cmb = form.findField('namaSup'), store2;
-        if (typeKas == 1) {
-            store2 = this.getListFaktur().getStore();
-        } else if (typeKas == 2) {
-            store2 = this.getListMintaBayar().getStore();
-        } else {
-            store2 = this.getListRujukan().getStore();
-        }
-
-//        Ext.Ajax.request({
-//            url: BASE_PATH + 'akun/reset_kk',
-//            method: 'POST',
-//            params: {
-//                kkId: id.getValue(),
-//                type: typeKas
-//            },
-//            scope: this,
-//            callback: function(options, success, response) {
-//                var resp = Ext.decode(response.responseText);
-//
-//                if (resp.success === 'true') {
-        form.reset();
-//                    forem.saved = true;
-//                    form.findField('kkType').setValue(typeKas);
-//                    if (typeKas == 1) {
-//                        store2.removeAll();
-//                        cmb.setReadOnly(false);
-//                    } else {
-//                        store2.load();
-//                    }
-//
-////                    Ext.getCmp('imageTtdKk').setSrc(BASE_URL + 'assets/img_data/signBlank.png');
-////
-////                    Ext.Ajax.request({
-////                        url: BASE_PATH + 'data/clear_data_sign_img/signNullKk',
-////                        scope: this,
-////                        callback: function(options, success, response) {
-////                            var resp = Ext.decode(response.responseText);
-////
-////                            if (resp.success === 'true') {
-////                                console.log('Kk Reset');
-////                            }
-////                        }
-////                    });
-//                } else {
-//                    console.log(resp.data);
-//                }
-//            }
-//        });
-    },
     onSuccess: function(resp, idForm) {
-
+        var form = this.getKsKeluarForm(),
+                tabs = this.getKsKeluarTab();
+        
+        form.getForm().reset();
+        form.saved = true;
+        if(idForm === 2) {
+            tabs.setActiveTab(2);
+        }
     },
     onFailure: function(resp, idForm) {
         Ext.MessageBox.show({

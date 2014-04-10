@@ -7,6 +7,7 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
     models: [
     ],
     stores: [
+        'gdlsstockop.BarangStore'
     ],
     views: [
         'gdlsstockop.GetGdLsStockOp',
@@ -15,22 +16,28 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
         'gdlsstockop.ArusStockGrid'
     ],
     refs: [
-        {ref: 'SupplierForm', selector: '#mssupplierform'},
-        {ref: 'SupplierGrid', selector: '#mssuppliergrid'}
+        {ref: 'BarangGrid', selector: '#stockopgrid'},
+        {ref: 'StockOpForm', selector: '#stockopform'},
+        {ref: 'stockOpGrid', selector: '#arusstockgrid'}
     ],
     init: function() {
         this.listen({
             controller: {
             },
             component: {
-                '#mssupplierform button[action=suppSave]': {
-                    click: this.showLimitForm
+                '#stockopform button[action=stockNew]': {
+                    click: this.resetForm
                 },
-                '#mssupplierform button[action=suppNew]': {
-                    click: this.showKemasan
+                '#stockopform button[action=stockSave]': {
+                    click: this.saveForm
                 },
-                '#mssupplierform button[action=suppDelete]': {
-                    click: this.showSatuan
+                '#stockopgrid': {
+                    selectionchange: function(m, r) {
+                        var form = this.getStockOpForm();
+                        if(r[0]){
+                            form.getForm().loadRecord(r[0]);
+                        }
+                    }
                 }
             },
             global: {
@@ -39,14 +46,9 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
             }
         });
     },
-    showLimitForm: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbaranglimitwin');
+    resetForm: function(btn) {
     },
-    showKemasan: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbarangkemasanwin');
-    },
-    showSatuan: function(btn) {
-        var win = Ext.widget('gdmsbarang.msbarangsatuanwin');
+    saveForm: function(btn) {
     }
 });
 

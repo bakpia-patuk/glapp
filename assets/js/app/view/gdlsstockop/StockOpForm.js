@@ -25,25 +25,25 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
             tbar: [
                 {
                     xtype: 'button',
-                    text: 'SIMPAN',
+                    disabled: false,
+                    text: 'ADD_NEW',
                     ui: 'orange-button',
-                    iconCls: 'icon-btn-save',
-                    action: 'suppSave'
+                    iconCls: 'icon-btn-add',
+                    action: 'stockNew'
                 },
                 {
                     xtype: 'button',
-                    disabled: false,
-                    text: 'BARU',
+                    text: 'SIMPAN',
                     ui: 'orange-button',
-                    iconCls: 'icon-btn-add',
-                    action: 'suppNew'
+                    iconCls: 'icon-btn-save',
+                    action: 'stockSave'
                 }
             ],
             items: [
                 {
                     xtype: 'textfield',
-                    fieldLabel: 'Id Tt ',
-                    name: 'ttId',
+                    fieldLabel: 'Id So ',
+                    name: 'id',
                     allowBlank: true,
                     hidden: true,
                     disabled: false,
@@ -61,7 +61,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Nama Barang ',
-                    name: 'itemName',
+                    name: 'mi_name',
                     allowBlank: false,
                     hidden: false,
                     readOnly: true
@@ -77,7 +77,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                 },
                 {
                     xtype: 'numberfield',
-                    name: 'lastStock',
+                    name: 'stock_last',
                     fieldLabel: 'Stock Awal ',
                     allowNegative: false,
                     minValue: 0, //prevents negative numbers
