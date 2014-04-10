@@ -10,8 +10,6 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
     autoScroll: true,
     forceFit: true,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
-    }),
 
     initComponent: function () {
         var me = this;
@@ -25,8 +23,19 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
             tbar: [
                 {
                     xtype: 'combobox',
-                    emptyText: 'Golongan',
-                    allowBlank: false
+                    fieldLabel: 'Filter ',
+                    labelAlign: 'right',
+                    labelWidth: 40,
+                    width: 160,
+                    emptyText: 'Jenis'
+                },
+                {
+                    xtype: 'combobox',
+                    emptyText: 'Golongan'
+                },
+                {
+                    xtype: 'textfield',
+                    emptyText: 'Query'
                 },
                 {
                     text: 'SEARCH',
