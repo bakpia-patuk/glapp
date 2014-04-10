@@ -118,6 +118,7 @@ class Bk_anggaran extends Auth_Controller {
             $trx_agrdata = $this->input->post('trx_agrdata');
 
             if ($supplier != "") {
+                $tujuan_kirim = 1;
                 if ($trx_jenisbayar == 2) {
                     $no_faktur = explode(';', $trx_agrdata);
                     for ($i = 0; $i < count($no_faktur) - 1; $i++) {
@@ -129,14 +130,15 @@ class Bk_anggaran extends Auth_Controller {
                         $data_po = $this->Bkanggaran_model->gets($opts, NULL, 'trx_faktur');
                         if($data_po){
                             foreach ($data_po as $key) {
+                                $tujuan_kirim = $key->faktur_cabang;
                                 $data_json = json_encode($key);
 
                                 $data = array();
 
                                 $data['jumlah'] = 1;
 
-                                $data['tujuan'] = 1;
-                                $data['id_cabang'] = $key->faktur_cabang;
+                                $data['tujuan'] = $key->faktur_cabang;
+                                $data['id_cabang'] = $this->user->cabang_id;
 
                                 $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
 
@@ -151,6 +153,35 @@ class Bk_anggaran extends Auth_Controller {
                             }
                         }
                     }
+
+                    $opts=array();
+                    $opts[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+                    $data_po = $this->Bkanggaran_model->gets($opts, NULL, 'trx_anggaran');
+                    if($data_po){
+                        foreach ($data_po as $key) {
+                            
+                            $data_json = json_encode($key);
+
+                            $data = array();
+
+                            $data['jumlah'] = 1;
+
+                            $data['tujuan'] = $tujuan_kirim;
+                            $data['id_cabang'] = $this->user->cabang_id;
+
+                            $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
+
+                            $data = array();
+                            $data['data'] = $data_json;
+                            $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                            
+                            $data['primary_key'] = $key->id;
+                            $data['table_name'] = 'trx_anggaran';
+
+                            $this->Bkanggaran_model->insert_outgoing($data, 'detail');
+                        }
+                    }
+
                 }
                 else if ($trx_jenisbayar == 1) {
                     $no_bg = explode(';', rtrim($trx_agrdata, ';'));
@@ -166,14 +197,15 @@ class Bk_anggaran extends Auth_Controller {
                         $data_po = $this->Bkanggaran_model->gets($opts, NULL, 'trx_faktur_bayar');
                         if($data_po){
                             foreach ($data_po as $key) {
+                                $tujuan_kirim = $key->faktur_cabang;
                                 $data_json = json_encode($key);
 
                                 $data = array();
 
                                 $data['jumlah'] = 1;
 
-                                $data['tujuan'] = 1;
-                                $data['id_cabang'] = $key->faktur_cabang;
+                                $data['tujuan'] = $key->faktur_cabang;
+                                $data['id_cabang'] = $this->user->cabang_id;
 
                                 $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
 
@@ -193,14 +225,15 @@ class Bk_anggaran extends Auth_Controller {
                         $data_po = $this->Bkanggaran_model->gets($opts, NULL, 'trx_faktur');
                         if($data_po){
                             foreach ($data_po as $key) {
+                                
                                 $data_json = json_encode($key);
 
                                 $data = array();
 
                                 $data['jumlah'] = 1;
 
-                                $data['tujuan'] = 1;
-                                $data['id_cabang'] = $key->faktur_cabang;
+                                $data['tujuan'] = $key->faktur_cabang;
+                                $data['id_cabang'] = $this->user->cabang_id;
 
                                 $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
 
@@ -215,6 +248,35 @@ class Bk_anggaran extends Auth_Controller {
                             }
                         }
                     }
+
+                    $opts=array();
+                    $opts[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+                    $data_po = $this->Bkanggaran_model->gets($opts, NULL, 'trx_anggaran');
+                    if($data_po){
+                        foreach ($data_po as $key) {
+
+                            
+                            $data_json = json_encode($key);
+
+                            $data = array();
+
+                            $data['jumlah'] = 1;
+
+                            $data['tujuan'] = $tujuan_kirim;
+                            $data['id_cabang'] = $this->user->cabang_id;
+
+                            $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
+
+                            $data = array();
+                            $data['data'] = $data_json;
+                            $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                            
+                            $data['primary_key'] = $key->id;
+                            $data['table_name'] = 'trx_anggaran';
+
+                            $this->Bkanggaran_model->insert_outgoing($data, 'detail');
+                        }
+                    }
                 }
                 else if ($trx_jenisbayar == 4) {
                     $no_faktur = explode(';', rtrim($trx_agrdata, ';'));
@@ -227,14 +289,15 @@ class Bk_anggaran extends Auth_Controller {
                         $data_po = $this->Bkanggaran_model->gets($optk, NULL, 'trx_faktur');
                         if($data_po){
                             foreach ($data_po as $key) {
+                                $tujuan_kirim = $key->faktur_cabang;
                                 $data_json = json_encode($key);
 
                                 $data = array();
 
                                 $data['jumlah'] = 1;
 
-                                $data['tujuan'] = 1;
-                                $data['id_cabang'] = $key->faktur_cabang;
+                                $data['tujuan'] = $key->faktur_cabang;
+                                $data['id_cabang'] = $this->user->cabang_id;
 
                                 $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
 
@@ -249,6 +312,33 @@ class Bk_anggaran extends Auth_Controller {
                             }
                         }
                     }
+                    $opts=array();
+                    $opts[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+                    $data_po = $this->Bkanggaran_model->gets($opts, NULL, 'trx_anggaran');
+                    if($data_po){
+                        foreach ($data_po as $key) {
+                            
+                            $data_json = json_encode($key);
+
+                            $data = array();
+
+                            $data['jumlah'] = 1;
+
+                            $data['tujuan'] = $tujuan_kirim;
+                            $data['id_cabang'] = $this->user->cabang_id;
+
+                            $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
+
+                            $data = array();
+                            $data['data'] = $data_json;
+                            $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                            
+                            $data['primary_key'] = $key->id;
+                            $data['table_name'] = 'trx_anggaran';
+
+                            $this->Bkanggaran_model->insert_outgoing($data, 'detail');
+                        }
+                    }
                 }
                 else {
                     $no_faktur = explode(';', $trx_agrdata);
@@ -261,14 +351,15 @@ class Bk_anggaran extends Auth_Controller {
                         $data_po = $this->Bkanggaran_model->gets($optk, NULL, 'trx_faktur');
                         if($data_po){
                             foreach ($data_po as $key) {
+                                $tujuan_kirim = $key->faktur_cabang;
                                 $data_json = json_encode($key);
 
                                 $data = array();
 
                                 $data['jumlah'] = 1;
 
-                                $data['tujuan'] = 1;
-                                $data['id_cabang'] = $key->faktur_cabang;
+                                $data['tujuan'] = $key->faktur_cabang;
+                                $data['id_cabang'] = $this->user->cabang_id;
 
                                 $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
 
@@ -281,6 +372,33 @@ class Bk_anggaran extends Auth_Controller {
 
                                 $this->Bkanggaran_model->insert_outgoing($data, 'detail');
                             }
+                        }
+                    }
+                    $opts=array();
+                    $opts[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+                    $data_po = $this->Bkanggaran_model->gets($opts, NULL, 'trx_anggaran');
+                    if($data_po){
+                        foreach ($data_po as $key) {
+                            
+                            $data_json = json_encode($key);
+
+                            $data = array();
+
+                            $data['jumlah'] = 1;
+
+                            $data['tujuan'] = $tujuan_kirim;
+                            $data['id_cabang'] = $this->user->cabang_id;
+
+                            $no = $this->Bkanggaran_model->insert_outgoing($data, 'head');
+
+                            $data = array();
+                            $data['data'] = $data_json;
+                            $data['head_id'] = $no . '.' . $this->user->cabang_id;
+                            
+                            $data['primary_key'] = $key->id;
+                            $data['table_name'] = 'trx_anggaran';
+
+                            $this->Bkanggaran_model->insert_outgoing($data, 'detail');
                         }
                     }
                 }

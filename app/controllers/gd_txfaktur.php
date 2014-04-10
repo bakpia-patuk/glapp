@@ -89,11 +89,11 @@ class Gd_txfaktur extends Auth_Controller {
 //                $item_id = $row->tt_barang_id;
 //                $detail_item = $this->Gdtxfaktur_model->get_detail('id', $item_id, 'master_item_' . $this->ion_auth->user()->row()->cabang_id);
                 if($row->tt_ppn==1){
-                    $data_diskon = $row->tt_disc*$row->tt_harga;
+                    $data_diskon = $row->tt_disc*$row->tt_harga/100;
                     $harga_netto = ($row->tt_harga*$row->tt_qty_kirim)+($row->tt_harga * $row->tt_qty_kirim * 0.1)-$data_diskon;
                 }
                 else{
-                    $data_diskon = $row->tt_disc*$row->tt_harga;
+                    $data_diskon = $row->tt_disc*$row->tt_harga/100;
                     $harga_netto = $row->tt_harga*$row->tt_qty_kirim-($data_diskon);
                 }
                 $nama_barang = $this->Gdtxfaktur_model->get_detail('id',$row->tt_barang_id,'dt_item_cabang');
