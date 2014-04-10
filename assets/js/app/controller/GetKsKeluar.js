@@ -94,7 +94,7 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             },
             '#KasKeluarSavePrint': {
                 click: function() {
-                    this.checkTtd(2);
+                    this.savePrintKk();
                 }
             },
             '#fakturCheck': {
@@ -288,100 +288,24 @@ Ext.define('GlApp.controller.GetKsKeluar', {
     },
     // untuk save print belum bisa
     savePrintKk: function(button, e, options) {
-        var form = this.getKkForm().getForm(),
-                forem = this.getKkForm(),
-                id = form.findField('id').getValue(),
-                tabs = this.getTabKk(),
-                typeKas = form.findField('kkType').getValue(),
-                cmb = form.findField('namaSup'), store, filterCollection = [];
+        var form = this.getKsKeluarForm().getForm();
 
         if (form.isValid()) {
-            Ext.Ajax.request({
-                url: BASE_PATH + 'ks_keluar/add_kaskeluar',
-                method: 'POST',
-                params: form.getValues(),
-                scope: this,
-                callback: function(options, success, response) {
-                    var resp = Ext.decode(response.responseText);
-
-                    if (resp.success === 'true') {
-                        Ext.MessageBox.show({
-                            title: resp.title,
-                            msg: resp.message,
-                            buttons: Ext.MessageBox.OK,
-                            icon: Ext.MessageBox.INFO
-                        });
-
-                        form.reset();
-                        forem.saved = true;
-                        form.findField('kkType').setValue(typeKas);
-                        cmb.setReadOnly(false);
-
-//                        Ext.getCmp('imageTtdKk').setSrc(BASE_URL + 'assets/img_data/signBlank.png');
-//
-//                        Ext.Ajax.request({
-//                            url: BASE_PATH + 'data/clear_data_sign_img/signNullKk',
-//                            scope: this,
-//                            callback: function(options, success, response) {
-//                                var resp = Ext.decode(response.responseText);
-//
-//                                if (resp.success === 'true') {
-//                                    console.log('Kk Saved');
-//                                }
-//                            }
-//                        });
-                        tabs.setActiveTab(2);
-                        store = this.getKkGrid().getStore();
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'kas_type',
-                            value: 'kaskeluar'
-                        });
-                        filterCollection.push(filter2);
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'kas_tgltrx',
-                            value: Ext.Date.format(new Date(), 'Y-m-d 00:00:00') + 'GT'
-                        });
-                        filterCollection.push(filter2);
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'kas_tgltrx',
-                            value: Ext.Date.format(new Date(), 'Y-m-d 23:59:29') + 'LT'
-                        });
-                        filterCollection.push(filter2);
-
-                        var filter2 = new Ext.util.Filter({
-                            property: 'cabang_id',
-                            value: userCabang
-                        });
-                        filterCollection.push(filter2);
-
-                        store.clearFilter(true);
-                        store.filter(filterCollection);
-//                        window.open(BASE_PATH + 'print_data/printKas/' + resp.data, "Print Preview", "height=550,width=950,modal=yes,alwaysRaised=yes");
-                    } else {
-                        Ext.MessageBox.show({
-                            title: resp.title,
-                            msg: resp.message,
-                            buttons: Ext.MessageBox.OK,
-                            icon: Ext.MessageBox.ERROR
-                        });
-                    }
-                }
-            });
-        } else {
-            alert('form ada yang belum di isi');
+            this.ajaxReq('ks_keluar/add_kaskeluar', form.getValues(), 3);
         }
     },
     onSuccess: function(resp, idForm) {
         var form = this.getKsKeluarForm(),
                 tabs = this.getKsKeluarTab();
-        
+
         form.getForm().reset();
         form.saved = true;
-        if(idForm === 2) {
+        if (idForm === 2) {
             tabs.setActiveTab(2);
+        }
+        if (idForm === 3) {
+            tabs.setActiveTab(2);
+            this.printBkk(resp.data);
         }
     },
     onFailure: function(resp, idForm) {
@@ -392,8 +316,8 @@ Ext.define('GlApp.controller.GetKsKeluar', {
             icon: Ext.MessageBox.ERROR
         });
     },
-    printTt: function(type, id) {
-        window.open(BASE_PATH + 'gd_tt/print_tt/' + type + '/' + id, "Print Preview", "height=" + screen.height + ",width=950,modal=yes,alwaysRaised=yes,scrollbars=yes");
+    printBkk: function(id) {
+        window.open(BASE_PATH + 'ks_keluar/print_bkk/' + id, "Print Preview", "height=" + screen.height + ",width=950,modal=yes,alwaysRaised=yes,scrollbars=yes");
     }
 });
 

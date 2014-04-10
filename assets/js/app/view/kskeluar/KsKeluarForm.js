@@ -60,7 +60,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     name: 'kas_type',
                     value: 'kaskeluar',
                     hidden: true,
-                    allowBlank: false,
+                    allowBlank: true,
                     readOnly: true
                 },
                 {
@@ -69,7 +69,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     name: 'kk_type',
                     itemId: 'kk_type',
                     hidden: true,
-                    allowBlank: false,
+                    allowBlank: true,
                     readOnly: true
                 },
                 {
@@ -85,7 +85,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     value: new Date(),
-                    allowBlank: false
+                    allowBlank: true
                 },
                 {
                     xtype: 'combobox',
@@ -214,6 +214,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     typeAhead: true,
                     allowBlank: true,
                     valueNotFoundText: 'Tidak ada Data',
+                    value: 4,
                     store: new Ext.data.SimpleStore({
                         id: 0,
                         fields: [

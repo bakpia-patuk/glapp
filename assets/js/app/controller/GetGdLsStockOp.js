@@ -7,7 +7,8 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
     models: [
     ],
     stores: [
-        'gdlsstockop.BarangStore'
+        'gdlsstockop.BarangStore',
+        'gdlsstockop.GolonganStore'
     ],
     views: [
         'gdlsstockop.GetGdLsStockOp',

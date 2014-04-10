@@ -10,8 +10,12 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
     autoScroll: true,
     forceFit: true,
     columnLines: true,
-
-    initComponent: function () {
+    plugins: [
+        {
+            ptype: 'bufferedrenderer'
+        }
+    ],
+    initComponent: function() {
         var me = this;
 
         Ext.applyIf(me, {
@@ -24,14 +28,44 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Filter ',
-                    labelAlign: 'right',
                     labelWidth: 40,
-                    width: 160,
-                    emptyText: 'Jenis'
+                    labelAlign: 'right',
+                    emptyText: 'Jenis',
+                    displayField: 'type',
+                    valueField: 'typeCode',
+                    queryMode: 'local',
+                    forceSelection: true,
+                    typeAhead: true,
+                    valueNotFoundText: 'Tidak ada Data',
+                    store: new Ext.data.SimpleStore({
+                        id: 0,
+                        fields: [
+                            'typeCode', //numeric value is the key
+                            'type' //the text value is the value
+                        ],
+                        data: [
+                            [1, 'PERSEDIAAN'],
+                            [2, 'NON PERSEDIAAN'],
+                            [0, 'INVENTARIS']
+                        ]
+                    })
                 },
                 {
                     xtype: 'combobox',
-                    emptyText: 'Golongan'
+                    width: 150,
+                    minChars: 2,
+                    triggerAction: 'all',
+                    store: 'gdlsstockop.GolonganStore',
+                    emptyText: 'Golongan',
+                    displayField: 'mi_name',
+                    valueField: 'id',
+                    queryMode: 'remote',
+                    allowBlank: false,
+                    matchFieldWidth: false,
+                    hidden: false,
+                    listConfig: {
+                        minWidth: 185
+                    }
                 },
                 {
                     xtype: 'textfield',
@@ -50,7 +84,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                     text: 'ALL',
                     ui: 'orange-button'
                 }
-                
+
             ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer', {width: 40}),

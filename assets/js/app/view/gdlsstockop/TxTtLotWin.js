@@ -169,7 +169,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                             region: 'center',
                             itemId: 'gridLot',
                             forceFit: true,
-                            store: 'gdtxterima.TtLotStore',
+//                            store: 'gdtxterima.TtLotStore',
                             columns: [
                                 Ext.create('Ext.grid.RowNumberer'),
                                 {

@@ -88,7 +88,7 @@ class Ks_keluar extends Auth_Controller {
 
         $result = $this->Kskeluar_model->gets($params, NULL, 'trx_minta_kas');
         $no = 0;
-        
+
         if ($result) {
             foreach ($result as $value) {
                 $result[$no]->divisi_name = $this->Kskeluar_model->get_detail('id', $value->trx_divisi, 'dt_divisi')->divisi_name;
@@ -303,7 +303,11 @@ class Ks_keluar extends Auth_Controller {
 //        } else {
 //            echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => $this->catch_db_err(), 'title' => 'Database Error'));
 //        }
-        echo json_encode(array('success' => 'true', 'data' => NULL, 'message' => 'Transaksi berhasil ditambahkan', 'title' => 'Info'));
+        echo json_encode(array('success' => 'true', 'data' => 1, 'message' => 'Transaksi berhasil ditambahkan', 'title' => 'Info'));
+    }
+
+    public function print_bkk($id) {
+        $this->load->view('kas_invoice');
     }
 
 }
