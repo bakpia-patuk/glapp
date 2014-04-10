@@ -115,53 +115,20 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                             store.clearFilter(true);
                             store.filter("form_id", "bankkeluar");
                         },
-//                        select: function(combo, rec, eOpt) {
-//                            var store = this.up('form').getForm().findField('namaKd').getStore();
-//                            this.up('form').getForm().findField('namaKd').show();
-//                            this.up('form').getForm().findField('namaKd').setReadOnly(false);
-//                            this.up('form').getForm().findField('namaKd').reset();
-//                            store.clearFilter(true);
-//                            store.filter('kp_id', combo.getValue());
-//                            store.load();
-//                        }
+                        select: function(combo, rec, eOpt) {
+                            var store = this.up('form').getForm().findField('kas_dtlkeperluan').getStore();
+                            this.up('form').getForm().findField('kas_dtlkeperluan').show();
+                            this.up('form').getForm().findField('kas_dtlkeperluan').setReadOnly(false);
+                            this.up('form').getForm().findField('kas_dtlkeperluan').reset();
+                            store.clearFilter(true);
+                            store.filter('kp_id', combo.getValue());
+                            store.load();
+                        }
                     },
-//                    onTrigger2Click: function() {
-//                        var mbkGrid = new Ext.widget('shared.gkmastergrid', {
-//                            border: true,
-//                            region: 'center'
-//                        }),
-//                        mbkDtGrid = new Ext.widget('shared.gkmasterdetailgrid', {
-//                            region: 'east',
-//                            border: true,
-//                            width: 290,
-//                            split: true
-//                        }),
-//                        store = mbkGrid.getStore();
-//                        var win = new Ext.widget('shared.newwindow', {
-//                            title: 'DAFTAR KEPERLUAN',
-//                            width: 700,
-//                            height: 300,
-//                            border: false,
-//                            layout: 'border',
-//                            items: [
-//                                mbkGrid, mbkDtGrid
-//                            ],
-//                            buttons: [
-//                                {
-//                                    text: 'Simpan',
-//                                    itemId: 'dtKeperluanSave'
-//                                }
-//                            ]
-//                        });
-//
-//                        var store = mbkGrid.getStore();
-//
-//
-//                        store.clearFilter(true);
-//                        store.filter('form_id', 'bankkeluar');
-//                        mbkGrid.down('#keperluanForm').setValue('bankkeluar');
-//                        win.show();
-//                    }
+                    onTrigger2Click: function() {
+//                        alert();
+                        var win = Ext.widget('bkkeluar.bkgroupkpwin');
+                    }
                 },
 //                {
 //                    xtype: 'combobox',
@@ -179,7 +146,7 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Detail Keperluan ',
-                    name: 'namaKd',
+                    name: 'kas_dtlkeperluan',
                     readOnly: true,
                     itemId: 'cmbDetKep',
                     disabled: false,
@@ -187,8 +154,8 @@ Ext.define('GlApp.view.bkkeluar.BkKeluarForm', {
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DetailKpStore',
-                    displayField: 'namaAkun',
+                    store: 'bkkeluar.ListAkunGkStore',
+                    displayField: 'akun_name',
                     valueField: 'id',
                     emptyText: 'Pilih...',
                     matchFieldWidth: false,

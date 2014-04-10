@@ -9,7 +9,7 @@ var trxbank = Ext.define('GlApp.model.TrxBankModel', {
         {name: 'jam', type: 'time'},
         {name: 'kas_bank', type: 'int'},
         {name: 'kas_grpkeperluan', type: 'int'},
-        {name: 'namaKd', type: 'int'},
+        {name: 'kas_dtlkeperluan', type: 'int'},
         {name: 'keteranganKd', type: 'string'},
         {name: 'kas_jumlah', type: 'double'},
         {name: 'kas_bayartype', type: 'int'},

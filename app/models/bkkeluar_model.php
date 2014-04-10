@@ -25,6 +25,7 @@ class Bkkeluar_model extends MY_Model {
         if ($results != NULL) {
             foreach ($results as $row) {
                 $datatgl = explode(' ', $row->kas_tgltrx);
+                $tes = $this->Ksmasuk_model->get_detail('id', $row->kas_dtlkeperluan, 'ms_keperluan_akun')->akun_header;
 //                if ($row->kas_dtlkeperluan == 19 || $row->kas_dtlkeperluan == 4) {
 //                    $keterangan = $this->get_detail('id', $row->kas_dtlkeperluan, 'master_keperluan_detail')->kd_name;
 //                } else {
@@ -40,8 +41,8 @@ class Bkkeluar_model extends MY_Model {
                     'jam' => $datatgl[1],
                     'kas_bank' => $row->kas_bank,
                     'kas_grpkeperluan' => $row->kas_grpkeperluan,
-//                    'namaKd' => $row->kas_dtlkeperluan,
-                    'keteranganKd' => '',//$keterangan,
+                    'kas_dtlkeperluan' => $row->kas_dtlkeperluan,
+                    'keteranganKd' => $this->get_detail('id', $tes, 'dt_akun')->akun_name,
                     'kas_jumlah' => $row->kas_jumlah,
                     'kas_bayartype' => $row->kas_bayartype,
                     'noBg' => $row->kas_bayartype == 0 ? $row->kas_nobayar : 0,
@@ -69,7 +70,7 @@ class Bkkeluar_model extends MY_Model {
         $date = strtotime($this->input->post('tglTransaksi') . ' ' . $time);
         $bank_name = $this->input->post('kas_bank');
         $grp_keperluan = $this->input->post('kas_grpkeperluan');
-//        $dtil_keperluan = $this->input->post('namaKd');
+        $dtil_keperluan = $this->input->post('kas_dtlkeperluan');
         $jumlah = $this->money_formatter($this->input->post('kas_jumlah'));
         $bayar_type = 0;
         $bg_no = $this->input->post('noBg');
@@ -77,6 +78,7 @@ class Bkkeluar_model extends MY_Model {
         $bg_nama = $this->input->post('kas_namabayar');
         $bg_bank = $this->input->post('kas_bankbg');
         $keterangan_string = 'Bank keluar dari ';
+        $tes = $this->Ksmasuk_model->get_detail('id', $dtil_keperluan, 'ms_keperluan_akun')->akun_header;
 
         if ($id == "") {
             $data_trx_kas = array(
@@ -86,7 +88,7 @@ class Bkkeluar_model extends MY_Model {
                 'kas_anggaranid' => 0,
                 'kas_bank' => $bank_name,
                 'kas_grpkeperluan' => $grp_keperluan,
-                'kas_dtlkeperluan' => 0,//$dtil_keperluan,
+                'kas_dtlkeperluan' => $dtil_keperluan,
                 'kas_jumlah' => $jumlah,
                 'kas_bayartype' => $bayar_type,
                 'kas_nobayar' => $bg_no,
@@ -108,7 +110,7 @@ class Bkkeluar_model extends MY_Model {
                     'tgl_trx' => mdate($datestring, $date),
                     'jumlah_trx' => $jumlah,
                     'no_ref_trx' => $trx_ref,
-                    'keterangan_trx' => $keterangan_string,// . $this->get_detail('id', $dtil_keperluan, 'master_keperluan_detail')->kd_name,
+                    'keterangan_trx' => $keterangan_string . $this->get_detail('id', $tes, 'dt_akun')->akun_name,
                     'jenis_trx' => $form,
                     'created' => date('Y-m-d H:i:s', now()),
                     'modified' => date('Y-m-d H:i:s', now()),
@@ -126,7 +128,7 @@ class Bkkeluar_model extends MY_Model {
             $data_trx_update = array(
                 'kas_bank' => $bank_name,
                 'kas_grpkeperluan' => $grp_keperluan,
-                'kas_dtlkeperluan' => 0,//$dtil_keperluan,
+                'kas_dtlkeperluan' => $dtil_keperluan,
                 'kas_jumlah' => $jumlah,
                 'kas_nobayar' => $bg_no,
                 'kas_namabayar' => $bg_nama,
@@ -138,7 +140,7 @@ class Bkkeluar_model extends MY_Model {
             if ($this->update($data_trx_update, $opt, NULL, 'trx_kas')) {
                 $data_trx_harian = array(
                     'jumlah_trx' => $jumlah,
-                    'keterangan_trx' => $keterangan_string,// . $this->get_detail('id', $dtil_keperluan, 'master_keperluan_detail')->kd_name,
+                    'keterangan_trx' => $keterangan_string . $this->get_detail('id', $tes, 'dt_akun')->akun_name,
                     'modified' => date('Y-m-d H:i:s', now())
                 );
                 $opts[] = array('field' => 'no_ref_trx', 'param' => 'where', 'operator' => '', 'value' => $trx_ref);
@@ -184,5 +186,22 @@ class Bkkeluar_model extends MY_Model {
         $this->db->update('trx_kas', $generate);
 
         return $invoice;
+    }
+    
+    public function add_to_kpakun($id_akun, $id_keperluan, $id_form) {
+        $opt[] = array('field' => 'kp_id', 'param' => 'where', 'operator' => '', 'value' => $id_keperluan);
+        $opt[] = array('field' => 'akun_header', 'param' => 'where', 'operator' => '', 'value' => $id_akun);
+        $exsist = $this->gets($opt, NULL, 'ms_keperluan_akun');
+
+        if ($exsist == NULL) {
+            $data = array(
+                'kp_id' => $id_keperluan,
+                'form_id' => $id_form,
+                'akun_header' => $id_akun
+            );
+
+            $this->insert($data, 'ms_keperluan_akun');
+        }
+        return TRUE;
     }
 }

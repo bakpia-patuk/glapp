@@ -11,16 +11,24 @@ Ext.define('GlApp.controller.GetBkKeluar', {
         'bkkeluar.BankStore',
         'bkkeluar.CabangStore',
         'bkkeluar.BankFormStore',
+        'bkkeluar.AkunHeaderStore',
+        'bkkeluar.GrkAkunStore',
+        'bkkeluar.ListAkunGkStore',
         'bkkeluar.GrkBkStore'
     ],
     views: [
         'bkkeluar.GetBkKeluar',
         'bkkeluar.BkKeluarForm',
         'bkkeluar.BkKeluarGrid',
+        'bkkeluar.BkListAkunWin',
+        'bkkeluar.BkGroupKpWin'
     ],
     refs: [
         {ref: 'BkKeluarForm', selector: '#bkkeluarform'},
         {ref: 'BkKeluarGrid', selector: '#bkkeluargrid'},
+        {ref: 'BkGkGrid', selector: '#gridGk'},
+        {ref: 'BkGkAkunGrid', selector: '#gridGkAkun'},
+        {ref: 'BkheaderAkunGrid', selector: '#gridHeaderAkun'}
     ],
     init: function() {
         this.control({
@@ -253,6 +261,52 @@ Ext.define('GlApp.controller.GetBkKeluar', {
 //                                }
 //                            }
 //                        });
+                    }
+                }
+            },
+            '#setAkunGk': {
+                click: function() {
+                    var grid = this.getBkGkGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Select Group Keperluan First');
+                        return;
+                    }
+                    var win = Ext.widget('bkkeluar.bklistakunwin');
+                }
+            },
+            '#setAkunKp': {
+                click: function() {
+                    var grid = this.getBkheaderAkunGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Pilih Header Akun Group');
+                        return;
+                    }
+
+                    var data = '';
+                    for (i = 0; i < sel.length; i++) {
+                        data = data + sel[i].get('akun_id') + '-';
+                    }
+
+                    var gd = this.getBkGkGrid(),
+                            sel = gd.getSelectionModel().getSelection();
+
+                    var params = {
+                        idForm: 'bankkeluar',
+                        idPerlu: sel[0].get('id'),
+                        data: data
+                    };
+                    this.ajaxReq('bk_keluar/set_akungr', params, 2);
+                }
+            },
+            '#gridGk': {
+                selectionchange: function(m, r) {
+                    var grid = this.getBkGkAkunGrid();
+
+                    if (r[0]) {
+                        grid.getStore().clearFilter(true);
+                        grid.getStore().filter('kp_id', r[0].get('id'));
                     }
                 }
             }

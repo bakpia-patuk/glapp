@@ -406,7 +406,53 @@ Ext.define('GlApp.controller.GetKsMasuk', {
                         grid.getStore().filter('kp_id', r[0].get('id'));
                     }
                 }
-            }
+            },
+            '#setAkunGk': {
+                click: function() {
+                    var grid = this.getKsGkGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Select Group Keperluan First');
+                        return;
+                    }
+                    var win = Ext.widget('ksmasuk.bklistakunwin');
+                }
+            },
+            '#setAkunKp': {
+                click: function() {
+                    var grid = this.getKsheaderAkunGrid(),
+                            sel = grid.getSelectionModel().getSelection();
+                    if (!sel.length) {
+                        Ext.Msg.alert('Warning', 'Pilih Header Akun Group');
+                        return;
+                    }
+
+                    var data = '';
+                    for (i = 0; i < sel.length; i++) {
+                        data = data + sel[i].get('akun_id') + '-';
+                    }
+
+                    var gd = this.getKsGkGrid(),
+                            sel = gd.getSelectionModel().getSelection();
+
+                    var params = {
+                        idForm: 'kasmasuk',
+                        idPerlu: sel[0].get('id'),
+                        data: data
+                    };
+                    this.ajaxReq('ks_masuk/set_akungr', params, 2);
+                }
+            },
+//            '#gridGk': {
+//                selectionchange: function(m, r) {
+//                    var grid = this.getKsGkAkunGrid();
+//
+//                    if (r[0]) {
+//                        grid.getStore().clearFilter(true);
+//                        grid.getStore().filter('kp_id', r[0].get('id'));
+//                    }
+//                }
+//            }
         });
     },
     delFinal: function (sel, me) {
@@ -480,52 +526,6 @@ Ext.define('GlApp.controller.GetKsMasuk', {
                     });
                 }
             },
-            '#setAkunGk': {
-                click: function() {
-                    var grid = this.getKsGkGrid(),
-                            sel = grid.getSelectionModel().getSelection();
-                    if (!sel.length) {
-                        Ext.Msg.alert('Warning', 'Select Group Keperluan First');
-                        return;
-                    }
-                    var win = Ext.widget('ksmasuk.bklistakunwin');
-                }
-            },
-            '#setAkunKp': {
-                click: function() {
-                    var grid = this.getKsheaderAkunGrid(),
-                            sel = grid.getSelectionModel().getSelection();
-                    if (!sel.length) {
-                        Ext.Msg.alert('Warning', 'Pilih Header Akun Group');
-                        return;
-                    }
-
-                    var data = '';
-                    for (i = 0; i < sel.length; i++) {
-                        data = data + sel[i].get('akun_id') + '-';
-                    }
-
-                    var gd = this.getKsGkGrid(),
-                            sel = gd.getSelectionModel().getSelection();
-
-                    var params = {
-                        idForm: 'kasmasuk',
-                        idPerlu: sel[0].get('id'),
-                        data: data
-                    };
-                    this.ajaxReq('ks_masuk/set_akungr', params, 2);
-                }
-            },
-            '#gridGk': {
-                selectionchange: function(m, r) {
-                    var grid = this.getKsGkAkunGrid();
-
-                    if (r[0]) {
-                        grid.getStore().clearFilter(true);
-                        grid.getStore().filter('kp_id', r[0].get('id'));
-                    }
-                }
-            }
         });
     }
 });
