@@ -59,15 +59,15 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     width: 150,
                     text: 'HARGA',
                     align: 'right',
-                    dataIndex: 'tt_harga',
-                    format: '0,00/i'
+                    dataIndex: 'tt_harga'
+//                    format: '0,00/i'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 60,
                     text: 'DISC',
                     align: 'center',
-                    dataIndex: 'tt_disc',
+                    dataIndex: 'tt_disc'
                     //format: '0'
                 },
                 {
@@ -75,8 +75,8 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     width: 60,
                     text: 'PPN',
                     align: 'center',
-                    dataIndex: 'tt_ppn',
-                    format: '0'
+                    dataIndex: 'tt_ppn'
+//                    format: '0'
                 },
                 {
                     xtype: 'numbercolumn',
@@ -84,7 +84,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     text: 'NETTO',
                     align: 'right',
                     dataIndex: 'ttItemNetto',
-                    format: '0,00/i',
+                    format: '0,00/i'
                     
                 }
             ]
