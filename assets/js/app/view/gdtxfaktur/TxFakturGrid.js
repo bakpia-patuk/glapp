@@ -24,7 +24,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGrid', {
                 emptyText: 'Tidak ada data Terima Barang',
                 deferEmptyText: false
             },
-            tbar: [
+//            tbar: [
                 // {
                 //     xtype: 'datefield',
                 //     fieldLabel: 'Filter ',
@@ -63,7 +63,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGrid', {
                 // {
                 //     text: 'REFRESH'
                 // }
-            ],
+//            ],
             
             columns: [
                 {

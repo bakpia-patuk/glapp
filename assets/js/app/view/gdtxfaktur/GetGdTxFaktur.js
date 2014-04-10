@@ -18,7 +18,7 @@ Ext.define('GlApp.view.gdtxfaktur.GetGdTxFaktur', {
                     xtype: 'tabpanel',
                     deferredRender: false,
                     plain: true,
-                    ui: 'blue-tab',
+                    ui: 'orange-tab',
                     border: false,
                     itemId: 'poTab',
                     items: [
@@ -30,7 +30,7 @@ Ext.define('GlApp.view.gdtxfaktur.GetGdTxFaktur', {
                             bodyPadding: '2 0 0 0',
                             defaults: {
                                 border: true,
-                                ui: 'blue-panel',
+                                ui: 'orange-panel',
                                 split: true
                             },
                             items: [
@@ -41,11 +41,7 @@ Ext.define('GlApp.view.gdtxfaktur.GetGdTxFaktur', {
                                     maxWidth: 325,
                                     collapsible: true,
                                     title: 'FORM TUKAR FAKTUR',
-                                    items: [
-                                        {
-                                            xtype: 'gdtxfaktur.txfakturform'
-                                        }
-                                    ]
+                                    xtype: 'gdtxfaktur.txfakturform'
                                 },
                                 {
                                     region: 'center',
@@ -53,7 +49,7 @@ Ext.define('GlApp.view.gdtxfaktur.GetGdTxFaktur', {
                                     border: false,
                                     defaults: {
                                         border: true,
-                                        ui: 'blue-panel',
+                                        ui: 'orange-panel',
                                         split: true
                                     },
                                     items: [
@@ -84,7 +80,7 @@ Ext.define('GlApp.view.gdtxfaktur.GetGdTxFaktur', {
                             bodyPadding: '2 0 0 0',
                             defaults: {
                                 border: true,
-                                ui: 'blue-panel',
+                                ui: 'orange-panel',
                                 split: true
                             },
                             items: [
@@ -102,26 +98,20 @@ Ext.define('GlApp.view.gdtxfaktur.GetGdTxFaktur', {
                                     ]
                                 },
                                 {
-                                  region: 'center',
-                                  xtype: 'gdtxfaktur.txbgfakturgrid',
-                                  title: 'DAFTAR BG FAKTUR',
-                                  layout: 'fit',
-                                  border: true
+                                    region: 'center',
+                                    xtype: 'gdtxfaktur.txbgfakturgrid',
+                                    title: 'DAFTAR BG FAKTUR',
+                                    layout: 'fit',
+                                    border: true
                                 }
                             ]
                         },
                         {
-                            xtype: 'panel',
                             title: 'DAFTAR FAKTUR',
                             layout: 'fit',
-                            border: false,
                             bodyPadding: '2 0 0 0',
-                            items: [
-                                {
-                                    xtype: 'gdtxfaktur.txlistfakturgrid',
-                                    border: true
-                                }
-                            ]
+                            xtype: 'gdtxfaktur.txlistfakturgrid',
+                            border: true
                         }
                     ]
                 }
