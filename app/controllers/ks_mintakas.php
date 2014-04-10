@@ -79,9 +79,35 @@ class Ks_mintakas extends Auth_Controller {
         } else {
             unset($input['id']);
             unset($input['formId']);
-            if (!$this->Ksmintakas_model->insert($input, 'trx_minta_kas')) {
+            $no = $this->Ksmintakas_model->insert($input, 'trx_minta_kas');
+            if (!$no) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => $this->catch_db_err()));
             } else {
+                $id = $no.'.'.$this->user->cabang_id;
+                $params = array();
+                $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+                $data_po = $this->Ksmintakas_model->gets($params, NULL, 'trx_minta_kas');
+                foreach ($data_po as $key) {
+
+                    $data_json = json_encode($key);
+
+                    $data = array();
+
+                    $data['jumlah'] = 1;
+
+                    $data['tujuan'] = 1;
+                    $data['id_cabang'] = $this->user->cabang_id;
+
+                    $no = $this->Ksmintakas_model->insert_outgoing($data, 'head');
+
+                    $data = array();
+                    $data['data'] = $data_json;
+                    $data['head_id '] = $no . '.' . $this->user->cabang_id;
+                    $data['primary_key'] = $key->id;
+                    $data['table_name'] = 'trx_minta_kas';
+
+                    $this->Ksmintakas_model->insert_outgoing($data, 'detail');
+                }
                 echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Insert Success'));
             }
         }

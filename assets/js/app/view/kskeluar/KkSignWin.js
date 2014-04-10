@@ -33,7 +33,7 @@ Ext.define('GlApp.view.kskeluar.KkSignWin', {
                             xtype:'textfield',
                             name: 'idKk',
                             itemId: 'idKk',
-                            hidden: true
+                            hidden: false
                         },
                         {
                             xtype: 'fieldcontainer',
@@ -87,7 +87,7 @@ Ext.define('GlApp.view.kskeluar.KkSignWin', {
             buttons: [
                 {
                     text: 'Save',
-                    action: 'kkSignSave'
+                    itemId: 'kkSignSave'
                 },
                 {
                     text: 'Cancel',

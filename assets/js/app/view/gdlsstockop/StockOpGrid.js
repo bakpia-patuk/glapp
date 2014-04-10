@@ -10,8 +10,6 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
     autoScroll: true,
     forceFit: true,
     columnLines: true,
-    selModel: Ext.create('Ext.selection.CheckboxModel', {
-    }),
 
     initComponent: function () {
         var me = this;
@@ -24,51 +22,33 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
             },
             tbar: [
                 {
-                    xtype: 'datefield',
+                    xtype: 'combobox',
                     fieldLabel: 'Filter ',
+                    labelAlign: 'right',
                     labelWidth: 40,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Awal',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
-                },
-                {
-                    xtype: 'datefield',
-                    fieldLabel: ' s.d ',
-                    labelWidth: 30,
-                    labelAlign: 'right',
-                    emptyText: 'Tgl. Akhir',
-                    displayField: 'type',
-                    valueField: 'typeCode',
-                    queryMode: 'local',
-                    forceSelection: true,
-                    typeAhead: true,
-                    valueNotFoundText: 'Tidak ada Data'
+                    width: 160,
+                    emptyText: 'Jenis'
                 },
                 {
                     xtype: 'combobox',
-                    emptyText: 'Cabang',
-                    allowBlank: false
+                    emptyText: 'Golongan'
                 },
                 {
-                    text: 'SEARCH'
+                    xtype: 'textfield',
+                    emptyText: 'Query'
+                },
+                {
+                    text: 'SEARCH',
+                    ui: 'orange-button'
                 },
                 '->',
                 {
-                    text: 'APP_CABANG'
+                    text: 'REFRESH',
+                    ui: 'orange-button'
                 },
                 {
-                    text: 'APP_PUSAT'
-                },
-                {
-                    text: 'REFRESH'
-                },
-                {
-                    text: 'ALL'
+                    text: 'ALL',
+                    ui: 'orange-button'
                 }
                 
             ],
@@ -76,25 +56,25 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                 {
                     xtype: 'gridcolumn',
                     width: 120,
-                    text: 'NO PENGADAAN',
+                    text: 'NAMA BARANG',
                     dataIndex: 'namams'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 100,
-                    text: 'TGL. PENGADAAN',
+                    text: 'STOCK AKHIR',
                     dataIndex: 'alamatms'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 150,
-                    text: 'CABANG',
+                    text: 'MERK',
                     dataIndex: 'namakotams'
                 },
                 {
                     xtype: 'gridcolumn',
                     width: 150,
-                    text: 'DIVISI',
+                    text: 'KATALOG',
                     dataIndex: 'tlpms'
                 }
             ]

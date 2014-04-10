@@ -1202,25 +1202,26 @@ class Shared extends Auth_Controller {
             $record[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $_GET['query']);
         }
 
-        $opt['sortBy'] = 'msi_satkecil';
+        $opt['sortBy'] = 'kms_kecil';
         $opt['sortDirection'] = 'ASC';
-        // $data_dokter = $this->Shared_model->gets($record, $opt, 'item_kemasan');
+
+        $data_dokter = $this->Shared_model->gets($record, $opt, 'item_kemasan');
         $list_dokter = array();
 
-        // if ($data_dokter != NULL) {
-        //     foreach ($data_dokter as $key) {
-        //         $list_dokter[] = array(
-        //             'id' => $key->id,
-        //             'msi_idbarang' => $key->msi_idbarang,
-        //             'msi_satbesar' => $key->msi_satbesar,
-        //             'nama_satbesar' => $key->msi_satbesar != 0 ? $this->Dmodel->get_detail('id', $key->msi_satbesar, 'master_satuan')->sat_name : '',
-        //             'msi_konversi' => $key->msi_konversi,
-        //             'msi_satkecil' => $key->msi_satkecil,
-        //             'nama_satkecil' => '',
-        //             'is_active' => $key->is_active,
-        //         );
-        //     }
-        // }
+        if ($data_dokter != NULL) {
+            foreach ($data_dokter as $key) {
+                $list_dokter[] = array(
+                    'id' => $key->id,
+                    'msi_idbarang' => $key->item_id,
+                    'msi_satbesar' => $key->kms_besar,
+                    'nama_satbesar' => '-',//$key->msi_satbesar != 0 ? $this->Shared_model->get_detail('id', $key->msi_satbesar, 'master_satuan')->sat_name : '',
+                    'msi_konversi' => $key->kms_konv,
+                    'msi_satkecil' => $key->kms_kecil,
+                    'nama_satkecil' => '',
+                    'is_active' => $key->is_active,
+                );
+            }
+        }
         echo json_encode(array('success' => 'true', 'data' => $list_dokter, 'message' => 'Daftar semua Pengeluaran Inventaris'));
     }
 

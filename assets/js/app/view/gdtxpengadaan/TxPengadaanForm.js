@@ -91,11 +91,11 @@ Ext.define('GlApp.view.gdtxpengadaan.TxPengadaanForm', {
                             });
                             filterCollection.push(statusFilter);
 
-                            var statusPo = new Ext.util.Filter({
+                            /*var statusPo = new Ext.util.Filter({
                                 property: 'set_use',
                                 value: 1
                             });
-                            filterCollection.push(statusPo);
+                            filterCollection.push(statusPo);*/
 
                             store.clearFilter(true);
                             store.filter(filterCollection);

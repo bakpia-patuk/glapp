@@ -170,6 +170,7 @@ Ext.define('GlApp.view.gdtxpo.TxPoListGrid', {
                                                 icon: Ext.MessageBox.INFO
                                             });
                                         } else {
+                                            e.grid.getStore().load();
                                             Ext.MessageBox.show({
                                                 title: 'ERROR',
                                                 msg: resp.msg,

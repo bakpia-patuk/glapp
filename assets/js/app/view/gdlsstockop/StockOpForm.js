@@ -26,7 +26,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                 {
                     xtype: 'button',
                     text: 'SIMPAN',
-                    ui: 'blue-button',
+                    ui: 'orange-button',
                     iconCls: 'icon-btn-save',
                     action: 'suppSave'
                 },
@@ -34,7 +34,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                     xtype: 'button',
                     disabled: false,
                     text: 'BARU',
-                    ui: 'blue-button',
+                    ui: 'orange-button',
                     iconCls: 'icon-btn-add',
                     action: 'suppNew'
                 }
@@ -118,17 +118,17 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                     allowBlank: false,
                     listeners: {
                         change: function() {
-                            if(this.getValue() > 0) {
+                            if (this.getValue() > 0) {
                                 this.up('form').down('#btnLostSo').enable();
                             } else {
                                 this.up('form').down('#btnLostSo').disable();
                             }
-                            
+
                             var val = parseInt(this.getValue()),
-                                type = this.up('form').getForm().findField('penyesuaianst').getGroupValue(),
-                                awal = parseInt(this.up('form').getForm().findField('lastStock').getValue()),
-                                akhir = this.up('form').getForm().findField('oldqty');
-                        
+                                    type = this.up('form').getForm().findField('penyesuaianst').getGroupValue(),
+                                    awal = parseInt(this.up('form').getForm().findField('lastStock').getValue()),
+                                    akhir = this.up('form').getForm().findField('oldqty');
+
                             akhir.setValue(type === 1 ? awal + val : awal - val);
                         }
                     }
@@ -150,7 +150,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                         {
                             xtype: 'button',
                             iconCls: 'icon-btn-search',
-                            ui: 'blue-button',
+                            ui: 'orange-button',
                             itemId: 'btnLostSo',
                             text: 'Lihat',
                             margins: '0 0 0 5',

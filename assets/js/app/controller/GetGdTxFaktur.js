@@ -65,7 +65,7 @@ Ext.define('GlApp.controller.GetGdTxFaktur', {
 
                         var statusFilter2 = new Ext.util.Filter({
                             property: 'faktur_bayar',
-                            value: 0
+                            value: 1
                         });
                         filterCollection.push(statusFilter2);
 

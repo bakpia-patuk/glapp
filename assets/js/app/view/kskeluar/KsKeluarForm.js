@@ -287,6 +287,7 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                             margins: '0 0 0 5',
                             handler: function () {
                                var win = new Ext.widget('kskeluar.kksignwin');
+                               win.down('#idKk').setValue(form.down('#random_string').getValue());
                             }
                         }
                     ]
@@ -309,13 +310,14 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                             margin: '0 0 0 0',
                             baseCls: 'imagefieldthumb',
                             src: BASE_PATH + 'assets/appdata/signBlank.png',
-                            id: 'imageTtdTb1'
+                            itemId: 'imageTtdKk1'
                         })
                     ]
                 },
                 {
                     xtype: 'textfield',
                     fieldLabel: 'random Key',
+                    hidden: true,
                     name: 'random_string',
                     itemId: 'random_string'
                 }

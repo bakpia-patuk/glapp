@@ -8,9 +8,9 @@ Ext.define('GlApp.view.kskeluar.ListMintaBayar', {
     columnLines: true,
     flex: 1,
     store: 'kskeluar.MintaKasStore',
-
-    initComponent: function () {
-        var me = this;
+    initComponent: function() {
+        var me = this,
+                grid = me;
 
         Ext.applyIf(me, {
             viewConfig: {
@@ -18,6 +18,16 @@ Ext.define('GlApp.view.kskeluar.ListMintaBayar', {
                 emptyText: 'Tidak ada daftar Permintaan Bayar',
                 deferEmptyText: false
             },
+            tbar: [
+                '->',
+                {
+                    text: 'REFRESH',
+                    ui: 'green-button',
+                    handler: function() {
+                        grid.getStore().load();
+                    }
+                }
+            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {
@@ -46,8 +56,8 @@ Ext.define('GlApp.view.kskeluar.ListMintaBayar', {
                     text: 'JUMLAH',
                     align: 'right',
                     dataIndex: 'trx_value',
-                    renderer: function (value, meta, record) {
-                        return Ext.util.Format.number(value, '0.000,00/i');
+                    renderer: function(value, meta, record) {
+                        return Ext.util.Format.number(value, '0,000.00/i');
                     }
                 }
             ]

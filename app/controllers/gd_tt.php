@@ -460,7 +460,7 @@ class Gd_tt extends Auth_Controller {
                 $barang = $this->Gdtt_model->get_item_detail($row->barang_id);
                 $result[$no]->barang_name = $barang->mi_name;
                 $result[$no]->tt_qty_sisa = $this->Gdtt_model->get_tt_sisa($row->po_id, $row->peng_id, $row->barang_id);
-                $result[$no]->merk_name = $this->Gdtt_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name;
+                $result[$no]->merk_name = $barang->mi_merk!=0?$this->Gdtt_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name:'-';
                 $no++;
             }
             echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All PO Supplier'));
