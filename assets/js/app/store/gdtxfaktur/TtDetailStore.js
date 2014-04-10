@@ -16,9 +16,9 @@ var TtDetail = Ext.define('GlApp.model.TtDetailModel', {
         {name: 'tt_qty_kirim', type: 'int'},
         {name: 'tt_qty_sisa', type: 'int'},
         {name: 'tt_harga', type: 'float'},
-        {name: 'tt_disc', type: 'int'},
-        {name: 'tt_ppn', type: 'int'},
-        {name: 'ttItemNetto', type: 'string'},
+        {name: 'tt_disc', type: 'float'},
+        {name: 'tt_ppn', type: 'float'},
+        {name: 'ttItemNetto', type: 'float'},
         {name: 'tt_faktur_status', type: 'int'},
         {name: 'simpan_status', type: 'int'}
     ],
