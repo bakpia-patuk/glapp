@@ -126,7 +126,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
 
                             var val = parseInt(this.getValue()),
                                     type = this.up('form').getForm().findField('penyesuaianst').getGroupValue(),
-                                    awal = parseInt(this.up('form').getForm().findField('lastStock').getValue()),
+                                    awal = parseInt(this.up('form').getForm().findField('stock_last').getValue()),
                                     akhir = this.up('form').getForm().findField('oldqty');
 
                             akhir.setValue(type === 1 ? awal + val : awal - val);

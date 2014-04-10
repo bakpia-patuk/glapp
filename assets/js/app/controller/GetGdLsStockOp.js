@@ -13,7 +13,8 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
         'gdlsstockop.GetGdLsStockOp',
         'gdlsstockop.StockOpForm',
         'gdlsstockop.StockOpGrid',
-        'gdlsstockop.ArusStockGrid'
+        'gdlsstockop.ArusStockGrid',
+        'gdlsstockop.TxTtLotWin'
     ],
     refs: [
         {ref: 'BarangGrid', selector: '#stockopgrid'},
@@ -30,6 +31,9 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
                 },
                 '#stockopform button[action=stockSave]': {
                     click: this.saveForm
+                },
+                '#stockopform button[action=loadSoLotTambah]': {
+                    click: this.lotShow
                 },
                 '#stockopgrid': {
                     selectionchange: function(m, r) {
@@ -49,6 +53,9 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
     resetForm: function(btn) {
     },
     saveForm: function(btn) {
+    },
+    lotShow: function(btn) {
+        var win = Ext.widget('gdlsstockop.txttlotwin');
     }
 });
 

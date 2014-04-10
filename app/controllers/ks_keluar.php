@@ -64,7 +64,6 @@ class Ks_keluar extends Auth_Controller {
         $params[] = array('field' => 'faktur_cabang', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
 
         $result = $this->Kskeluar_model->gets($params, NULL, 'trx_faktur');
-        $no = 0;
 
         if ($result != NULL) {
             echo json_encode(array('success' => 'true', 'data' => $result, 'message' => 'Daftar semua Faktur'));
@@ -89,6 +88,7 @@ class Ks_keluar extends Auth_Controller {
 
         $result = $this->Kskeluar_model->gets($params, NULL, 'trx_minta_kas');
         $no = 0;
+        
         if ($result) {
             foreach ($result as $value) {
                 $result[$no]->divisi_name = $this->Kskeluar_model->get_detail('id', $value->trx_divisi, 'dt_divisi')->divisi_name;
