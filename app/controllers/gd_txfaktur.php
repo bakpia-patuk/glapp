@@ -403,7 +403,7 @@ class Gd_txfaktur extends Auth_Controller {
         $detail_faktur = $this->Gdtxfaktur_model->get_detail('id', $id, 'trx_faktur');
 
         $data_minta_anggaran = array(
-            //'id' => $detail_faktur->faktur_tgl,
+//            'id' => $detail_faktur->faktur_tgl,
             'tgl_trx' => mdate('%Y-%m-%d %H:%i:%s', now()),
             'trx_cabangid' => $this->user->cabang_id,
             'trx_type' => 1,
