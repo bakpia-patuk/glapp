@@ -32,7 +32,7 @@ CREATE TABLE `detail` (
   PRIMARY KEY (`no`),
   KEY `head_id` (`head_id`),
   CONSTRAINT `detail_ibfk_1` FOREIGN KEY (`head_id`) REFERENCES `head` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `head` */
 
@@ -47,7 +47,22 @@ CREATE TABLE `head` (
   `id_cabang` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `no` (`no`)
-) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=384 DEFAULT CHARSET=latin1;
+
+/* Trigger structure for table `head` */
+
+DELIMITER $$
+
+/*!50003 DROP TRIGGER*//*!50032 IF EXISTS */ /*!50003 `kolum_id` */$$
+
+/*!50003 CREATE */ /*!50017 DEFINER = 'root'@'localhost' */ /*!50003 TRIGGER `kolum_id` BEFORE INSERT ON `head` FOR EACH ROW BEGIN
+	IF (NEW.id = '' ) then
+		SET New.id = CONCAT((SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA=DATABASE() AND TABLE_NAME='head'),'.',New.id_cabang);
+	END IF;
+    END */$$
+
+
+DELIMITER ;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
