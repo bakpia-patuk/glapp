@@ -92,4 +92,30 @@ class Dv_txbrkeluar extends Auth_Controller {
         }
     }
 
+    public function set_itemdivbk() {
+        $id_minta = $this->input->post('id_minta');
+        $id_ruang = $this->input->post('id_ruang');
+        $id_barang = $this->input->post('id_barang');
+        $id_lot = $this->input->post('id_lot');
+        $jumlah_out = $this->input->post('jumlah_out');
+        $id_lot = explode("`",$id_lot);
+        $jumlah_out = explode("`",$jumlah_out);
+        for($i=0;$i<sizeof($id_lot);$i++){
+            $jumlah_barang = $this->Dv_txbrkeluar_model->get_last_stockdivlot($id_barang,$id_ruang,$id_lot[$i]);
+            if($jumlah_barang<$jumlah_out[$i]){
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Barang di lot tersebut tidak mencukupi'));
+                return;
+            }
+
+
+        }
+
+        $record=array();
+        $record[] = array('field' => 'pengdiv_id', 'param' => 'where', 'operator' => '', 'value' => $id_minta);
+        $record[] = array('field' => 'barang_id', 'param' => 'where', 'operator' => '', 'value' => $id_barang);
+        $data_permintaan = $this->Dv_txbrkeluar_model->get($record,NULL,'trx_pengdivisi_detail');
+        if()
+
+    }
+
 }

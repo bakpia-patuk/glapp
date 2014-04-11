@@ -146,11 +146,8 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                     iconCls: 'icon-btn-cross',
                     ui: 'blue-button',
                     handler: function(btn, e, opt) {
-                        var formGrid = grid.down('#lotFormBk').getForm(),
-                                ruang = formGrid.findField('idRuang').getValue(),
-                                barang = formGrid.findField('pengBarang').getValue();
-                        alert(ruang);
-                        alert(barang);
+                       
+                        
                         /*Ext.Ajax.request({
                             url: BASE_PATH + 'persediaan/reset_itemdivbk',
                             method: 'POST',
@@ -178,15 +175,29 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                                 id = formGrid.findField('id').getValue(),
                                 ruang = formGrid.findField('idRuang').getValue(),
                                 barang = formGrid.findField('pengBarang').getValue();
-                         alert(ruang);
-                        alert(barang);
-                        /*Ext.Ajax.request({
-                            url: BASE_PATH + 'persediaan/set_itemdivbk',
+                        var id_lot = '';
+                        var jumlah_out = ''; 
+                       
+    store.each(function(record){
+       var jumlah_keluar = record.get('qtyKeluar');
+       
+       var noLot = record.get('noLot');
+       id_lot+=noLot+'`';
+       jumlah_out+=jumlah_keluar+'`';
+       // Do stuff with value
+    });
+
+
+                       Ext.Ajax.request({
+                            url: BASE_PATH + 'dv_txbrkeluar/set_itemdivbk',
                             method: 'POST',
                             params: {
                                 id_minta: id,
                                 id_ruang: ruang,
-                                id_barang: barang
+                                id_barang: barang,
+                                id_lot: id_lot,
+                                jumlah_out : jumlah_out,
+
                             },
                             scope: this,
                             callback: function(options, success, response) {
@@ -203,7 +214,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                                     });
                                 }
                             }
-                        });*/
+                        });
                     }
                 }
             ]
