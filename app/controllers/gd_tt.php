@@ -386,6 +386,11 @@ class Gd_tt extends Auth_Controller {
     public function edit_peng_tt() {
         $insert = $this->input->post(NULL, TRUE);
 
+        if ($insert['tt_qty_kirim'] > $insert['barang_qty']) {
+            echo json_encode(array('success' => 'false', 'data' => $insert['id'], 'msg' => 'Barang kirim lebih besar dari barang pesanan'));
+            return;
+        }
+
         if ($insert['tt_id'] != 0) {
             //$this->Gdtt_model->get_detail('id',$insert['id'],'trx_po_detail');
             $data = array(
