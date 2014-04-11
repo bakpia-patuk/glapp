@@ -917,4 +917,26 @@ class Gd_txfaktur extends Auth_Controller {
         }
     }
 
+    public function check_faktur() {
+        $query = $this->input->post('faktur');
+        $result = $this->Gdtxfaktur_model->get_detail_like('faktur_no', $query, 'trx_faktur');
+
+        if ($result != NULL) {
+            $tgl_faktur = explode(" ", $result->faktur_tgl);
+            $detail_faktur = array(
+                'supplier' => $result->faktur_suppid != 0 ? $this->Gdtxfaktur_model->get_detail('id', $result->faktur_suppid, 'dt_supplier')->ms_name : "",
+                'fakturTotal' => $result->faktur_nototal,
+                'statusBayar' => $result->faktur_realisasi == 0 ? "BELUM LUNAS" : "LUNAS",
+                'caraBayar' => $result->faktur_bayar == 0 ? 'BG' : ($result->faktur_bayar == 1 ? "TUNAI" : "TRANSFER"),
+                'tglTrx' => $tgl_faktur[0],
+                'tglDebet' => $result->faktur_bayartgl,
+                'trfValue' => $result->faktur_nototal,
+                'bank' => $result->faktur_bgstatus
+            );
+
+            echo json_encode(array('success' => 'true', 'data' => $detail_faktur, 'message' => 'Daftar semua No Lot'));
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => 'Info', 'message' => 'Tidak ada data No Faktur yang anda Cari'));
+        }
+    }
 }

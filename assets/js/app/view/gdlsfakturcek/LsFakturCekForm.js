@@ -26,34 +26,31 @@ Ext.define('GlApp.view.gdlsfakturcek.LsFakturCekForm', {
                 {
                     xtype: 'triggerfield',
                     fieldLabel: 'No Faktur ',
-                    triggerCls: 'x-item-search',
-                    onTrigger1Click: function() {
-                        this.up('form').getForm().reset();
-                    },
-                    onTrigger2Click: function() {
-                        var form = this.up('form').getForm(),
-                            supplier = form.findField('supplier'),
-                            fakturTotal = form.findField('fakturValue'),
-                            statusBayar = form.findField('status'),
-                            caraBayar = form.findField('caraBayar'),
-                            tglTrx = form.findField('tglTransaksi'),
-                            tglDebet = form.findField('tglDebet'),
-                            trfValue = form.findField('trfValue'),
-                            bank = form.findField('bankName');
-                    
-                        if(this.getValue() === "") {
+                    triggerCls: Ext.baseCSSPrefix + 'form-search-trigger',
+                    onTriggerClick: function() {
+                        var forem = form.getForm();
+                        var supplier = forem.findField('supplier'),
+                                fakturTotal = forem.findField('fakturValue'),
+                                statusBayar = forem.findField('status'),
+                                caraBayar = forem.findField('caraBayar'),
+                                tglTrx = forem.findField('tglTransaksi'),
+                                tglDebet = forem.findField('tglDebet'),
+                                trfValue = forem.findField('trfValue'),
+                                bank = forem.findField('bankName');
+
+                        if (this.getValue() === "") {
                             Ext.Msg.alert('Error', 'Masukkan nomer Faktur yang akan di cari');
                             return;
                         }
-                        
+
                         Ext.Ajax.request({
-                            url: BASE_PATH + 'persediaan/cek_faktur',
+                            url: BASE_PATH + 'gd_txfaktur/check_faktur',
                             method: 'POST',
                             params: {
                                 faktur: this.getValue()
                             },
                             scope: this,
-                            callback: function (options, success, response) {
+                            callback: function(options, success, response) {
                                 var resp = Ext.decode(response.responseText);
 
                                 if (resp.success === 'true') {
