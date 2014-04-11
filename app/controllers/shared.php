@@ -37,11 +37,11 @@ class Shared extends Auth_Controller {
             $params = $this->generate_db_query($raw_record);
         }
 
-        if ($query) {
-            if ($query != "") {
-                $params[] = array('field' => 'mi_name', 'param' => 'like', 'operator' => '', 'value' => $query);
-            }
-        }
+//        if ($query) {
+//            if ($query != "") {
+//                $params[] = array('field' => 'mi_name', 'param' => 'like', 'operator' => '', 'value' => $query);
+//            }
+//        }
 
         $tablename = 'dt_item';
         $params[] = array('field' => 'mi_child_stat', 'param' => 'where', 'operator' => '', 'value' => 0);

@@ -1,5 +1,5 @@
 /**
- * @author Isht Ae
+ * @author coepoe
  **/
 
 Ext.define('GlApp.controller.GetIvTxBrTerima', {
