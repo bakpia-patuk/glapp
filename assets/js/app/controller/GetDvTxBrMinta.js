@@ -151,7 +151,7 @@ Ext.define('GlApp.controller.GetDvTxBrMinta', {
                             if (resp.success === 'true') {
                                 form.reset();
                                 cmb.getStore().load();
-                                cmb.setValue(parseInt(userDivisi));
+                                cmb.setValue(parseInt(USER_DIVISI));
                                 cmb.setReadOnly(true);
                                 cmb1.clearValue();
                                 form.findField('pengBarang').setReadOnly(false);

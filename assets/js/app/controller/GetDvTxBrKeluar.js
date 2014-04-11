@@ -149,8 +149,9 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                         var formGrid = grid.down('#lotFormBk').getForm(),
                                 ruang = formGrid.findField('idRuang').getValue(),
                                 barang = formGrid.findField('pengBarang').getValue();
-
-                        Ext.Ajax.request({
+                        alert(ruang);
+                        alert(barang);
+                        /*Ext.Ajax.request({
                             url: BASE_PATH + 'persediaan/reset_itemdivbk',
                             method: 'POST',
                             params: {
@@ -165,7 +166,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                                     btn.up('window').destroy();
                                 }
                             }
-                        });
+                        });*/
                     }
                 },
                 {
@@ -177,8 +178,9 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                                 id = formGrid.findField('id').getValue(),
                                 ruang = formGrid.findField('idRuang').getValue(),
                                 barang = formGrid.findField('pengBarang').getValue();
-
-                        Ext.Ajax.request({
+                         alert(ruang);
+                        alert(barang);
+                        /*Ext.Ajax.request({
                             url: BASE_PATH + 'persediaan/set_itemdivbk',
                             method: 'POST',
                             params: {
@@ -201,7 +203,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                                     });
                                 }
                             }
-                        });
+                        });*/
                     }
                 }
             ]

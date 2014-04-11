@@ -47,7 +47,7 @@ class Dv_txbrkeluar_model extends MY_Model {
     public function get_last_stockdivlot($barang, $ruang ,$lot) {
 //        GET IN
         $this->db->select_sum('stl_qty')
-                ->from('trx_stok_lotdiv')
+                ->from('trx_stock_lotdiv')
                 ->where('stl_nolot', $lot)
                 ->where('stl_ruangid', $ruang)
                 ->where('stl_barangid', $barang)
@@ -55,21 +55,22 @@ class Dv_txbrkeluar_model extends MY_Model {
         $query_in = $this->db->get();
 
         if ($query_in->num_rows() > 0) {
-            $in = $query_in->row()->trx_stok;
+            $in = $query_in->row()->stl_qty;
         } else {
             $in = 0;
         }
 
 //        GET OUT
-        $this->db->select_sum('trx_stok')
-                ->from('trx_stok_div')
-                ->where('id_ruang', $ruang)
-                ->where('id_barang', $barang)
+        $this->db->select_sum('stl_qty')
+                ->from('trx_stock_lotdiv')
+                ->where('stl_nolot', $lot)
+                ->where('stl_ruangid', $ruang)
+                ->where('stl_barangid', $barang)
                 ->where('stl_type', 0);
         $query_out = $this->db->get();
 
         if ($query_out->num_rows() > 0) {
-            $out = $query_out->row()->trx_stok;
+            $out = $query_out->row()->stl_qty;
         } else {
             $out = 0;
         }
@@ -92,8 +93,8 @@ class Dv_txbrkeluar_model extends MY_Model {
         $data_lot = $this->db->get(); 
         
         if ($data_lot->num_rows() > 0) {
-            $data_lot = $query->result();
-            var_dump(sizeof($data_lot));
+            $data_lot = $data_lot->result();
+            
             for($i=0 ; $i<sizeof($data_lot);$i++){
                 $param_lot = $data_lot[$i];
                 $jumlah_stok = $this->get_last_stockdivlot($param_lot->stl_barangid,$param_lot->stl_ruangid,$param_lot->stl_nolot);

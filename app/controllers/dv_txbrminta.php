@@ -300,10 +300,10 @@ class Dv_txbrminta extends Auth_Controller {
     }
     public function pengdiv_reset() {
         $opt[] = array('field' => 'simpan_status', 'param' => 'where', 'operator' => '', 'value' => 0);
-        $this->pmodel->delete($opt, NULL, "trx_pengdivisi");
+        $this->Dv_txbrminta_model->delete($opt, NULL, "trx_pengdivisi");
 
         $opts[] = array('field' => 'minta_status', 'param' => 'where', 'operator' => '', 'value' => 0);
-        $this->pmodel->delete($opts, NULL, "trx_pengdivisi_detail");
+        $this->Dv_txbrminta_model->delete($opts, NULL, "trx_pengdivisi_detail");
 
         echo json_encode(array('success' => 'true'));
     }
