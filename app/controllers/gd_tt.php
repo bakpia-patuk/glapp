@@ -193,6 +193,8 @@ class Gd_tt extends Auth_Controller {
         $params[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_stock_lot');
         foreach ($data_po as $key) {
+
+
             $data_json = json_encode($key);
 
             $data = array();
@@ -211,6 +213,10 @@ class Gd_tt extends Auth_Controller {
             $data['table_name'] = 'trx_stock_lot';
 
             $this->Gdtt_model->insert_outgoing($data, 'detail');
+
+            unset($data['no']);
+
+            $this->Gdtt_model->insert($data, 'trx_stock_lotdiv');
         }
 
         $params = array();
@@ -413,6 +419,7 @@ class Gd_tt extends Auth_Controller {
             'stl_nolot' => $insert['stl_nolot'],
             'stl_qty' => $insert['stl_qty'],
             'stl_qtylast' => $insert['stl_qty'],
+            'stl_type' => 1,
             'stl_baranged' => mdate("%Y-%m-%d", strtotime($insert['stl_baranged'])),
             'stk_trxreftype' => $insert['stk_trxreftype'],
             'stk_trxref' => $insert['stk_trxref'],

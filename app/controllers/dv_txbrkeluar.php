@@ -63,7 +63,7 @@ class Dv_txbrkeluar extends Auth_Controller {
             }
         }
 
-        $result = $this->Dv_txbrkeluar_model->getsdiv_lot($record, NULL, 'trx_stock_lot',$user->cabang_id);
+        $result = $this->Dv_txbrkeluar_model->getsdiv_lot($record, NULL, 'trx_stock_lotdiv',$user->cabang_id);
 
         if ($result != NULL) {
             foreach ($result as $row) {
