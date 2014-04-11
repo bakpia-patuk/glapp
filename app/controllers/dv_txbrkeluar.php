@@ -76,7 +76,7 @@ class Dv_txbrkeluar extends Auth_Controller {
                     'idBarang' => $row->stl_barangid,
                     'namaBarang' => $param_barang->mi_name,
                     'qtyLot' => $row->stl_barangqty,
-                    'qtyKeluar' => $row->stl_qtylast,
+                    'qtyKeluar' => $row->stl_barangqty,
                     'qtyOld' => $row->stl_barangqty,
                     'tglEd' => $row->stl_baranged,
                     'noBarcode' => $row->stl_barcode,
@@ -86,9 +86,9 @@ class Dv_txbrkeluar extends Auth_Controller {
         }
 
         if ($result) {
-            echo json_encode(array('success' => 'true', 'data' => $listpo, 'message' => 'Daftar semua No Lot'));
+            echo json_encode(array('success' => 'true', 'data' => $listpo, 'msg' => 'Daftar semua No Lot'));
         } else {
-            echo json_encode(array('success' => 'true', 'data' => $listpo, 'message' => 'Tidak ada data No LOT'));
+            echo json_encode(array('success' => 'true', 'data' => $listpo, 'msg' => 'Tidak ada data No LOT'));
         }
     }
 
@@ -100,12 +100,10 @@ class Dv_txbrkeluar extends Auth_Controller {
         $jumlah_out = $this->input->post('jumlah_out');
         $id_lot = explode("`",$id_lot);
         $jumlah_out = explode("`",$jumlah_out);
-        for($i=0;$i<sizeof($id_lot);$i++){
-            $jumlah_barang = $this->Dv_txbrkeluar_model->get_last_stockdivlot($id_barang,$id_ruang,$id_lot[$i]);
-            if($jumlah_barang<$jumlah_out[$i]){
-                echo json_encode(array('success' => 'false', 'data' => NULL, 'message' => 'Barang di lot tersebut tidak mencukupi'));
-                return;
-            }
+        $total_jumlah = 0;
+        for($i=0;$i<sizeof($id_lot)-1;$i++){
+            
+            $total_jumlah +=$jumlah_out[$i];
 
 
         }
@@ -114,7 +112,137 @@ class Dv_txbrkeluar extends Auth_Controller {
         $record[] = array('field' => 'pengdiv_id', 'param' => 'where', 'operator' => '', 'value' => $id_minta);
         $record[] = array('field' => 'barang_id', 'param' => 'where', 'operator' => '', 'value' => $id_barang);
         $data_permintaan = $this->Dv_txbrkeluar_model->get($record,NULL,'trx_pengdivisi_detail');
+        $jumlah_diminta = $data_permintaan->barang_qty_minta - $data_permintaan->barang_qty_terima;
+        if($total_jumlah>$jumlah_diminta){
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'msg' => 'Barang yang akan dikeluarkan melebihi jumlah yang diminta'));
+            return;
+        }
 
+        if($total_jumlah<$jumlah_diminta){
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'msg' => 'Barang yang akan dikirim kurang dari jumlah yang diminta'));
+            return;
+        }
+
+        $record=array();
+        $record[] = array('field' => 'divisi_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->divisi_id);
+        $record[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+        $record[] = array('field' => 'ruang_id', 'param' => 'where', 'operator' => '', 'value' => $id_ruang);
+        $record[] = array('field' => 'ruang_nama', 'param' => 'where', 'operator' => '', 'value' => 'R. GUDANG');
+        $is_gudang = $this->Dv_txbrkeluar_model->get($record,NULL,'dt_ruang');
+
+        for($i=0;$i<sizeof($id_lot)-1;$i++){
+            
+            $record=array();
+            
+            $record[] = array('field' => 'stl_cabangid', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
+            $record[] = array('field' => 'stl_nolot', 'param' => 'where', 'operator' => '', 'value' => $id_lot[$i]);
+            $data_lot = $this->Dv_txbrkeluar_model->get($record,NULL,'trx_stock_lotdiv');
+            //var_dump($data_lot);
+            $jumlah_barang = $this->Dv_txbrkeluar_model->get_last_stockdivlot($id_barang,$id_ruang,$id_lot[$i]);
+            if($jumlah_barang<$jumlah_out[$i]){
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'msg' => 'Barang di lot tersebut tidak mencukupi'));
+                return;
+            }
+            $data = array();
+            $data['stl_cabangid']=$this->user->cabang_id;
+            $data['stl_divisiid']=$this->user->divisi_id;
+            $data['stl_ruangid']=$id_ruang;
+            $data['stl_usercreate']=$this->user->id;
+            $data['stl_barangid']=$id_barang ;
+            $data['stl_nolot']=$id_lot[$i];
+            $data['stl_qty']=$jumlah_out[$i];
+            $data['stl_qtylast']=$jumlah_barang-$jumlah_out[$i];
+            $data['stl_baranged']=$data_lot->stl_baranged;
+            $data['stl_type']=0;
+            $data['stk_trxreftype']='mintadiv';
+            $data['stk_trxref']=$id_minta;
+            $data['stl_barcode']=$data_lot->stl_barcode;
+            $data['simpan_status']=1;
+            $this->Dv_txbrkeluar_model->insert($data, 'trx_stock_lotdiv');
+
+            if($is_gudang){
+                $data = array();
+                $data['stl_cabangid']=$this->user->cabang_id;
+                $data['stl_divisiid']=$this->user->divisi_id;
+                $data['stl_ruangid']=$id_ruang;
+                $data['stl_usercreate']=$this->user->id;
+                $data['stl_barangid']=$id_barang ;
+                $data['stl_nolot']=$id_lot[$i];
+                $data['stl_qty']=$jumlah_out[$i];
+                $data['stl_qtylast']=$jumlah_barang-$jumlah_out[$i];
+                $data['stl_baranged']=$data_lot->stl_baranged;
+                $data['stl_type']=0;
+                $data['stk_trxreftype']='mintadiv';
+                $data['stk_trxref']=$id_minta;
+                $data['stl_barcode']=$data_lot->stl_barcode;
+                $data['simpan_status']=1;
+                $this->Dv_txbrkeluar_model->insert($data, 'trx_stock_lot');
+            }
+            
+
+        }
+
+        $jumlah_barang = $this->Dv_txbrkeluar_model->get_last_stock($id_barang,$id_ruang);
+        $data = array();
+        $data['id_ruang']=$id_ruang;
+        $data['id_cabang']=$this->user->cabang_id;
+        $data['id_barang']=$id_barang ;
+        $data['jmlh_stok']=$total_jumlah;
+        $data['trxreftype']='mintadiv';
+        $data['jenis_trx']=0;
+        $data['trx_stok']=$id_minta;
+        
+        $data['simpan_status']=1;
+        $id_div_keluar=$this->Dv_txbrkeluar_model->insert($data, 'trx_stock_div');
+
+        if($is_gudang){
+            $jumlah_barang = $this->Dv_txbrkeluar_model->get_last_stock($id_barang,$id_ruang);
+            $data = array();
+            $data['stk_cabangid']=$this->user->cabang_id;
+            $data['stk_divisiid']=$this->user->divisi_id;
+            $data['stk_ruangid']=$id_ruang;
+            $data['stk_usercreate']=$this->user->id;
+            $data['stk_trxtype']=0 ;
+            $data['stk_trxreftype']='mintadiv';
+            $data['stk_trxref']=$id_minta;
+            $data['stk_barangid']=$id_barang;
+            $data['stk_qty']=$total_jumlah;
+            $data['stk_qtylast']=$jumlah_barang-$total_jumlah;
+            
+            $data['simpan_status']=1;
+            $this->Dv_txbrkeluar_model->insert($data, 'trx_stock');
+            $opts = array();
+            $opts[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_barang);
+
+            $data_item_cabang = $this->Dv_txbrkeluar_model->get($opts,NULL,'dt_item_cabang');
+            $data_item = array(
+                'stock_last'=>$data_item_cabang->stock_last-$total_jumlah
+            );
+            $this->Dv_txbrkeluar_model->update($data_item, $opts, NULL, 'dt_item_cabang');
+        }
+        $opts = array();
+        $opts[] = array('field' => 'pengdiv_id', 'param' => 'where', 'operator' => '', 'value' => $id_minta);
+        $opts[] = array('field' => 'barang_id', 'param' => 'where', 'operator' => '', 'value' => $id_barang);
+        $data_item = array(
+            'barang_qty_terima' => $total_jumlah,
+            'user_kirim' =>$this->user->id,
+            'kirim_status' => 1,
+            'tgl_kirim' => mdate("%Y-%m-%d", now()),
+            'div_no_kirim' => 'DIVBK/' . $id_ruang . '/' . mdate("%d%m%y", now()) . '/' . sprintf('%06d', $id_div_keluar),
+        );
+        $this->Dv_txbrkeluar_model->update($data_item, $opts, NULL, 'trx_pengdivisi_detail');
+
+        $opts = array();
+        $opts[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_minta);
+
+        
+        $data_item = array(
+            'kirim_status'=>1,
+        );
+        $this->Dv_txbrkeluar_model->update($data_item, $opts, NULL, 'trx_pengdivisi');
+
+        echo json_encode(array('success' => 'true', 'data' => NULL, 'msg' => 'Data barang berhasil tersimpan'));
+        return;
     }
 
 }

@@ -44,6 +44,37 @@ class Dv_txbrkeluar_model extends MY_Model {
         return $in + -($out);
     }
 
+    public function get_last_stock($barang, $ruang) {
+//        GET IN
+        $this->db->select_sum('stk_qty')
+                ->from('trx_stock')
+                ->where('stk_ruangid', $ruang)
+                ->where('stk_barangid', $barang)
+                ->where('stk_trxtype', 1);
+        $query_in = $this->db->get();
+
+        if ($query_in->num_rows() > 0) {
+            $in = $query_in->row()->stk_qty;
+        } else {
+            $in = 0;
+        }
+
+//        GET OUT
+        $this->db->select_sum('stk_qty')
+                ->from('trx_stock')
+                ->where('stk_ruangid', $ruang)
+                ->where('stk_barangid', $barang)
+                ->where('stk_trxtype', 0);
+        $query_out = $this->db->get();
+
+        if ($query_out->num_rows() > 0) {
+            $out = $query_out->row()->stk_qty;
+        } else {
+            $out = 0;
+        }
+
+        return $in + -($out);
+    }
     public function get_last_stockdivlot($barang, $ruang ,$lot) {
 //        GET IN
         $this->db->select_sum('stl_qty')

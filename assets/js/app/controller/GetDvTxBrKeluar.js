@@ -147,23 +147,8 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                     ui: 'blue-button',
                     handler: function(btn, e, opt) {
                        
-                        
-                        /*Ext.Ajax.request({
-                            url: BASE_PATH + 'persediaan/reset_itemdivbk',
-                            method: 'POST',
-                            params: {
-                                id_ruang: ruang,
-                                id_barang: barang
-                            },
-                            scope: this,
-                            callback: function(options, success, response) {
-                                var resp = Ext.decode(response.responseText);
-
-                                if (resp.success === 'true') {
-                                    btn.up('window').destroy();
-                                }
-                            }
-                        });*/
+                        btn.up('window').destroy();
+                    
                     }
                 },
                 {
@@ -184,7 +169,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
        var noLot = record.get('noLot');
        id_lot+=noLot+'`';
        jumlah_out+=jumlah_keluar+'`';
-       // Do stuff with value
+       
     });
 
 
@@ -203,9 +188,46 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                             callback: function(options, success, response) {
                                 var resp = Ext.decode(response.responseText);
 
-                                if (resp.success === 'true') {
+                                if (resp.success == 'true') {
                                     btn.up('window').destroy();
-                                    grid2.getStore().load();
+                                    var form = getDvTxBrKeluarForm().getForm();
+                                    form.reset();
+                                    var store1 = getDvTxBrKeluarGrid().getStore();
+                                    var store2 = getDvTxBrKeluarDetailGrid().getStore();
+                                    //divisiField.setValue((resp.data.divisi));
+                                    store2.removeAll();
+
+                                    var statusFilter1 = new Ext.util.Filter({
+                                        property: 'pengdiv_tujuan',
+                                        value: USER_DIVISI
+                                    });
+                                    filterCollection.push(statusFilter1);
+
+                                    var statusFilter2 = new Ext.util.Filter({
+                                        property: 'appr_status',
+                                        value: '1'
+                                    });
+                                    filterCollection.push(statusFilter2);
+
+                                    var statusFilter2 = new Ext.util.Filter({
+                                        property: 'kirim_status',
+                                        value: '1NE'
+                                    });
+                                    filterCollection.push(statusFilter2);
+
+                                    store.clearFilter(true);
+                                    store.filter(filterCollection);
+                                    this.getDvTxBrKeluarGrid().getSelectionModel().clearSelections();
+                                    Ext.MessageBox.show({
+                                        title: 'INFO',
+                                        msg: resp.msg,
+                                        buttons: Ext.MessageBox.OK,
+                                        icon: Ext.MessageBox.INFO
+                                    });
+                                }
+                                else{
+                                    btn.up('window').destroy();
+                                   
                                     Ext.MessageBox.show({
                                         title: 'INFO',
                                         msg: resp.msg,
