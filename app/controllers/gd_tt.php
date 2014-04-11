@@ -75,7 +75,7 @@ class Gd_tt extends Auth_Controller {
                 }
 
                 if (($barang_terkirim + $row->tt_qty_kirim) > $row->barang_qty) {
-                    echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda jumlah barang lebih dari permintaan'));
+                    echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda memasukan jumlah barang lebih dari permintaan'));
                     return;
                 }
             }
@@ -135,7 +135,7 @@ class Gd_tt extends Auth_Controller {
             $data['jenis_trx'] = 1;
             $data['trx_stok'] = $key->id;
             $data['simpan_status'] = 1;
-            $id_stok_div = $this->Gdtt_model->insert($data, 'trx_stok_div');
+            $id_stok_div = $this->Gdtt_model->insert($data, 'trx_stock_div');
             $id_stok_div = $id_stok_div . '.' . $this->user->cabang_id;
             $data_stok_div_syn[] = array('data' => $data, 'id' => $id_stok_div);
         }

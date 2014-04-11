@@ -134,7 +134,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.divBkEdGrid', {
                                         form = grid.down('#lotFormBk').getForm(),
                                         data = e.record;
                                 e.record.commit();
-                                Ext.Ajax.request({
+                                /*Ext.Ajax.request({
                                     url: BASE_PATH + 'persediaan/div_bklot',
                                     method: 'POST',
                                     params: {
@@ -167,7 +167,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.divBkEdGrid', {
                                             });
                                         }
                                     }
-                                });
+                                });*/
                             }
                         }
                     }

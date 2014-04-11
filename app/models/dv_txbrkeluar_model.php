@@ -15,7 +15,7 @@ class Dv_txbrkeluar_model extends MY_Model {
     public function get_last_stockdiv($barang, $ruang) {
 //        GET IN
         $this->db->select_sum('trx_stok')
-                ->from('trx_stok_div')
+                ->from('trx_stock_div')
                 ->where('id_ruang', $ruang)
                 ->where('id_barang', $barang)
                 ->where('jenis_trx', 1);
@@ -29,7 +29,7 @@ class Dv_txbrkeluar_model extends MY_Model {
 
 //        GET OUT
         $this->db->select_sum('trx_stok')
-                ->from('trx_stok_div')
+                ->from('trx_stock_div')
                 ->where('id_ruang', $ruang)
                 ->where('id_barang', $barang)
                 ->where('jenis_trx', 0);
@@ -127,4 +127,5 @@ class Dv_txbrkeluar_model extends MY_Model {
             return $query->row()->trx_stok;
         }
     }
+
 }
