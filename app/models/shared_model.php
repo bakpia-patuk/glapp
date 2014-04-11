@@ -31,7 +31,7 @@ class Shared_model extends MY_Model {
                     'mi_parent_id' => $row->mi_parent_id,
                     'mi_parent_name' => $this->get_parent_id($row->mi_parent_id),
                     'mi_merk' => $row->mi_merk,
-                    'mi_merk_name' => $row->mi_merk != 0 ? $this->get_detail('id', $row->mi_merk, 'dt_merk')->merk_name : "",
+                    'mi_merk_name' => $this->get_detail('id', $row->mi_merk, 'dt_merk') != NULL ? $this->get_detail('id', $row->mi_merk, 'dt_merk')->merk_name : "",
                     'mi_item_price' => $row->mi_item_price,
                     'mi_barcode' => $row->mi_barcode,
                     'mi_inv_stat' => $row->mi_inv_stat,

@@ -20,7 +20,7 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
     refs: [
         {ref: 'BarangGrid', selector: '#stockopgrid'},
         {ref: 'StockOpForm', selector: '#stockopform'},
-        {ref: 'stockOpGrid', selector: '#arusstockgrid'}
+        {ref: 'StockOpGrid', selector: '#arusstockgrid'}
     ],
     init: function() {
         this.listen({
@@ -39,9 +39,48 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
                 '#stockopgrid': {
                     selectionchange: function(m, r) {
                         var form = this.getStockOpForm();
-                        if(r[0]){
+                        if (r[0]) {
                             form.getForm().loadRecord(r[0]);
                         }
+                    }
+                },
+                '#barangSearch': {
+                    click: function() {
+                        var grid = this.getBarangGrid(),
+                                store = grid.getStore(),
+                                type = grid.down('#soType').getValue(),
+                                gol = grid.down('#soBarangGol').getValue(),
+                                query = grid.down('#soBarangQuery').getValue(),
+                                filterCollection = [];
+                        if (type === null) {
+                            Ext.Msg.alert('Warning', 'Pilih Jenis barang');
+                            return;
+                        }
+
+                        var statusFilter = new Ext.util.Filter({
+                            property: 'mi_inv_stat',
+                            value: type
+                        });
+                        filterCollection.push(statusFilter);
+
+                        if (gol !== null) {
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'mi_parent_id',
+                                value: gol
+                            });
+                            filterCollection.push(statusFilter);
+                        }
+                        if (query !== "") {
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'mi_name=ll',
+                                value: query
+                            });
+                            filterCollection.push(statusFilter);
+                        }
+
+                        store.clearFilter(true);
+                        store.filter(filterCollection);
+
                     }
                 }
             },

@@ -16,7 +16,8 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
         }
     ],
     initComponent: function() {
-        var me = this;
+        var me = this,
+                grid = me;
 
         Ext.applyIf(me, {
             viewConfig: {
@@ -28,6 +29,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Filter ',
+                    itemId: 'soType',
                     labelWidth: 40,
                     labelAlign: 'right',
                     emptyText: 'Jenis',
@@ -48,19 +50,27 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                             [2, 'NON PERSEDIAAN'],
                             [0, 'INVENTARIS']
                         ]
-                    })
+                    }),
+                    listeners: {
+                        select: function() {
+                            var gol = grid.down('#soBarangGol');
+                            gol.reset();
+                            gol.getStore().clearFilter(true);
+                            gol.getStore().filter('mi_inv_stat', this.getValue());
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
                     width: 150,
                     minChars: 2,
                     triggerAction: 'all',
+                    itemId: 'soBarangGol',
                     store: 'gdlsstockop.GolonganStore',
                     emptyText: 'Golongan',
                     displayField: 'mi_name',
                     valueField: 'id',
                     queryMode: 'remote',
-                    allowBlank: false,
                     matchFieldWidth: false,
                     hidden: false,
                     listConfig: {
@@ -69,10 +79,12 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                 },
                 {
                     xtype: 'textfield',
+                    itemId: 'soBarangQuery',
                     emptyText: 'Query'
                 },
                 {
                     text: 'SEARCH',
+                    itemId: 'barangSearch',
                     ui: 'orange-button'
                 },
                 '->',

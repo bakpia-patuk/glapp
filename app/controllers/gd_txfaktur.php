@@ -88,17 +88,21 @@ class Gd_txfaktur extends Auth_Controller {
             foreach ($result as $row) {
 //                $item_id = $row->tt_barang_id;
 //                $detail_item = $this->Gdtxfaktur_model->get_detail('id', $item_id, 'master_item_' . $this->ion_auth->user()->row()->cabang_id);
-                if($row->tt_ppn==1){
-                    $data_diskon = $row->tt_disc*$row->tt_harga/100;
-                    $harga_netto = ($row->tt_harga*$row->tt_qty_kirim)+($row->tt_harga * $row->tt_qty_kirim * 0.1)-$data_diskon;
-                }
-                else{
-                    $data_diskon = $row->tt_disc*$row->tt_harga/100;
-                    $harga_netto = $row->tt_harga*$row->tt_qty_kirim-($data_diskon);
-                }
-                $nama_barang = $this->Gdtxfaktur_model->get_detail('id',$row->tt_barang_id,'dt_item_cabang');
-                $nama_barang = $this->Gdtxfaktur_model->get_detail('id',$nama_barang->mi_id,'dt_item');
-                
+//                if ($row->tt_ppn == 1) {
+        $a = $row->tt_qty_kirim * $row->tt_harga;
+        $b = 1 - ($row->tt_disc / 100);
+        $c = 1 + ($row->tt_ppn / 100);
+
+        $harga_netto =  $a * $b * $c;
+//                    $data_diskon = $row->tt_disc * $row->tt_harga / 100;
+//                    $harga_netto = ($row->tt_harga * $row->tt_qty_kirim) + ($row->tt_harga * $row->tt_qty_kirim * $row->tt_ppn) - $data_diskon;
+//                } else {
+//                    $data_diskon = $row->tt_disc * $row->tt_harga / 100;
+//                    $harga_netto = $row->tt_harga * $row->tt_qty_kirim - ($data_diskon);
+//                }
+                $nama_barang1 = $this->Gdtxfaktur_model->get_detail('id', $row->tt_barang_id, 'dt_item_cabang');
+                $nama_barang = $this->Gdtxfaktur_model->get_detail('id', $nama_barang1->mi_id, 'dt_item');
+
                 $listpo[] = array(
                     'id' => $row->id,
                     'tt_id' => $row->tt_id,
@@ -115,7 +119,7 @@ class Gd_txfaktur extends Auth_Controller {
                     'tt_qty_sisa' => $row->tt_qty_sisa,
                     'tt_harga' => $row->tt_harga,
                     'tt_disc' => $row->tt_disc,
-                    'tt_ppn' => $row->tt_ppn==1 ? 10 : 0,
+                    'tt_ppn' => $row->tt_ppn,
                     'ttItemNetto' => $harga_netto,
                     'tt_faktur_status' => $row->tt_faktur_status,
                     'simpan_status' => $row->simpan_status
@@ -223,15 +227,11 @@ class Gd_txfaktur extends Auth_Controller {
         $res = $this->Gdtxfaktur_model->gets($opt, NULL, 'trx_tt_detail');
         if ($res) {
             foreach ($res as $row) {
-                if($row->tt_ppn==1){
-                    $ppn=10;
-                }
-                else{
-                    $ppn=0;
-                }
+                $ppn = $row->tt_ppn;
+
                 $item_price = $row->tt_harga;
                 $qty = $row->tt_qty_kirim;
-                
+
                 $disc = $row->tt_disc;
 
                 $netto = $item_price - ($disc / 100 * $item_price);
@@ -403,7 +403,7 @@ class Gd_txfaktur extends Auth_Controller {
         $detail_faktur = $this->Gdtxfaktur_model->get_detail('id', $id, 'trx_faktur');
 
         $data_minta_anggaran = array(
-            //'id' => $detail_faktur->faktur_tgl,
+//            'id' => $detail_faktur->faktur_tgl,
             'tgl_trx' => mdate('%Y-%m-%d %H:%i:%s', now()),
             'trx_cabangid' => $this->user->cabang_id,
             'trx_type' => 1,
@@ -419,12 +419,12 @@ class Gd_txfaktur extends Auth_Controller {
         );
 
         $id_ma = $this->Gdtxfaktur_model->insert($data_minta_anggaran, 'trx_agrplan');
-        if($id_ma == NULL) {
+        if ($id_ma == NULL) {
             echo json_encode(array('success' => 'false', 'data' => "", 'message' => $this->catch_db_err()));
             return FALSE;
         }
         $params = array();
-        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_ma.'.'.$this->user->cabang_id);
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_ma . '.' . $this->user->cabang_id);
         $data_po = $this->Gdtxfaktur_model->gets($params, NULL, 'trx_agrplan');
         foreach ($data_po as $key) {
 
@@ -840,6 +840,7 @@ class Gd_txfaktur extends Auth_Controller {
         }
         clearstatcache();
     }
+
     public function upload_signNullTf1() {
         /* $stat = stat('C:\Wacom\ttd\signNull.png');
           $stm = $stat['mtime'];
@@ -916,5 +917,26 @@ class Gd_txfaktur extends Auth_Controller {
         }
     }
 
+    public function check_faktur() {
+        $query = $this->input->post('faktur');
+        $result = $this->Gdtxfaktur_model->get_detail_like('faktur_no', $query, 'trx_faktur');
 
+        if ($result != NULL) {
+            $tgl_faktur = explode(" ", $result->faktur_tgl);
+            $detail_faktur = array(
+                'supplier' => $result->faktur_suppid != 0 ? $this->Gdtxfaktur_model->get_detail('id', $result->faktur_suppid, 'dt_supplier')->ms_name : "",
+                'fakturTotal' => $result->faktur_nototal,
+                'statusBayar' => $result->faktur_realisasi == 0 ? "BELUM LUNAS" : "LUNAS",
+                'caraBayar' => $result->faktur_bayar == 0 ? 'BG' : ($result->faktur_bayar == 1 ? "TUNAI" : "TRANSFER"),
+                'tglTrx' => $tgl_faktur[0],
+                'tglDebet' => $result->faktur_bayartgl,
+                'trfValue' => $result->faktur_nototal,
+                'bank' => $result->faktur_bgstatus
+            );
+
+            echo json_encode(array('success' => 'true', 'data' => $detail_faktur, 'message' => 'Daftar semua No Lot'));
+        } else {
+            echo json_encode(array('success' => 'false', 'data' => 'Info', 'message' => 'Tidak ada data No Faktur yang anda Cari'));
+        }
+    }
 }

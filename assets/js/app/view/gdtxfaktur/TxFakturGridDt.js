@@ -63,7 +63,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
 //                    format: '0,00/i'
                 },
                 {
-                    xtype: 'gridcolumn',
+                    xtype: 'numbercolumn',
                     width: 60,
                     text: 'DISC',
                     align: 'center',
@@ -84,7 +84,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturGridDt', {
                     text: 'NETTO',
                     align: 'right',
                     dataIndex: 'ttItemNetto',
-                    format: '0,00/i'
+//                    format: '0,00/i'
                     
                 }
             ]

@@ -65,7 +65,7 @@ Ext.define('GlApp.controller.App', {
                 '*': {
                     exception: function( proxy, response, operation, eOpts ) {
                         Ext.MessageBox.show({
-                            title: 'INFO',
+                            title: 'ERROR',
                             msg: response.responseText,
                             buttons: Ext.MessageBox.OK,
                             icon: Ext.MessageBox.ERROR

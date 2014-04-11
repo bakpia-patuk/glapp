@@ -53,7 +53,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     fieldLabel: 'ID Faktur ',
                     name: 'id',
                     hidden: false,
-                    readOnly:true,
+                    readOnly: true
                 },
                 {
                     xtype: 'combobox',
@@ -63,7 +63,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     triggerAction: 'all',
                     queryMode: 'remote',
                     minChars: 2,
-                   store: 'gdtxfaktur.MasterSupplierStore',
+                    store: 'gdtxfaktur.MasterSupplierStore',
                     displayField: 'suppdisplay',
                     valueField: 'idms',
                     emptyText: 'ketik nama supplier'
@@ -99,7 +99,7 @@ Ext.define('GlApp.view.gdtxfaktur.TxFakturForm', {
                     keyNavEnabled: false,
                     mouseWheelEnabled: false,
                     allowBlank: false,
-                    value:0,
+                    value: 0,
                     readOnly: true
                 }),
                 {

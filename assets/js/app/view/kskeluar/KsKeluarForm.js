@@ -231,10 +231,10 @@ Ext.define('GlApp.view.kskeluar.KsKeluarForm', {
                     fieldLabel: 'Nominal ',
                     name: 'kas_jumlah',
                     decimalPrecision: 2,
-                    decimalSeparator: ',',
+                    decimalSeparator: '.',
                     alwaysDisplayDecimals: true,
                     allowNegative: false,
-                    minValue: 0, //prevents negative numbers
+                    minValue: 1, //prevents negative numbers
                     // Remove spinner buttons, and arrow key and mouse wheel listeners
                     hideTrigger: true,
                     keyNavEnabled: false,

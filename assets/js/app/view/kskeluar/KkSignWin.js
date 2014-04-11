@@ -33,7 +33,7 @@ Ext.define('GlApp.view.kskeluar.KkSignWin', {
                             xtype:'textfield',
                             name: 'idKk',
                             itemId: 'idKk',
-                            hidden: false
+                            hidden: true
                         },
                         {
                             xtype: 'fieldcontainer',

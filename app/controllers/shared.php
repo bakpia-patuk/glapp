@@ -114,15 +114,8 @@ class Shared extends Auth_Controller {
 
     public function list_barang_cabang() {
         $records = $this->input->get('filter');
-        $cabang = $this->input->get('cabang');
         $query = $this->input->get('query');
         $params = array();
-
-        if ($cabang) {
-            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $cabang);
-        } else {
-            $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
-        }
 
         if ($records) {
             $raw_record = json_decode($records, true);
@@ -135,6 +128,7 @@ class Shared extends Auth_Controller {
             }
         }
 
+        $params[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $this->user->cabang_id);
         $params[] = array('field' => 'mi_child_stat', 'param' => 'where', 'operator' => '', 'value' => 1);
         $opt['sortBy'] = 'no';
         $opt['sortDirection'] = 'ASC';
@@ -1214,7 +1208,7 @@ class Shared extends Auth_Controller {
                     'id' => $key->id,
                     'msi_idbarang' => $key->item_id,
                     'msi_satbesar' => $key->kms_besar,
-                    'nama_satbesar' => '-',//$key->msi_satbesar != 0 ? $this->Shared_model->get_detail('id', $key->msi_satbesar, 'master_satuan')->sat_name : '',
+                    'nama_satbesar' => '-', //$key->msi_satbesar != 0 ? $this->Shared_model->get_detail('id', $key->msi_satbesar, 'master_satuan')->sat_name : '',
                     'msi_konversi' => $key->kms_konv,
                     'msi_satkecil' => $key->kms_kecil,
                     'nama_satkecil' => '',

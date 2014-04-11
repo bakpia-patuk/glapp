@@ -28,7 +28,7 @@ Ext.define('GlApp.store.gdlsstockop.BarangStore', {
     alias: 'store.gdlsstockop.barangstore',
     model: BarangModel,
     storeId: 'TrxPengStore',
-    autoLoad: true,
+    autoLoad: false,
     remoteFilter: true,
     proxy: {
         success: true,
