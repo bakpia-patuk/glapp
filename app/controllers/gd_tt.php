@@ -29,9 +29,10 @@ class Gd_tt extends Auth_Controller {
 
             $data = array(
                 'tt_status' => 0,
+                'tt_qty_kirim' => 0,
                 'tt_id' => 0
             );
-
+            
             $param[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
             if (!$this->Gdtt_model->update($data, $param, NULL, 'trx_po_detail')) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
@@ -386,13 +387,13 @@ class Gd_tt extends Auth_Controller {
     public function edit_peng_tt() {
         $insert = $this->input->post(NULL, TRUE);
 
-        if ($insert['tt_qty_kirim'] > $insert['barang_qty']) {
-            echo json_encode(array('success' => 'false', 'data' => $insert['id'], 'msg' => 'Barang kirim lebih besar dari barang pesanan'));
-            return;
-        }
 
         if ($insert['tt_id'] != 0) {
-            //$this->Gdtt_model->get_detail('id',$insert['id'],'trx_po_detail');
+            $sisa = $this->Gdtt_model->get_tt_sisa($insert['po_id'], $insert['peng_id'], $insert['barang_id']);
+            if ($insert['tt_qty_kirim'] + $sisa > $insert['barang_qty']) {
+                echo json_encode(array('success' => 'false', 'data' => $insert['id'], 'msg' => 'Barang kirim lebih besar dari barang pesanan'));
+                return;
+            }
             $data = array(
                 'tt_qty_kirim' => $insert['tt_qty_kirim']
             );

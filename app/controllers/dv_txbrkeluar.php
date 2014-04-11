@@ -114,7 +114,6 @@ class Dv_txbrkeluar extends Auth_Controller {
         $record[] = array('field' => 'pengdiv_id', 'param' => 'where', 'operator' => '', 'value' => $id_minta);
         $record[] = array('field' => 'barang_id', 'param' => 'where', 'operator' => '', 'value' => $id_barang);
         $data_permintaan = $this->Dv_txbrkeluar_model->get($record,NULL,'trx_pengdivisi_detail');
-        if()
 
     }
 

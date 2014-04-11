@@ -148,25 +148,17 @@ class Gdtt_model extends MY_Model {
         );
 
         $this->insert($data, 'trx_tt_detail');
+        
         //cek total barang
         //Jumlah semua qty terkirim
-        $params=array();
-        $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => '', 'value' => $dtpo->po_id);
-        $result = $this->gets($params, NULL, 'trx_tt_detail');
-        $barang_terkirim=0;
-        foreach ($result as $key) {
+        $barang_terkirim = $this->get_tt_sisa($dtpo->po_id, $dtpo->peng_id, $dtpo->barang_id);
 
-            $barang_terkirim+=$key->tt_qty_kirim;
-        }
-        
-        if($barang_terkirim==$dtpo->barang_qty){
-            $set_true = array('tt_set' => 1,'tt_qty_kirim'=>$dtpo->barang_qty);
-        }
-        else{
-            $set_true = array('tt_set' => 2,'tt_qty_kirim'=>0);
+        if ($barang_terkirim == $dtpo->barang_qty) {
+            $set_true = array('tt_status' => 2, 'tt_set' => 1, 'tt_qty_kirim' => $dtpo->barang_qty);
+        } else {
+            $set_true = array('tt_status' => 2, 'tt_set' => 0, 'tt_qty_kirim' => 0);
         }
 
-       
         $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
         $this->update($set_true, $params1, NULL, 'trx_po_detail');
 
@@ -234,8 +226,8 @@ class Gdtt_model extends MY_Model {
             $out = '<ul>';
             foreach ($result as $row) {
                 $out.= '<li>';
-                $out.= 'No '.$row->stl_nolot. ', Jumlah : '.$row->stl_qty;
-               $out.= '</li>';
+                $out.= 'No ' . $row->stl_nolot . ', Jumlah : ' . $row->stl_qty;
+                $out.= '</li>';
             }
             $out.= '</ul>';
             return $out;
