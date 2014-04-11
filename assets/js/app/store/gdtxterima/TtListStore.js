@@ -32,5 +32,6 @@ Ext.define('GlApp.store.gdtxterima.TtListStore', {
             type: 'json',
             root: 'data'
         }
-    }
+    },
+    groupField: 'tt_no'
 });

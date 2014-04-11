@@ -184,6 +184,16 @@ Ext.define('GlApp.view.gdtxterima.TxTtListGrid', {
                 }
                 
             ],
+            features: [
+                {
+                    startCollapsed: false,
+                    id: 'ttListGroup',
+                    ftype: 'grouping',
+                    groupHeaderTpl: 'No TT : {name}',
+                    hideGroupedHeader: false,
+                    enableGroupingMenu: true
+                }
+            ],
             columns: [
                 Ext.create('Ext.grid.RowNumberer'),
                 {

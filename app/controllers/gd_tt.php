@@ -56,30 +56,29 @@ class Gd_tt extends Auth_Controller {
 
     public function save() {
         $insert = $this->input->post(NULL, TRUE);
-        $params=array();
+        $params = array();
         $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_po_detail');
         foreach ($data_po as $row) {
-            if($row->tt_qty_kirim==0){
+            if ($row->tt_qty_kirim == 0) {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum memasukan jumlah barang'));
                 return;
             }
-            $params=array();
+            $params = array();
             $params[] = array('field' => 'tt_po_id', 'param' => 'where', 'operator' => '', 'value' => $row->po_id);
             $result = $this->Gdtt_model->gets($params, NULL, 'trx_tt_detail');
-            $barang_terkirim=0;
-            if($result){
+            $barang_terkirim = 0;
+            if ($result) {
                 foreach ($result as $key) {
 
                     $barang_terkirim+=$key->tt_qty_kirim;
                 }
 
-                if(($barang_terkirim+$row->tt_qty_kirim)>$row->barang_qty){
+                if (($barang_terkirim + $row->tt_qty_kirim) > $row->barang_qty) {
                     echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda jumlah barang lebih dari permintaan'));
                     return;
                 }
             }
-            
         }
         if ($insert['id'] == 0) {
             echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'ERROR', 'msg' => 'Anda belum melakukan transaksi'));
@@ -121,12 +120,12 @@ class Gd_tt extends Auth_Controller {
         $params[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $params[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => 'ttgudang');
         $data_stok_detail = $this->Gdtt_model->gets($params, NULL, 'trx_stock');
-       
+
         $data_stok_syn = array();
-        $data_stok_div_syn = array(); 
+        $data_stok_div_syn = array();
         foreach ($data_stok_detail as $key) {
-            
-            $data_stok_syn[]=array('data'=>$key,'id'=>$key->id);
+
+            $data_stok_syn[] = array('data' => $key, 'id' => $key->id);
             $data = array();
             $data['id_ruang'] = $key->stk_ruangid;
             $data['id_cabang '] = $key->stk_cabangid;
@@ -134,10 +133,10 @@ class Gd_tt extends Auth_Controller {
             $data['jmlh_stok'] = $key->stk_qty;
             $data['jenis_trx'] = 1;
             $data['trx_stok'] = $key->id;
-            $data['simpan_status'] =1;
+            $data['simpan_status'] = 1;
             $id_stok_div = $this->Gdtt_model->insert($data, 'trx_stok_div');
-            $id_stok_div = $id_stok_div.'.'.$this->user->cabang_id;
-            $data_stok_div_syn[] = array('data'=>$data,'id'=>$id_stok_div) ;
+            $id_stok_div = $id_stok_div . '.' . $this->user->cabang_id;
+            $data_stok_div_syn[] = array('data' => $data, 'id' => $id_stok_div);
         }
 
 
@@ -237,7 +236,7 @@ class Gd_tt extends Auth_Controller {
             $this->Gdtt_model->insert_outgoing($data, 'detail');
         }
 
-       
+
 
         foreach ($data_stok_syn as $key) {
             $data_json = json_encode($key['data']);
@@ -460,7 +459,7 @@ class Gd_tt extends Auth_Controller {
                 $barang = $this->Gdtt_model->get_item_detail($row->barang_id);
                 $result[$no]->barang_name = $barang->mi_name;
                 $result[$no]->tt_qty_sisa = $this->Gdtt_model->get_tt_sisa($row->po_id, $row->peng_id, $row->barang_id);
-                $result[$no]->merk_name = $barang->mi_merk!=0?$this->Gdtt_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name:'-';
+                $result[$no]->merk_name = $barang->mi_merk != 0 ? $this->Gdtt_model->get_detail('id', $barang->mi_merk, 'dt_merk')->merk_name : '-';
                 $no++;
             }
             echo json_encode(array('success' => 'true', 'data' => $result, 'title' => 'Info', 'msg' => 'List All PO Supplier'));
@@ -476,6 +475,9 @@ class Gd_tt extends Auth_Controller {
         if ($records) {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
+        } else {
+            $params[] = array('field' => 'tt_tgltrx', 'param' => 'where', 'operator' => ' >=', 'value' => mdate("%Y-%m-%d 00:00:00", time()));
+            $params[] = array('field' => 'tt_tgltrx', 'param' => 'where', 'operator' => ' <=', 'value' => mdate("%Y-%m-%d 23:59:59", time()));
         }
 
         $opt['sortBy'] = 'id';
@@ -580,4 +582,5 @@ class Gd_tt extends Auth_Controller {
 
         return FALSE;
     }
+
 }
