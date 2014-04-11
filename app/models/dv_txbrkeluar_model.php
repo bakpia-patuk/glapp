@@ -44,6 +44,39 @@ class Dv_txbrkeluar_model extends MY_Model {
         return $in + -($out);
     }
 
+    public function get_last_stockdivlot($barang, $ruang ,$lot) {
+//        GET IN
+        $this->db->select_sum('stl_qty')
+                ->from('trx_stock_lotdiv')
+                ->where('stl_nolot', $lot)
+                ->where('stl_ruangid', $ruang)
+                ->where('stl_barangid', $barang)
+                ->where('stl_type', 1);
+        $query_in = $this->db->get();
+
+        if ($query_in->num_rows() > 0) {
+            $in = $query_in->row()->stl_qty;
+        } else {
+            $in = 0;
+        }
+
+//        GET OUT
+        $this->db->select_sum('stl_qty')
+                ->from('trx_stock_lotdiv')
+                ->where('stl_nolot', $lot)
+                ->where('stl_ruangid', $ruang)
+                ->where('stl_barangid', $barang)
+                ->where('stl_type', 0);
+        $query_out = $this->db->get();
+
+        if ($query_out->num_rows() > 0) {
+            $out = $query_out->row()->stl_qty;
+        } else {
+            $out = 0;
+        }
+
+        return $in + -($out);
+    }
     public function getsdiv_lot($params, $opt, $table,$cabang) {
         $this->db->select('id, stl_nolot, stl_barangid, SUM(stl_qty) as stl_barangqty, stl_baranged, stl_barcode, simpan_status, stl_ruangid, stl_qtylast');
         $this->db->from($table);
@@ -51,26 +84,30 @@ class Dv_txbrkeluar_model extends MY_Model {
             foreach ($params as $data) {
                 
                     $this->db->$data['param']($data['field'] . $data['operator'], $data['value']);
-                // else{
-                //     $record=array();
-                //     $record[] = array('field' => 'mi_id', 'param' => 'where', 'operator' => '', 'value' => $data['value']);
-                //     $record[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $cabang);
-        
-                //     $det_barang = $this->get($record, null, 'dt_item_cabang' );
-                //     var_dump($det_barang->id);
-                //     $this->db->$data['param']($data['field'] . $data['operator'], $det_barang->id);
-                // }
+              
 
             }
+            
         }
         $query =$this->db->group_by('stl_nolot');
-        $query = $this->db->get(); 
-
-        if ($query->num_rows() > 0) {
-            return $query->result();
-        } else {
+        $data_lot = $this->db->get(); 
+        
+        if ($data_lot->num_rows() > 0) {
+            $data_lot = $data_lot->result();
+            
+            for($i=0 ; $i<sizeof($data_lot);$i++){
+                $param_lot = $data_lot[$i];
+                $jumlah_stok = $this->get_last_stockdivlot($param_lot->stl_barangid,$param_lot->stl_ruangid,$param_lot->stl_nolot);
+                $data_lot[$i]->stl_barangqty = $jumlah_stok;
+            }
+            return $data_lot;
+        }
+        else{
             return false;
         }
+        
+
+        
     }
 
      public function get_item_div($record, $id_barang, $type) {

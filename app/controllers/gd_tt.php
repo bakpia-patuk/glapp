@@ -128,6 +128,7 @@ class Gd_tt extends Auth_Controller {
             $data_stok_syn[] = array('data' => $key, 'id' => $key->id);
             $data = array();
             $data['id_ruang'] = $key->stk_ruangid;
+            $data['trxreftype'] = 'ttgudang';
             $data['id_cabang '] = $key->stk_cabangid;
             $data['id_barang'] = $key->stk_barangid;
             $data['jmlh_stok'] = $key->stk_qty;
@@ -164,6 +165,31 @@ class Gd_tt extends Auth_Controller {
             $this->Gdtt_model->insert_outgoing($data, 'detail');
         }
 
+
+        $params = array();
+        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+        $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_tt');
+        foreach ($data_po as $key) {
+            $data_json = json_encode($key);
+
+            $data = array();
+
+            $data['jumlah'] = 1;
+
+            $data['tujuan'] = 1;
+            $data['id_cabang'] = $this->user->cabang_id;
+
+            $no = $this->Gdtt_model->insert_outgoing($data, 'head');
+
+            $data = array();
+            $data['data'] = $data_json;
+            $data['head_id '] = $no . '.' . $this->user->cabang_id;
+            $data['primary_key'] = $key->id;
+            $data['table_name'] = 'trx_tt';
+
+            $this->Gdtt_model->insert_outgoing($data, 'detail');
+        }
+
         $params = array();
         $params[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_tt_detail');
@@ -192,6 +218,8 @@ class Gd_tt extends Auth_Controller {
         $params[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
         $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_stock_lot');
         foreach ($data_po as $key) {
+
+
             $data_json = json_encode($key);
 
             $data = array();
@@ -210,33 +238,11 @@ class Gd_tt extends Auth_Controller {
             $data['table_name'] = 'trx_stock_lot';
 
             $this->Gdtt_model->insert_outgoing($data, 'detail');
+
+            unset($key->no);
+            unset($key->id);
+            $this->Gdtt_model->insert($key, 'trx_stock_lotdiv');
         }
-
-        $params = array();
-        $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
-        $data_po = $this->Gdtt_model->gets($params, NULL, 'trx_tt');
-        foreach ($data_po as $key) {
-            $data_json = json_encode($key);
-
-            $data = array();
-
-            $data['jumlah'] = 1;
-
-            $data['tujuan'] = 1;
-            $data['id_cabang'] = $this->user->cabang_id;
-
-            $no = $this->Gdtt_model->insert_outgoing($data, 'head');
-
-            $data = array();
-            $data['data'] = $data_json;
-            $data['head_id '] = $no . '.' . $this->user->cabang_id;
-            $data['primary_key'] = $key->id;
-            $data['table_name'] = 'trx_tt';
-
-            $this->Gdtt_model->insert_outgoing($data, 'detail');
-        }
-
-
 
         foreach ($data_stok_syn as $key) {
             $data_json = json_encode($key['data']);
@@ -412,6 +418,7 @@ class Gd_tt extends Auth_Controller {
             'stl_nolot' => $insert['stl_nolot'],
             'stl_qty' => $insert['stl_qty'],
             'stl_qtylast' => $insert['stl_qty'],
+            'stl_type' => 1,
             'stl_baranged' => mdate("%Y-%m-%d", strtotime($insert['stl_baranged'])),
             'stk_trxreftype' => $insert['stk_trxreftype'],
             'stk_trxref' => $insert['stk_trxref'],
