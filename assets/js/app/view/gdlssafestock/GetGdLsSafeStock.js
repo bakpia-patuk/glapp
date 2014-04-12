@@ -17,7 +17,7 @@ Ext.define('GlApp.view.gdlssafestock.GetGdLsSafeStock', {
                 {
                     xtype: 'grid',
                     border: true,
-                    ui: 'blue-panel',
+                    ui: 'orange-panel',
                     title: 'DAFTAR SAFETY STOCK',
                     forceFit: true,
                     columnLines: true,
@@ -89,17 +89,21 @@ Ext.define('GlApp.view.gdlssafestock.GetGdLsSafeStock', {
                             emptyText: 'Query String'
                         },
                         {
-                            text: 'SEARCH'
+                            text: 'SEARCH',
+                            ui: 'orange-button'
                         },
                         '->',
                         {
-                            text: 'CETAK'
+                            text: 'CETAK',
+                            ui: 'orange-button'
                         },
                         {
-                            text: 'REFRESH'
+                            text: 'REFRESH',
+                            ui: 'orange-button'
                         },
                         {
-                            text: 'ALL'
+                            text: 'ALL',
+                            ui: 'orange-button'
                         }
 
                     ],

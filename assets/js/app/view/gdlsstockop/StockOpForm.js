@@ -43,16 +43,25 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Id So ',
-                    name: 'id',
+                    name: 'id_trx',
                     allowBlank: true,
                     hidden: true,
                     disabled: false,
                     readOnly: true
                 },
                 {
+                    xtype: 'textfield',
+                    fieldLabel: 'Type Trx',
+                    name: 'stk_trxreftype',
+                    readOnly: true,
+                    fieldCls: 'x-item-readonly',
+                    value: 'opnamegudang',
+                    hidden: false
+                },
+                {
                     xtype: 'datefield',
                     fieldLabel: 'Tanggal ',
-                    name: 'tglTransaksi',
+                    name: 'stk_date',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
                     value: new Date(),
@@ -62,6 +71,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Nama Barang ',
                     name: 'mi_name',
+                    itemId: 'mi_name',
                     allowBlank: false,
                     hidden: false,
                     readOnly: true
@@ -70,7 +80,8 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Kode Item ',
                     name: 'id',
-                    hidden: true,
+                    itemId: 'id_item',
+                    hidden: false,
                     disabled: false,
                     readOnly: true,
                     fieldCls: 'fieldReadOnly'
@@ -96,7 +107,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                     items: [
                         {
                             boxLabel: 'Penambahan',
-                            name: 'penyesuaianst',
+                            name: 'stk_trxtype',
                             width: 95,
                             inputValue: 1,
                             checked: true
@@ -104,7 +115,7 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                         {
                             boxLabel: 'Pengurangan',
                             width: 95,
-                            name: 'penyesuaianst',
+                            name: 'stk_trxtype',
                             inputValue: 0,
                             checked: false
                         }
@@ -114,22 +125,24 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                 {
                     xtype: 'textfield',
                     fieldLabel: 'Jumlah Barang ',
-                    name: 'itemTrxqty',
+                    name: 'stk_qty',
+                    itemId: 'stk_qty',
                     allowBlank: false,
                     listeners: {
                         change: function() {
-                            if (this.getValue() > 0) {
+                            var val = parseInt(this.getValue()),
+                                    type = this.up('form').getForm().findField('stk_trxtype').getGroupValue(),
+                                    awal = parseInt(this.up('form').getForm().findField('stock_last').getValue()),
+                                    akhir = this.up('form').getForm().findField('oldqty');
+
+                            var lastVal = type === 1 ? awal + val : awal - val;
+                            akhir.setValue(lastVal);
+
+                            if (this.getValue() > 0 && lastVal > 0) {
                                 this.up('form').down('#btnLostSo').enable();
                             } else {
                                 this.up('form').down('#btnLostSo').disable();
                             }
-
-                            var val = parseInt(this.getValue()),
-                                    type = this.up('form').getForm().findField('penyesuaianst').getGroupValue(),
-                                    awal = parseInt(this.up('form').getForm().findField('stock_last').getValue()),
-                                    akhir = this.up('form').getForm().findField('oldqty');
-
-                            akhir.setValue(type === 1 ? awal + val : awal - val);
                         }
                     }
                 },
@@ -172,27 +185,6 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                     allowBlank: true,
                     readOnly: true,
                     hidden: false
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: 'User Login ',
-                    name: 'username',
-                    hidden: true,
-                    value: USER_NAME,
-                    readOnly: true,
-                    fieldCls: 'x-item-readonly'
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: 'Current ref ',
-                    name: 'refTrx',
-                    hidden: true
-                },
-                {
-                    xtype: 'textfield',
-                    fieldLabel: 'ID ',
-                    name: 'soid',
-                    hidden: true
                 }
 
             ]

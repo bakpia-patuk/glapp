@@ -17,7 +17,7 @@ Ext.define('GlApp.view.gdlsarusstock.GetGdLsArusStock', {
                 {
                     xtype: 'grid',
                     border: true,
-                    ui: 'blue-panel',
+                    ui: 'orange-panel',
                     title: 'DAFTAR STOCK OPNAME',
                     forceFit: true,
                     columnLines: true,
@@ -59,17 +59,21 @@ Ext.define('GlApp.view.gdlsarusstock.GetGdLsArusStock', {
                             allowBlank: false
                         },
                         {
-                            text: 'SEARCH'
+                            text: 'SEARCH',
+                            ui: 'orange-button',
                         },
                         '->',
                         {
-                            text: 'CETAK'
+                            text: 'CETAK',
+                            ui: 'orange-button',
                         },
                         {
-                            text: 'REFRESH'
+                            text: 'REFRESH',
+                            ui: 'orange-button',
                         },
                         {
-                            text: 'ALL'
+                            text: 'ALL',
+                            ui: 'orange-button',
                         }
 
                     ],

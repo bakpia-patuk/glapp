@@ -40,6 +40,7 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
                     selectionchange: function(m, r) {
                         var form = this.getStockOpForm();
                         if (r[0]) {
+                            form.getForm().reset();
                             form.getForm().loadRecord(r[0]);
                         }
                     }
@@ -82,6 +83,15 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
                         store.filter(filterCollection);
 
                     }
+                },
+                '#stockopform button[action=lotSave]': {
+                    click: function(btn) {
+                        var form = btn.up('form');
+
+                        if (form.getForm().isValid()) {
+                            this.ajaxReq('gd_tt/save_lot', form.getForm().getValues(), 9);
+                        }
+                    }
                 }
             },
             global: {
@@ -95,7 +105,13 @@ Ext.define('GlApp.controller.GetGdLsStockOp', {
     saveForm: function(btn) {
     },
     lotShow: function(btn) {
-        var win = Ext.widget('gdlsstockop.txttlotwin');
+        var win = Ext.widget('gdlsstockop.txttlotwin'),
+                form = win.down('#formLotSo'),
+                soform = this.getStockOpForm();
+        
+        form.down('#stl_barangid').setValue(soform.down('#id_item').getValue());
+        form.down('#stl_barangname').setValue(soform.down('#mi_name').getValue());
+        form.down('#qty_tt').setValue(soform.down('#stk_qty').getValue());
     }
 });
 
