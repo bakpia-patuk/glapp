@@ -1,7 +1,7 @@
 var modelku = Ext.define('eTrav.model.ItemModel', {
     extend: 'Ext.data.Model',
     fields: [
-        {name: 'id', type: 'int'},
+        {name: 'id', type: 'string'},
         {name: 'itemCode', type: 'string'},
         {name: 'itemRender', type: 'string'},
         {name: 'itemCodeOld', type: 'string'},

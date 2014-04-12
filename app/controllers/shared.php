@@ -1128,6 +1128,7 @@ class Shared extends Auth_Controller {
             $raw_record = json_decode($records, true);
             $params = $this->generate_db_query($raw_record);
         }
+        
         $result = $this->Shared_model->gets($params, NULL, 'ms_keperluan_akun');
 
         if ($result != NULL) {

@@ -368,7 +368,7 @@ class Gd_pengadaan extends Auth_Controller {
     private function __return_csspeng($id) {
         $peng_detail = $this->Gdpengadaan_model->get_detail('id', $id, 'trx_pengadaan');
 
-        if ($peng_detail->peng_type == 0) {
+        
             $po_status = $peng_detail->po_status;
             $peng_statusdiv = $peng_detail->peng_statusdiv;
             $peng_statuspst = $peng_detail->peng_statuspst;
@@ -386,7 +386,8 @@ class Gd_pengadaan extends Auth_Controller {
             } else {
                 return 'peng-grey';
             }
-        }
+        
+
     }
 
 }

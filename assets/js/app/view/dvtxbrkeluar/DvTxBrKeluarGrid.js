@@ -223,12 +223,13 @@ Ext.define('eTrav.view.dvtxbrkeluar.DvTxBrKeluarGrid', {
                 {
                     xtype: 'button',
                     ui: 'blue-button',
+                    text:'Refresh',
                     iconCls: 'icon-btn-refresh',
-//                    handler: function() {
-//                        this.up('grid').getSelectionModel().clearSelections();
-//                        this.up('grid').getStore().load();
-////                        this.up('grid').up('panel').down('divbarangkeluardetailgrid').getStore().removeAll();
-//                    }
+                   handler: function() {
+                       this.up('grid').getSelectionModel().clearSelections();
+                       this.up('grid').getStore().load();
+//                        this.up('grid').up('panel').down('divbarangkeluardetailgrid').getStore().removeAll();
+                   }
                 }
             ],
 //            features: [

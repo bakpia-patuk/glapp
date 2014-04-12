@@ -25,6 +25,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     xtype: 'button',
                     ui: 'blue-button',
                     text: 'Simpan',
+                    
                     iconCls: 'icon-btn-save',
                    action: 'dbkSave'
                 },
@@ -32,7 +33,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     xtype: 'button',
                     ui: 'blue-button',
                     text: 'Baru',
-                    hidden: true,
+                    
                     iconCls: 'icon-btn-add',
                    action: 'dmbNew'
                 }
@@ -48,6 +49,12 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Id Ruang ',
                     name: 'idRuang',
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'isNoLot ',
+                    name: 'isNoLot',
                     hidden: true
                 },
                 {
@@ -201,6 +208,7 @@ Ext.define('GlApp.view.dvtxbrkeluar.DvTxBrKeluarForm', {
                             ui: 'blue-button',
                             itemId: 'pengDivbarangKeluar',
                             disabled: true,
+                            hidden:true,
                             text: 'ok',
                             margins: '0 0 0 5',
                            action: 'pengDivbarangKeluar'

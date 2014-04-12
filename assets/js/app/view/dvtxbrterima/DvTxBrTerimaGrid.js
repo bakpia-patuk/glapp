@@ -1,13 +1,13 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaGrid', {
+Ext.define('GlApp.view.dvtxbrterima.DvTxBrTerimaGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.dvtxbrterima.dvtxbrterimagrid',
     itemId: 'dvtxbrterimagrid',
     autoScroll: true,
     forceFit: true,
-//    store: 'PengdivStore',
+   store: 'dvtxbrterima.PengdivStore',
     columnLines: true,
     flex: 1,
     border: false,

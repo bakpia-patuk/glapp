@@ -114,8 +114,10 @@ class Bk_msbank extends Auth_Controller {
                     $data = array();
 
                     $data['jumlah'] = 1;
-
-                    $data['tujuan'] = $key->bank_cabang;
+                    if($this->user->cabang_id==1)
+                        $data['tujuan'] = $key->bank_cabang;
+                    else
+                        $data['tujuan'] = 1;
                     $data['id_cabang'] = $this->user->cabang_id;
 
                     $no = $this->Bkmsbank_model->insert_outgoing($data, 'head');

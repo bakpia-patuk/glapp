@@ -1,4 +1,4 @@
-Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaDetailGrid', {
+Ext.define('GlApp.view.dvtxbrterima.DvTxBrTerimaDetailGrid', {
     extend: 'Ext.grid.Panel',
     alias: 'widget.dvtxbrterima.dvtxbrterimadetailgrid',
     itemId: 'dvtxbrterimadetailgrid',
@@ -7,7 +7,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaDetailGrid', {
     columnLines: true,
     //selModel : smGrid,
     flex: 1,
-//    store: 'PengdivDetailStore',
+   store: 'dvtxbrterima.PengdivDetailStore',
     initComponent: function () {
         var me = this;
 

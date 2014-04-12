@@ -23,7 +23,7 @@ Ext.define('GlApp.controller.GetDvTxBrTerima', {
     ],
     init: function () {
         this.control({
-            'dvtxbrterimaform button[action=dmbSave]': {
+            '#dvtxbrterimaform button[action=dmbSave]': {
                 click: function(btn, e, opt) {
                     var grid = this.getDvTxBrTerimaGrid(),
                         store = grid.getStore(),
@@ -32,9 +32,9 @@ Ext.define('GlApp.controller.GetDvTxBrTerima', {
                         form = this.getDvTxBrTerimaForm().getForm(),
                         divisiField = form.findField('divisi'),
                         filterCollection = [];
-
+                        
                     Ext.Ajax.request({
-                        url: BASE_PATH + 'dv_txbrterima/pengdiv_bm_complete',
+                        url: BASE_PATH + 'dv_txbrterima/save',
                         method: 'POST',
                         params: form.getValues(),
                         scope: this,
@@ -43,13 +43,13 @@ Ext.define('GlApp.controller.GetDvTxBrTerima', {
 
                             if (resp.success === 'true') {
                                 form.reset();
-
+                                var filterCollection=[];
                                 divisiField.setValue(parseInt(resp.data.divisi));
                                 store2.removeAll();
 
                                 var statusFilter1 = new Ext.util.Filter({
                                     property: 'pengdiv_tujuan',
-                                    value: userDivisi
+                                    value: USER_DIVISI
                                 });
                                 filterCollection.push(statusFilter1);
 
@@ -73,7 +73,7 @@ Ext.define('GlApp.controller.GetDvTxBrTerima', {
                     });
                 }
             },
-            'dvtxbrterimaform button[action=pengDivBarangMasuk]': {
+            '#dvtxbrterimaform button[action=pengDivBarangMasuk]': {
                 click: function(btn, e, opt) {
                     var grid= this.getDvTxBrTerimaDetailGrid(),
                         store = grid.getStore(),
@@ -107,7 +107,7 @@ Ext.define('GlApp.controller.GetDvTxBrTerima', {
                     });
                 }
             },
-            'divbarangmasukgrid': {
+            '#dvtxbrterimagrid': {
                 afterrender: function() {
                     var grid = this.getDvTxBrTerimaGrid(),
                         store = grid.getStore(),
@@ -144,14 +144,18 @@ Ext.define('GlApp.controller.GetDvTxBrTerima', {
                     var grid= this.getDvTxBrTerimaDetailGrid(),
                         store = grid.getStore(),
                         id = records[0].get('id'),
+                        ruangId = records[0].get('ruangan'),
                         form = this.getDvTxBrTerimaForm().getForm();
                 
                         store.clearFilter(true);
                         store.filter('pengdiv_id', id);
                         form.findField('id').setValue(id);
+                        form.findField('idRuang').setValue(ruangId);
+                        form.findField('ruangan').setValue(parseInt(ruangId));
+                        form.findField('barangCabangId').setValue(records[0].get('barangCabangId'));
                 }
             },
-            'divbarangmasukdetailgrid': {
+            '#dvtxbrterimadetailgrid': {
                 selectionchange: function (model, records) {
                     var form = this.getDvTxBrTerimaForm().getForm();
                     form.findField('pengBarang').getStore().load();

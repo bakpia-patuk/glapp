@@ -81,7 +81,45 @@ class Dv_txpengadaan_model extends MY_Model {
         $data = array($param => 1);
         
         $params1[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
-        $this->update($data, $params1, NULL, 'trx_pengadaan');
+        $result = $this->update($data, $params1, NULL, 'trx_pengadaan_div');
+        if($param=='peng_statusmgr'){
+            $data_pengadaan = $this->get($params1,NULL,'trx_pengadaan_div');
+            $id_lama = $data_pengadaan->id;
+            unset($data_pengadaan->no);
+            unset($data_pengadaan->id);
+            $data_pengadaan->peng_type=1;
+            $no = $this->insert($data_pengadaan,'trx_pengadaan');
+
+            $detail_cabang = $this->get_detail('id', $data_pengadaan->cabang_id, 'dt_cabang');
+            $no_peng = sprintf('%06d', $no) . '/' . $detail_cabang->cabang_code . '/' . mdate('%Y%m%d', now());
+            $id = $no.'.'.$data_pengadaan->cabang_id;
+            
+            $data_ref = array(
+                'no_pengadaan' => $no_peng
+            );
+            
+
+            $params3[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id);
+            $this->update($data_ref, $params3, NULL, 'trx_pengadaan');
+
+            $params4[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_lama);
+            $data_ref = array(
+                'peng_id' => $id
+            );
+            $this->update($data_ref, $params2, NULL, 'trx_pengadaan_div');
+            $params2[] = array('field' => 'pengadaan_id', 'param' => 'where', 'operator' => '', 'value' => $id_lama);
+            $data_detail = $this->gets($params2, NULL, 'pengadaan_detail');
+            if($data_detail){
+                foreach ($data_detail as $key) {
+                    unset($key->id);
+                    unset($key->no);
+                    $key->pengadaan_id = $id;
+                    $this->insert($key,'trx_pengadaan_detail');
+                }
+            }
+
+        }
+        
         
         return TRUE;
     }

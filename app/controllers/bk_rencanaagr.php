@@ -216,8 +216,8 @@ class Bk_rencanaagr extends Auth_Controller {
                 $data = array();
                 $data['data'] = $data_json;
                 $data['head_id'] = $no . '.' . $this->user->cabang_id;
-                $data['nama_column'] = 'agrplan_id';
-                $data['primary_key'] = $id;
+                
+                $data['primary_key'] = $key->id;
                 $data['table_name'] = 'trx_agrplan_detail';
 
                 $this->Bkrencanaagr_model->insert_outgoing($data, 'detail');

@@ -284,7 +284,7 @@ class Dv_txpengadaan extends Auth_Controller {
             }
         }
         $record[] = array('field' => 'peng_type', 'param' => 'where', 'operator' => '', 'value' => '1');
-        $result = $this->Dv_txpengadaan_model->gets($record, NULL, 'trx_pengadaan');
+        $result = $this->Dv_txpengadaan_model->gets($record, NULL, 'trx_pengadaan_div');
         if ($result) {
         foreach ($result as $row) {
             $listpb[] = array(
@@ -391,18 +391,19 @@ class Dv_txpengadaan extends Auth_Controller {
                 'petugas_id' => $petugas_id,
                 'divisi' => $divisi,
                 'simpan_status' => 0,
-                'peng_type' => 1
+                'peng_type' => 1,
+
             );
 
-            $pengid1 = $this->Dv_txpengadaan_model->insert($data, 'trx_pengadaan');
+            $pengid1 = $this->Dv_txpengadaan_model->insert($data, 'trx_pengadaan_div');
             $pengid = $pengid1.'.'.$cabang_id;
-            $no_peng = sprintf('%06d', $pengid) . '/' . $detail_cabang->id . '/' . mdate('%Y%m%d', now());
+            $no_peng = sprintf('%06d', $pengid1) . '/' . $detail_cabang->cabang_code . '/' . mdate('%Y%m%d', now());
 
             $opt2[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $pengid);
             $data_ref = array(
                 'no_pengadaan' => $no_peng
             );
-            $this->Dv_txpengadaan_model->update($data_ref, $opt2, NULL, 'trx_pengadaan');
+            $this->Dv_txpengadaan_model->update($data_ref, $opt2, NULL, 'trx_pengadaan_div');
             $peng_id = $pengid;
         } else {
             $peng_id = $id;
@@ -414,24 +415,34 @@ class Dv_txpengadaan extends Auth_Controller {
         $record[] = array('field' => 'mi_id', 'param' => 'where', 'operator' => '', 'value' => $barang_id);
         $record[] = array('field' => 'cabang_id', 'param' => 'where', 'operator' => '', 'value' => $cabang_id);
         $barang_cabang = $this->Dv_txpengadaan_model->get($record,NULL,'dt_item_cabang');
+        
+
         $data_item = array(
+            
+            'cabang_id' => $this->user->cabang_id,
+            'divisi' => $this->user->divisi_id,
             'pengadaan_id' => $peng_id,
+            'tgl_butuh' => mdate('%Y-%m-%d', strtotime($tgl_butuh)),
             'barang_gol' => $gol_id,
             'barang_id' => $barang_cabang->id,
-            'barang_merk' => $barang_merk,
-            'barang_katalog' => $barang_katalog,
-            'barang_kemasan' => $barang_kemasan,
-            'barang_qty' => $barang_qty,
-            'barang_harga' => $detail_barang->mi_item_price,
-            'barang_disc' => $detail_barang->mi_diskon,
-            'barang_ppn' => $detail_barang->mi_ppn,
-            'tgl_butuh' => $tgl_butuh,
-            'barang_desc' => $barang_desc,
-            'simpan_status' => 0,
+            'peng_merk' => $barang_merk,
+            'peng_katalog' =>$barang_katalog,
+            'peng_kemasan' => $barang_kemasan,
+            'peng_qty' => $barang_qty,
+            'peng_harga' => $detail_barang->mi_item_price,
+            'peng_disc' => $detail_barang->mi_diskon,
+            'peng_ppn' => $detail_barang->mi_ppn == 1 ? 10 : 0,
+            'qty_po' => 0,
+            'po_merk' => $barang_merk,
+            'po_katalog' => $barang_katalog,
+            'po_kemasan' => $barang_kemasan,
+            'po_qty' =>$barang_qty,
+            'po_harga' => $detail_barang->mi_item_price,
+            'po_disc' => $detail_barang->mi_diskon,
+            'po_ppn' =>$detail_barang->mi_ppn == 1 ? 10 : 0,
             'po_status' => 0,
             'po_id' => 0,
-            'divisi' => $divisi,
-            'cabang_id' => $cabang_id
+            'barang_desc' => $barang_desc
         );
 
         if ($this->Dv_txpengadaan_model->insert($data_item, 'pengadaan_detail')) {
@@ -449,7 +460,7 @@ class Dv_txpengadaan extends Auth_Controller {
 
     public function pengadaan_complete() {
         $id_peng = $this->input->post('idPengadaan');
-        $peng_status = $this->Dv_txpengadaan_model->get_detail('id', $id_peng, 'trx_pengadaan')->peng_status;
+        $peng_status = $this->Dv_txpengadaan_model->get_detail('id', $id_peng, 'trx_pengadaan_div')->peng_status;
 
         $data = array(
             'peng_status' => $peng_status,
@@ -462,10 +473,10 @@ class Dv_txpengadaan extends Auth_Controller {
         );
 
         $opt[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $id_peng);
-        $this->Dv_txpengadaan_model->update($data, $opt, NULL, 'trx_pengadaan');
+        $this->Dv_txpengadaan_model->update($data, $opt, NULL, 'trx_pengadaan_div');
 
-        $opts[] = array('field' => 'pengadaan_id', 'param' => 'where', 'operator' => '', 'value' => $id_peng);
-        $this->Dv_txpengadaan_model->update($data_item, $opts, NULL, 'pengadaan_detail');
+        //$opts[] = array('field' => 'pengadaan_id', 'param' => 'where', 'operator' => '', 'value' => $id_peng);
+        //$this->Dv_txpengadaan_model->update($data_item, $opts, NULL, 'pengadaan_detail');
 
         echo json_encode(array('success' => 'true'));
     }
@@ -496,20 +507,20 @@ class Dv_txpengadaan extends Auth_Controller {
             $listpbd[] = array(
                 'id' => $row->id,
                 'pengadaanNo' => $row->pengadaan_id,
-                'pengadaanKode' => $this->Dv_txpengadaan_model->get_detail('id', $row->pengadaan_id, 'trx_pengadaan')->no_pengadaan,
+                'pengadaanKode' => $this->Dv_txpengadaan_model->get_detail('id', $row->pengadaan_id, 'trx_pengadaan_div')->no_pengadaan,
                 'barangId' => $row->barang_id,
                 'barangName' => $det_barang->mi_name,
                 'barangMerk' => $det_barang->mi_merk == 0 ? ' - ' : ($this->Dv_txpengadaan_model->get_detail('id', $det_barang->mi_merk, 'dt_merk')->merk_name),
                 'barangNameKode' => $det_barang->mi_name . ' / ' . $det_barang->mi_kode,
-                'barangKemasan' => $row->barang_kemasan == 0 ? ' - ' : ($this->Dv_txpengadaan_model->get_detail('id', $row->barang_kemasan, 'item_kemasan')->kemasan_kecil),
-                'barangKatalog' => $row->barang_katalog,
-                'barangHarga' => $row->barang_harga,
-                'barangDisc' => $row->barang_disc,
-                'barangDesc' => $row->barang_desc,
+                'barangKemasan' => $row->peng_kemasan == 0 ? ' - ' : ($this->Dv_txpengadaan_model->get_detail('id', $row->peng_kemasan, 'item_kemasan')->kemasan_kecil),
+                'barangKatalog' => $row->peng_katalog,
+                'barangHarga' => $row->peng_harga,
+                'barangDisc' => $row->peng_disc,
+                'barangDesc' => '-',
                 'tglKebutuhan' => $row->tgl_butuh,
-                'barangPpn' => $row->barang_ppn,
-                'barangQty' => $row->barang_qty,
-                'barangNetto' => ($row->barang_qty * $row->barang_harga) * (1 - ($row->barang_disc / 100)) * 1.1,
+                'barangPpn' => $row->peng_ppn,
+                'barangQty' => $row->peng_qty,
+                'barangNetto' => ($row->peng_qty * $row->peng_harga) * (1 - ($row->peng_disc / 100)),
                 'barangStatus' => $det_barang->mi_inv_stat,
                 'simpanStatus' => $row->simpan_status,
                 'poStatus' => $row->po_status,
@@ -541,7 +552,7 @@ class Dv_txpengadaan extends Auth_Controller {
             
         }
         
-        $this->Dv_txpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_CB', 'TRX_PENGADAAN');
+        $this->Dv_txpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_CB', 'trx_pengadaan_div');
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Approve Pengadaan Success'));
     }
     public function approve_manager() {
@@ -556,17 +567,58 @@ class Dv_txpengadaan extends Auth_Controller {
 
 
         foreach ($data as $row) {
-            $status_divisi = $this->Dv_txpengadaan_model->get_detail('id',$row,'trx_pengadaan')->peng_statusdiv;
+            $status_divisi = $this->Dv_txpengadaan_model->get_detail('id',$row,'trx_pengadaan_div')->peng_statusdiv;
             if($status_divisi==0){
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Pengadaan belum diapprove oleh divisi'));
                 return;
             }
+            $peng_statusmgr = $this->Dv_txpengadaan_model->get_detail('id',$row,'trx_pengadaan_div')->peng_statusmgr;
+            if($peng_statusmgr==1){
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Error', 'msg' => 'Pengadaan sudah diapprove oleh manager'));
+                return;
+            }
             $this->Dv_txpengadaan_model->approve_peng('peng_statusmgr', $row);
+
+            
            
+        }
+        foreach ($data as $row) {
+            $params = array();
+            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $row);
+            $param_pengadaan = $this->Gdpengadaan_model->get($params, NULL, 'trx_pengadaan_div');
+
+            $params = array();
+            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $param_pengadaan->peng_id);
+            $data_pengadaan = $this->Gdpengadaan_model->get($params, NULL, 'trx_pengadaan');
+
+            $data_json = json_encode($data_pengadaan);
+            $data2=array();
+            $data2[] = array('data' => $data_json,'primary_key' => $row,'table_name'=>'trx_pengadaan' );
+            $jumlah=1;
+            $params_detail = array();
+            $params_detail[] = array('field' => 'pengadaan_id', 'param' => 'where', 'operator' => '', 'value' => $param_pengadaan->peng_id);
+            $data_pengadaan_detail = $this->Gdpengadaan_model->gets($params_detail, NULL, 'trx_pengadaan_detail');
+            foreach ($data_pengadaan_detail as $key) {
+                $data_json = json_encode($key);
+                $data2[] = array('data' => $data_json,'primary_key' => $key->id,'nama_column'=>'id','table_name'=>'trx_pengadaan_detail' );
+                $jumlah++;
+            }
+            $data_head = array();
+            $data_head['jumlah'] = $jumlah;
+            $data_head['tujuan'] = 1;
+            $data_head['id_cabang'] = $this->user->cabang_id;
+
+            $no=$this->Gdpengadaan_model->insert_outgoing($data_head, 'head');
+
+            foreach ($data2 as $key) {
+                $key['head_id '] = $no.'.'.$this->user->cabang_id;
+                $this->Gdpengadaan_model->insert_outgoing($key, 'detail');
+            }
         }
 
 
-        $this->Dv_txpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_PST', 'TRX_PENGADAAN');
+
+        $this->Dv_txpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_PST', 'trx_pengadaan_div');
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Approve Pengadaan Success'));
     }
     public function approve_pusat() {
@@ -587,7 +639,7 @@ class Dv_txpengadaan extends Auth_Controller {
         }
 
 
-        $this->Dv_txpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_PST', 'TRX_PENGADAAN');
+        $this->Dv_txpengadaan_model->generate_user_log($this->user->id, $this->user->cabang_id, 'APPROVE_PST', 'trx_pengadaan_div');
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Approve Pengadaan Success'));
     }
 

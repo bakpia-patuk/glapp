@@ -131,6 +131,7 @@ class Gd_tt extends Auth_Controller {
             $data['id_ruang'] = $key->stk_ruangid;
             $data['trxreftype'] = 'ttgudang';
             $data['id_cabang '] = $key->stk_cabangid;
+            $data['id_divisi '] = $key->stk_divisiid;
             $data['id_barang'] = $key->stk_barangid;
             $data['jmlh_stok'] = $key->stk_qty;
             $data['jenis_trx'] = 1;

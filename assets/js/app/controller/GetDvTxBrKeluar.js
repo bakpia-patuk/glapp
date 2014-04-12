@@ -25,17 +25,62 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
     ],
     init: function() {
         this.control({
-            '#dvtxbrkeluarform button[action=pengDivbarangKeluar]': {
+            '#dvtxbrkeluarform button[action=dbkSave1]': {
+                click: function(btn, e, opt) {
+                     Ext.MessageBox.show({
+                        title: 'INFO',
+                        msg:  'Barang Berhasil Dikeluarkan',
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.INFO
+                    });
+                }
+            },
+            '#dvtxbrkeluarform button[action=dmbNew]': {
+                click: function(btn, e, opt) {
+                    var filterCollection = [];
+                    
+                    var form = this.getDvTxBrKeluarForm().getForm();
+                    form.reset();
+                    var store = this.getDvTxBrKeluarGrid().getStore();
+                    var store2 = this.getDvTxBrKeluarDetailGrid().getStore();
+                    //divisiField.setValue((resp.data.divisi));
+                    store2.removeAll();
+
+                    var statusFilter1 = new Ext.util.Filter({
+                        property: 'pengdiv_tujuan',
+                        value: USER_DIVISI
+                    });
+                    filterCollection.push(statusFilter1);
+
+                    var statusFilter2 = new Ext.util.Filter({
+                        property: 'appr_status',
+                        value: '1'
+                    });
+                    filterCollection.push(statusFilter2);
+
+                    var statusFilter2 = new Ext.util.Filter({
+                        property: 'kirim_status',
+                        value: '1NE'
+                    });
+                    filterCollection.push(statusFilter2);
+
+                    store.clearFilter(true);
+                    store.filter(filterCollection);
+                    this.getDvTxBrKeluarGrid().getSelectionModel().clearSelections();
+                }
+            },
+            '#dvtxbrkeluarform button[action=dbkSave]': {
                 click: function(btn, e, opt) {
                     var grid = this.getDvTxBrKeluarDetailGrid(),
                             store = grid.getStore(),
                             form = this.getDvTxBrKeluarForm().getForm(),
                             id = form.findField('id'),
+                            isNoLot = form.findField('isNoLot').getValue(),
                             divisi = form.findField('divisi'),
                             jumlah = form.findField('jumlah').getValue(),
                             jumlahOld = form.findField('jumlahOld').getValue();
 
-
+                    alert(jumlahOld);
                     if (jumlah > jumlahOld) {
                         Ext.Msg.alert('Info', 'Jumlah Barang Keluar tidak bisa lebih besar dari barang diminta');
                         return;
@@ -51,28 +96,87 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
 
                             if (resp.success === 'true') {
                                 //Select ED
-                                Ext.Msg.show({
-                                    title: 'Konfirmasi',
-                                    msg: 'Barang ini memiliki ED. Apakah anda akan memilih ED ',
-                                    buttons: Ext.Msg.YESNOCANCEL,
-                                    icon: Ext.MessageBox.WARNING,
-                                    scope: this,
-                                    fn: function(btn) {
-                                        if (btn === 'yes') {
-                                            this.showEdWindow();
-                                        } else if (btn === 'no') {
-                                            this.completeRandomBk();
-                                        } else {
-                                            return;
+                                if(isNoLot=='1'){
+                                    Ext.Msg.show({
+                                        title: 'Konfirmasi',
+                                        msg: 'Barang ini memiliki ED. Apakah anda akan memilih ED ',
+                                        buttons: Ext.Msg.YESNOCANCEL,
+                                        icon: Ext.MessageBox.WARNING,
+                                        scope: this,
+                                        fn: function(btn) {
+                                            if (btn === 'yes') {
+                                                this.showEdWindow();
+                                            } else if (btn === 'no') {
+                                                this.completeRandomBk();
+                                            } else {
+                                                return;
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
+                                else{
+                                    Ext.Ajax.request({
+                                        url: BASE_PATH + 'dv_txbrkeluar/save',
+                                        method: 'POST',
+                                        params: form.getValues(),
+                                        scope: this,
+                                        callback: function(options, success, response) {
+                                            var resp = Ext.decode(response.responseText);
 
-//                                form.reset();
-//                                id.setValue(resp.data.idPeng);
-//                                divisi.setValue(parseInt(resp.data.divisi));
-//                                store.clearFilter(true);
-//                                store.filter('pengdiv_id', resp.data.idPeng);
+                                            if (resp.success == 'true') {
+                                                var filterCollection = [];
+                                               
+                                                var form = this.getDvTxBrKeluarForm().getForm();
+                                                form.reset();
+                                                var store = this.getDvTxBrKeluarGrid().getStore();
+                                                var store2 = this.getDvTxBrKeluarDetailGrid().getStore();
+                                                //divisiField.setValue((resp.data.divisi));
+                                                store2.removeAll();
+
+                                                var statusFilter1 = new Ext.util.Filter({
+                                                    property: 'pengdiv_tujuan',
+                                                    value: USER_DIVISI
+                                                });
+                                                filterCollection.push(statusFilter1);
+
+                                                var statusFilter2 = new Ext.util.Filter({
+                                                    property: 'appr_status',
+                                                    value: '1'
+                                                });
+                                                filterCollection.push(statusFilter2);
+
+                                                var statusFilter2 = new Ext.util.Filter({
+                                                    property: 'kirim_status',
+                                                    value: '1NE'
+                                                });
+                                                filterCollection.push(statusFilter2);
+
+                                                store.clearFilter(true);
+                                                store.filter(filterCollection);
+                                                this.getDvTxBrKeluarGrid().getSelectionModel().clearSelections();
+                                                Ext.MessageBox.show({
+                                                    title: 'INFO',
+                                                    msg: resp.msg,
+                                                    buttons: Ext.MessageBox.OK,
+                                                    icon: Ext.MessageBox.INFO
+                                                });
+                                            }
+                                            else{
+                                                btn.up('window').destroy();
+                                               
+                                                Ext.MessageBox.show({
+                                                    title: 'INFO',
+                                                    msg: resp.msg,
+                                                    buttons: Ext.MessageBox.OK,
+                                                    icon: Ext.MessageBox.ERROR
+                                                });
+                                            }
+                                        }
+                                    });
+                                }
+                                
+
+//                                
                             } else {
                                 Ext.MessageBox.show({
                                     title: resp.title,
@@ -86,6 +190,34 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                 }
             },
             '#dvtxbrkeluargrid': {
+                afterrender: function () {
+                    var filterCollection=[];
+                    var store = this.getDvTxBrKeluarGrid().getStore();
+                    var store2 = this.getDvTxBrKeluarDetailGrid().getStore();
+                    //divisiField.setValue((resp.data.divisi));
+                    store2.removeAll();
+
+                    var statusFilter1 = new Ext.util.Filter({
+                        property: 'pengdiv_tujuan',
+                        value: USER_DIVISI
+                    });
+                    filterCollection.push(statusFilter1);
+
+                    var statusFilter2 = new Ext.util.Filter({
+                        property: 'appr_status',
+                        value: '1'
+                    });
+                    filterCollection.push(statusFilter2);
+
+                    var statusFilter2 = new Ext.util.Filter({
+                        property: 'kirim_status',
+                        value: '1NE'
+                    });
+                    filterCollection.push(statusFilter2);
+
+                    store.clearFilter(true);
+                    store.filter(filterCollection);
+                },
                 selectionchange: function(model, records) {
                     var grid = this.getDvTxBrKeluarDetailGrid(),
                             store = grid.getStore(),
@@ -106,6 +238,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                     form.findField('pengBarang').getStore().load();
                     if (records[0]) {
                         form.findField('pengBarang').setValue(records[0].get('barangId'));
+                        form.findField('isNoLot').setValue(records[0].get('isNoLot'));
                         form.findField('barangCabangId').setValue(records[0].get('barangCabangId'));
                         form.findField('jumlah').setValue(records[0].get('qtyMinta'));
                         form.findField('jumlahOld').setValue(records[0].get('qtyMinta'));
@@ -189,11 +322,12 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                                 var resp = Ext.decode(response.responseText);
 
                                 if (resp.success == 'true') {
+                                    var filterCollection = [];
                                     btn.up('window').destroy();
-                                    var form = getDvTxBrKeluarForm().getForm();
+                                    var form = this.getDvTxBrKeluarForm().getForm();
                                     form.reset();
-                                    var store1 = getDvTxBrKeluarGrid().getStore();
-                                    var store2 = getDvTxBrKeluarDetailGrid().getStore();
+                                    var store = this.getDvTxBrKeluarGrid().getStore();
+                                    var store2 = this.getDvTxBrKeluarDetailGrid().getStore();
                                     //divisiField.setValue((resp.data.divisi));
                                     store2.removeAll();
 
@@ -232,7 +366,7 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
                                         title: 'INFO',
                                         msg: resp.msg,
                                         buttons: Ext.MessageBox.OK,
-                                        icon: Ext.MessageBox.INFO
+                                        icon: Ext.MessageBox.ERROR
                                     });
                                 }
                             }
@@ -268,22 +402,62 @@ Ext.define('GlApp.controller.GetDvTxBrKeluar', {
         store.filter(filterCollection);
     },
     completeRandomBk: function() {
-        var form = this.getDivBkForm().getForm();
+        var form = this.getDvTxBrKeluarForm().getForm();
 
         Ext.Ajax.request({
-            url: BASE_PATH + 'persediaan/divbk_random',
+            url: BASE_PATH + 'dv_txbrkeluar/save_random',
             method: 'POST',
             params: form.getValues(),
             scope: this,
             callback: function(options, success, response) {
                 var resp = Ext.decode(response.responseText);
 
-                if (resp.success === 'true') {
+                if (resp.success == 'true') {
+                    var filterCollection = [];
+                   
+                    var form = this.getDvTxBrKeluarForm().getForm();
+                    form.reset();
+                    var store = this.getDvTxBrKeluarGrid().getStore();
+                    var store2 = this.getDvTxBrKeluarDetailGrid().getStore();
+                    //divisiField.setValue((resp.data.divisi));
+                    store2.removeAll();
+
+                    var statusFilter1 = new Ext.util.Filter({
+                        property: 'pengdiv_tujuan',
+                        value: USER_DIVISI
+                    });
+                    filterCollection.push(statusFilter1);
+
+                    var statusFilter2 = new Ext.util.Filter({
+                        property: 'appr_status',
+                        value: '1'
+                    });
+                    filterCollection.push(statusFilter2);
+
+                    var statusFilter2 = new Ext.util.Filter({
+                        property: 'kirim_status',
+                        value: '1NE'
+                    });
+                    filterCollection.push(statusFilter2);
+
+                    store.clearFilter(true);
+                    store.filter(filterCollection);
+                    this.getDvTxBrKeluarGrid().getSelectionModel().clearSelections();
                     Ext.MessageBox.show({
                         title: 'INFO',
                         msg: resp.msg,
                         buttons: Ext.MessageBox.OK,
                         icon: Ext.MessageBox.INFO
+                    });
+                }
+                else{
+                    btn.up('window').destroy();
+                   
+                    Ext.MessageBox.show({
+                        title: 'INFO',
+                        msg: resp.msg,
+                        buttons: Ext.MessageBox.OK,
+                        icon: Ext.MessageBox.ERROR
                     });
                 }
             }

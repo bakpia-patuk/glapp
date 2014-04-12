@@ -6,6 +6,7 @@ var modelku = Ext.define('eTrav.model.PengdivDetailModel', {
         {name: 'pengadaanKode', type: 'string'},
         {name: 'barangId', type: 'string'},
         {name: 'barangCabangId', type: 'string'},
+        {name: 'isNoLot', type: 'string'},
         {name: 'barangName', type: 'string'},
         {name: 'qtyMinta', type: 'string'},
         {name: 'qtyKirim', type: 'string'},

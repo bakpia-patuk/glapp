@@ -1,7 +1,7 @@
 /**
  * @author Isht Ae
  **/
-Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
+Ext.define('GlApp.view.dvtxbrterima.DvTxBrTerimaForm', {
     extend: 'Ext.form.Panel',
     alias: 'widget.dvtxbrterima.dvtxbrterimaform',
     itemId: 'dvtxbrterimaform',
@@ -43,6 +43,12 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     xtype: 'textfield',
                     fieldLabel: 'Id ',
                     name: 'id',
+                    hidden: true
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'Id Ruang ',
+                    name: 'idRuang',
                     hidden: true
                 },
                  {
@@ -97,7 +103,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                            filterCollection.push(statusFilter);
 
                            var statusFilter = new Ext.util.Filter({
-                               property: 'divisi_code',
+                               property: 'divisi_id',
                                value: myVal
                            });
                            filterCollection.push(statusFilter);
@@ -111,12 +117,12 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     xtype: 'combobox',
                     fieldLabel: 'Ruangan ',
                     name: 'ruangan',
-                    hidden: true,
                     triggerAction: 'all',
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-                   store: 'dvtxbrterima.DivisiRuanganStore',
+                    
+                    store: 'dvtxbrterima.DivisiRuanganStore',
                     displayField: 'ruangName',
                     valueField: 'id',
                     emptyText: 'Pilih Ruangan',
@@ -125,7 +131,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     matchFieldWidth: false,
                     listConfig: {
                         minWidth: 185
-                    }
+                    },
                 },
                 {
                     xtype: 'combobox',
@@ -137,7 +143,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     hideTrigger: true,
                     mode: 'remote',
                     minChars: 2,
-                   store: 'dvtxbrterima.ItemStore',
+                    store: 'dvtxbrterima.ItemStore',
                     displayField: 'itemName',
                     valueField: 'id',
                     forceSelection: true,
@@ -172,31 +178,7 @@ Ext.define('eTrav.view.dvtxbrterima.DvTxBrTerimaForm', {
                     allowBlank: false,
                     hidden: true
                 },
-                {
-                    xtype: 'fieldcontainer',
-                    width: 300,
-                    layout: 'hbox',
-                    items: [
-                        {
-                            html: '',
-                            border: false,
-                            width: 110,
-                            bodyStyle: FORM_BG,
-                            padding: '3 0 0 23',
-                            align: 'right'
-                        },
-                        {
-                            xtype: 'button',
-                            iconCls: 'icon-btn-add',
-                            ui: 'blue-button',
-                            itemId: 'pengDivBarangMasuk',
-                            disabled: true,
-                            text: 'OK',
-                            margins: '0 0 0 5',
-                           action: 'pengDivBarangMasuk'
-                        }
-                    ]
-                }
+               
             ]
         });
 
