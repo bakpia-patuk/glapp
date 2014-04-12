@@ -80,7 +80,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                                     itemId: 'stk_trxref',
                                     readOnly: true,
                                     fieldCls: 'x-item-readonly',
-                                    hidden: true
+                                    hidden: false
                                 },
                                 {
                                     xtype: 'textfield',
@@ -202,7 +202,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                 {
                     text: 'Save',
                     scope: this,
-                    handler: this.close
+                    action: 'setLot'
                 },
                 {
                     text: 'Cancel',

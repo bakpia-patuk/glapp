@@ -185,8 +185,14 @@ Ext.define('GlApp.view.gdlsstockop.StockOpForm', {
                     allowBlank: true,
                     readOnly: true,
                     hidden: false
+                },
+                {
+                    xtype: 'textfield',
+                    fieldLabel: 'random Key',
+                    hidden: false,
+                    name: 'random_string',
+                    itemId: 'random_string'
                 }
-
             ]
         });
         me.callParent(arguments);

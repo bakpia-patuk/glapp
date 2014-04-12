@@ -74,6 +74,81 @@ class Gd_stockop extends Auth_Controller {
         }
     }
 
+    public function reset() {
+        $insert = $this->input->post(NULL, TRUE);
+
+        if ($insert['id'] != 0) {
+            $params[] = array('field' => 'id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            if (!$this->Gdtt_model->delete($params, NULL, 'trx_tt')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+                return;
+            }
+
+            $data = array(
+                'tt_status' => 0,
+                'tt_qty_kirim' => 0,
+                'tt_id' => 0
+            );
+            
+            $param[] = array('field' => 'tt_id', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            if (!$this->Gdtt_model->update($data, $param, NULL, 'trx_po_detail')) {
+                echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+                return;
+            }
+
+            $param_del[] = array('field' => 'stk_trxreftype', 'param' => 'where', 'operator' => '', 'value' => 'ttgudang');
+            $param_del[] = array('field' => 'stk_trxref', 'param' => 'where', 'operator' => '', 'value' => $insert['id']);
+            $this->Gdtt_model->delete($param_del, NULL, 'trx_stock_lot');
+
+            $filename = 'assets/ttd_tx/ttSign' . $insert['id'] . 'NULL_.png';
+
+            if (file_exists($filename)) {
+                unlink($filename);
+            }
+
+            clearstatcache();
+        }
+
+        echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Reset All Data'));
+    }
+
+    public function save() {
+        $insert = $this->input->post(NULL, TRUE);
+        $last_no = $this->Gdtt_model->get_last('trx_stock_lot');
+
+        $data = array(
+            'id' => $last_no . '.' . $this->user->cabang_id,
+            'stl_date' => mdate("%Y-%m-%d %H:%i:%s", time()),
+            'stl_cabangid' => $this->user->cabang_id,
+            'stl_divisiid' => $this->user->divisi_id,
+            'stl_ruangid' => $this->Gdtt_model->__gudang_pusat($this->user->cabang_id),
+            'stl_usercreate' => $this->user->id,
+            'stl_barangid' => $insert['stl_barangid'],
+            'stl_nolot' => $insert['stl_nolot'],
+            'stl_qty' => $insert['stl_qty'],
+            'stl_qtylast' => $insert['stl_qty'],
+            'stl_type' => 1,
+            'stl_baranged' => mdate("%Y-%m-%d", strtotime($insert['stl_baranged'])),
+            'stk_trxreftype' => $insert['stk_trxreftype'],
+            'stk_trxref' => $insert['stk_trxref'],
+            'stl_barcode' => $insert['stl_barcode'],
+            'simpan_status' => 0
+        );
+
+        if (!$this->Gdtt_model->insert($data, 'trx_stock_lot')) {
+            echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
+            return;
+        }
+
+        $return = array(
+            'barang_id' => $insert['stl_barangid'],
+            'stk_trxref' => $insert['stk_trxref'],
+            'barang_name' => $insert['stl_barangname'],
+            'qty_tt' => $insert['qty_tt'],
+        );
+        echo json_encode(array('success' => 'true', 'data' => $return, 'title' => 'Info', 'msg' => 'Insert Lot Success'));
+    }
+
     public function save_lot() {
         $insert = $this->input->post(NULL, TRUE);
         $last_no = $this->Gdtt_model->get_last('trx_stock_lot');
