@@ -27,7 +27,7 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                     ui: 'blue-button',
                     text: 'Simpan',
                     iconCls: 'icon-btn-save',
-//                    action: 'dbInvSave'
+                    itemId: 'IvMbSave'
                 },
                 {
                     xtype: 'button',
@@ -35,7 +35,7 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                     text: 'Baru',
                     hidden: false,
                     iconCls: 'icon-btn-add',
-//                    action: 'dbInvNew'
+                    itemId: 'IvMbNew'
                 }
             ],
             items: [
@@ -50,24 +50,24 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                     fieldLabel: 'Cabang ',
                     name: 'db_cabang',
                     emptyText: 'Pilih',
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     allowBlank: true,
                     triggerAction: 'all',
                     valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                            if(userCabang !== "14") {
-//                                cmb.setValue(parseInt(userCabang));
-//                                cmb.setReadOnly(true);
-//                            } else {
-//                                cmb.setReadOnly(false);
-//                            }
-//                        }
-//                    }
+                    store: 'ivmsbarang.CabangFormStore',
+                    listeners: {
+                        'afterrender': function(cmb, rec, opt) {
+                            cmb.getStore().load();
+                            if(CABANG_ID !== 1) {
+                                cmb.setValue(parseInt(CABANG_ID));
+                                cmb.setReadOnly(true);
+                            } else {
+                                cmb.setReadOnly(false);
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
@@ -77,48 +77,48 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore',
-                    displayField: 'divisiName',
-                    valueField: 'divisiId',
+                    store: 'ivmsbarang.DivisiFormStore',
+                    displayField: 'divisi_name',
+                    valueField: 'id',
                     emptyText: 'Pilih Divisi',
                     allowBlank: false,
                     matchFieldWidth: false,
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                            if(userCabang !== "14") {
-//                                cmb.setValue(userDivisi);
-//                                cmb.setReadOnly(true);
-//                            } else {
-//                                cmb.setReadOnly(false);
-//                            }
-//                        },
-//                        'change': function(cmb, rec, opt){
-//                            var myVal = cmb.getValue(),
-//                                ruanganStore = this.up('form').getForm().findField('db_ruang').getStore(), 
-//                                filterCollection = [];
-//
-//                            this.up('form').getForm().findField('db_ruang').setReadOnly(false);
-//                            
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'divisi_code',
-//                                value: myVal
-//                            });
-//                            filterCollection.push(statusFilter);
-//                    
-//                            ruanganStore.clearFilter(true);
-//                            ruanganStore.filter(filterCollection);
-//                        }
-//                    }
+                    listeners: {
+                        'afterrender': function(cmb, rec, opt) {
+                            cmb.getStore().load();
+                            if(CABANG_ID !== 1) {
+                                cmb.setValue(USER_DIVISI);
+                                cmb.setReadOnly(true);
+                            } else {
+                                cmb.setReadOnly(false);
+                            }
+                        },
+                        'change': function(cmb, rec, opt){
+                            var myVal = cmb.getValue(),
+                                ruanganStore = this.up('form').getForm().findField('db_ruang').getStore(), 
+                                filterCollection = [];
+
+                            this.up('form').getForm().findField('db_ruang').setReadOnly(false);
+                            
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'cabang_id',
+                                value: CABANG_ID
+                            });
+                            filterCollection.push(statusFilter);
+
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'divisi_id',
+                                value: myVal
+                            });
+                            filterCollection.push(statusFilter);
+                    
+                            ruanganStore.clearFilter(true);
+                            ruanganStore.filter(filterCollection);
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
@@ -129,7 +129,7 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                     queryMode: 'remote',
                     minChars: 2,
                     hidden: false,
-//                    store: 'DivisiRuanganStore',
+                    store: 'ivmsbarang.RuangFormStore',
                     displayField: 'ruangName',
                     valueField: 'id',
                     emptyText: 'Pilih Ruangan',
@@ -150,8 +150,8 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                     hideTrigger: true,
                     mode: 'remote',
                     minChars: 2,
-//                    store: 'ItemStore',
-                    displayField: 'itemName',
+                    store: 'ivmsbarang.BarangStore',
+                    displayField: 'mi_name',
                     valueField: 'id',
                     forceSelection: true,
                     valueNotFoundText: 'Tidak ada barang',
@@ -161,35 +161,36 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                         shadow: 'side',
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            var myVal = cmb.getValue(),
-//                                ruanganStore = cmb.getStore(), 
-//                                filterCollection = [];
-//                            
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'mi_inv_stat',
-//                                value: 0
-//                            });
-//                            filterCollection.push(statusFilter);
-//                    
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'mi_child_stat',
-//                                value: 1
-//                            });
-//                            filterCollection.push(statusFilter);
-//                    
-//                            ruanganStore.clearFilter(true);
-//                            ruanganStore.filter(filterCollection);
-//                        },
-//                        select: function(cmb, rec, opt) {
-//                            var val = cmb.getValue(),
-//                                record = cmb.findRecordByValue(val);
-//                            if(record) {
-//                                cmb.up('form').getForm().findField('db_golid').setValue(record.get('itemParent'));
-//                            }
-//                        }
-//                    }
+                    listeners: {
+                        afterrender: function(cmb, rec, opt) {
+                            var myVal = cmb.getValue(),
+                                ruanganStore = cmb.getStore(), 
+                                filterCollection = [];
+                            
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'mi_inv_stat',
+                                value: 2
+                            });
+                            filterCollection.push(statusFilter);
+                    
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'mi_child_stat',
+                                value: 1
+                            });
+                            filterCollection.push(statusFilter);
+                    
+                            ruanganStore.clearFilter(true);
+                            ruanganStore.filter(filterCollection);
+                        },
+                        select: function(cmb, rec, opt) {
+                            var val = cmb.getValue(),
+                                record = cmb.findRecordByValue(val);
+                            this.up('form').getForm().findField('db_golid').getStore();
+                            if(record) {
+                                this.up('form').getForm().findField('db_golid').setValue(record.get('mi_parent_id'));
+                            }
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
@@ -200,9 +201,9 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangForm', {
                     queryMode: 'remote',
                     minChars: 2,
                     hidden: false,
-//                    store: 'GolonganStore',
-                    displayField: 'golNama',
-                    valueField: 'golId',
+                    store: 'ivmsbarang.GolonganStore',
+                    displayField: 'mi_name',
+                    valueField: 'id',
                     allowBlank: false,
                     readOnly: true,
                     matchFieldWidth: false,

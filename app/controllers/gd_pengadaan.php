@@ -25,8 +25,6 @@ class Gd_pengadaan extends Auth_Controller {
                 echo json_encode(array('success' => 'false', 'data' => NULL, 'title' => 'Info', 'msg' => $this->catch_db_err()));
                 return;
             }
-
-            
         }
 
         echo json_encode(array('success' => 'true', 'data' => NULL, 'title' => 'Info', 'msg' => 'Reset All Data'));

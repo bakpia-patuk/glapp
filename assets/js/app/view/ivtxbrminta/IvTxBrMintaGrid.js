@@ -7,7 +7,7 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaGrid', {
     itemId: 'ivtxbrmintagrid',
     autoScroll: true,
     forceFit: true,
-//    store: 'PenginvStore',
+    store: 'ivtxbrminta.IvTxBrMintaStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -37,44 +37,6 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaGrid', {
                     itemId: 'dateMbInvFilter',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
-//                    listeners: {
-//                        change: function () {
-//                            this.up('grid').getSelectionModel().clearSelections();
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#divisiMbInvFilter').getValue(),
-//                                combo2 = this.up('grid').down('#dateMbInvFilter2').getValue();;
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'tgl_trx',
-//                                value: Ext.Date.format(this.getValue(), 'Y-m-d 00:00:00') + 'GT'
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'penginv_cabang',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'penginv_divisi',
-//                                value: combo === null ? userDivisi  : combo
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
                 },
                 {
                     xtype: 'datefield',
@@ -86,124 +48,52 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaGrid', {
                     itemId: 'dateMbInvFilter2',
                     format: 'd/M/Y',
                     submitFormat: 'Y-m-d',
-//                    listeners: {
-//                        change: function () {
-//                            this.up('grid').getSelectionModel().clearSelections();
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#divisiMbInvFilter').getValue(),
-//                                combo2 = this.up('grid').down('#dateMbInvFilter').getValue();
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 00:00:00') + 'GT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'tgl_trx',
-//                                value: Ext.Date.format(this.getValue(), 'Y-m-d 23:59:59') + 'LT'
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'penginv_cabang',
-//                                value: userCabang
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'penginv_divisi',
-//                                value: combo === null ? userDivisi  : combo
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
                 },
                 {
                     xtype: 'combobox',
                     fieldLabel: 'Cabang ',
-                    itemId: 'divisiMbInvFilter',
+                    itemId: 'cabangMbInvFilter',
                     width: 220,
                     margins: '0 0 0 5',
                     emptyText: 'Pilih',
                     labelWidth: 50,
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     allowBlank: true,
                     triggerAction: 'all',
-                    hidden: true, //userCabang == 14 ? false : true,
+//                    hidden: CABANG_ID == 1 ? false : true,
                     valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
-//                    listeners: {
-//                        select: function () {
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#datePengDivFilter').getValue(),
-//                                combo2 = this.up('grid').down('#datePengDivFilter2').getValue();
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'divisi',
-//                                value: '0NE'
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            if(combo !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo, 'Y-m-d 00:00:00') + 'GT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'tgl_trx',
-//                                    value: Ext.Date.format(combo2, 'Y-m-d 23:59:59') + 'LT'
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            if(this.getValue() != 14){
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'peng_statusdiv',
-//                                    value: 1
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                    store: 'ivtxbrminta.CabangStore',
+                    listeners: {
+                        afterrender: function() {
+                            this.setValue(parseInt(CABANG_ID));
+                        },
+                    }
+                },
+                {
+                    tooltip: 'Search',
+                    ui: 'blue-button',
+                    iconCls: 'icon-btn-appr',
+                    itemId: 'TxBrMintaSearch',
+                    text: 'Search'
                 },
                 '->',
                 {
                     tooltip: 'Approval Permintaan',
                     ui: 'blue-button',
                     iconCls: 'icon-btn-appr',
-//                    action: 'apprInvMb',
-                    itemId: 'apprInvMb'
+                    itemId: 'TxBrMintaApp',
+                    text: 'Approval'
                 },
                 {
-                    xtype: 'button',
+                    ui: 'blue-button',
+                    text: 'Refresh',
                     iconCls: 'icon-btn-refresh',
-//                    handler: function() {
-//                        this.up('grid').getSelectionModel().clearSelections();
-//                        this.up('grid').getStore().load();
-//                    }
+                    handler: function() {
+                        this.up('grid').getSelectionModel().clearSelections();
+                        this.up('grid').getStore().load();
+                    }
                 }
             ],
 //            features: [
@@ -223,7 +113,7 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaGrid', {
                     xtype: 'gridcolumn',
                     flex: 0.3,
                     text: 'TGL. PERMINTAAN',
-                    dataIndex: 'tglTransaksi',
+                    dataIndex: 'tgl_trx',
                     renderer: function (value, meta, record) {
                         return Ext.util.Format.date(value, 'd/M/Y');
                     }

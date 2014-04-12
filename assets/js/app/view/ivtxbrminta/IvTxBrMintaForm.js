@@ -67,21 +67,21 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaForm', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore',
-                    displayField: 'divisiName',
-                    valueField: 'divisiId',
+                    store: 'ivtxbrminta.DivisiFormStore',
+                    displayField: 'divisi_name',
+                    valueField: 'id',
                     emptyText: 'Pilih Divisi',
                     allowBlank: false,
                     matchFieldWidth: false,
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        'afterrender': function(cmb, rec, opt) {
-//                            cmb.getStore().load();
-//                            cmb.setValue(userDivisi);
-//                            cmb.setReadOnly(true);
-//                        },
+                    listeners: {
+                        'afterrender': function(cmb, rec, opt) {
+                            cmb.getStore().load();
+                            cmb.setValue(USER_DIVISI);
+                            cmb.setReadOnly(true);
+                        },
 //                        'change': function(cmb, rec, opt){
 //                            var myVal = cmb.getValue(),
 //                                ruanganStore = this.up('form').getForm().findField('ruangan').getStore(), 
@@ -104,7 +104,7 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaForm', {
 //                            ruanganStore.clearFilter(true);
 //                            ruanganStore.filter(filterCollection);
 //                        }
-//                    }
+                    }
                 },
                 {
                     xtype: 'combobox',

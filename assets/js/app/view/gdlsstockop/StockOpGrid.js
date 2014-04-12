@@ -90,12 +90,12 @@ Ext.define('GlApp.view.gdlsstockop.StockOpGrid', {
                 '->',
                 {
                     text: 'REFRESH',
-                    itemId: 'barangSearch',
+                    itemId: 'barangRefresh',
                     ui: 'orange-button'
                 },
                 {
                     text: 'ALL',
-                    itemId: 'barangSearch',
+                    itemId: 'barangAll',
                     ui: 'orange-button'
                 }
 

@@ -37,7 +37,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                             region: 'west',
                             width: 275,
                             bodyPadding: 10,
-                            itemId: 'formLot',
+                            itemId: 'formLotSo',
                             fieldDefaults: {
                                 labelAlign: 'right',
                                 labelWidth: 90,
@@ -61,6 +61,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                                     name: 'id',
                                     readOnly: true,
                                     fieldCls: 'x-item-readonly',
+                                    value: 0,
                                     hidden: true
                                 },
                                 {
@@ -69,7 +70,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                                     name: 'stk_trxreftype',
                                     readOnly: true,
                                     fieldCls: 'x-item-readonly',
-                                    value: 'ttgudang',
+                                    value: 'opnamegudang',
                                     hidden: true
                                 },
                                 {
@@ -79,7 +80,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                                     itemId: 'stk_trxref',
                                     readOnly: true,
                                     fieldCls: 'x-item-readonly',
-                                    hidden: true
+                                    hidden: false
                                 },
                                 {
                                     xtype: 'textfield',
@@ -144,7 +145,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                                     keyNavEnabled: false,
                                     mouseWheelEnabled: false,
                                     allowBlank: false,
-                                    hidden: true
+                                    hidden: false
                                 },
                                 {
                                     xtype: 'numberfield',
@@ -201,7 +202,7 @@ Ext.define('GlApp.view.gdlsstockop.TxTtLotWin', {
                 {
                     text: 'Save',
                     scope: this,
-                    handler: this.close
+                    action: 'setLot'
                 },
                 {
                     text: 'Cancel',

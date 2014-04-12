@@ -7,7 +7,7 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaDetailGrid', {
     columnLines: true,
     //selModel : smGrid,
     flex: 1,
-//    store: 'PenginvDetailStore',
+    store: 'ivtxbrminta.IvTxBrMintaDetailStore',
     initComponent: function () {
         var me = this;
 
@@ -37,7 +37,7 @@ Ext.define('GlApp.view.ivtxbrminta.IvTxBrMintaDetailGrid', {
                     xtype: 'numbercolumn',
                     flex: 0.3,
                     text: 'QTY PESAN',
-                    dataIndex: 'qtyMinta',
+                    dataIndex: 'barang_qty_minta',
                     format: '000'
                 }
             ]

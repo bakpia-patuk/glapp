@@ -7,7 +7,7 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangGrid', {
     itemId: 'ivmsbaranggrid',
     autoScroll: true,
     forceFit: true,
-//    store: 'InvDataBarangStore',
+    store: 'ivmsbarang.IvMsBarangStore',
     columnLines: true,
     flex: 1,
     border: false,
@@ -30,48 +30,19 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangGrid', {
                     margins: '0 0 0 5',
                     emptyText: 'Pilih',
                     labelWidth: 48,
-                    displayField: 'cabangName',
+                    displayField: 'cabang_alias',
                     valueField: 'id',
                     queryMode: 'remote',
                     allowBlank: true,
                     triggerAction: 'all',
-//                    hidden: userCabang === "14" ? false : true,
+//                    hidden: userCabang === "1" ? false : true,
                     valueNotFoundText: 'Tidak ada Data',
-//                    store: 'CabangStore',
-//                    listeners: {
-//                        select: function () {
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#db_divisi').getValue(),
-//                                combo2 = this.up('grid').down('#db_ruang').getValue();
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'db_cabang',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//
-//                            if(combo !== null) {
-//                                var filter2 = new Ext.util.Filter({
-//                                    property: 'db_divisi',
-//                                    value: combo
-//                                });
-//                                filterCollection.push(filter2);
-//                            }
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'db_ruang',
-//                                    value: combo2
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                    store: 'ivmsbarang.CabangStore',
+                    listeners: {
+                        afterrender: function() {
+                            this.setValue(parseInt(CABANG_ID));
+                        },
+                    }
                 },
                 {
                     xtype: 'combobox',
@@ -81,9 +52,9 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangGrid', {
                     hideTrigger: false,
                     queryMode: 'remote',
                     minChars: 2,
-//                    store: 'DivisiStore',
-                    displayField: 'divisiName',
-                    valueField: 'divisiId',
+                    store: 'ivmsbarang.DivisiStore',
+                    displayField: 'divisi_name',
+                    valueField: 'id',
                     width: 188,
                     margins: '0 0 0 5',
                     emptyText: 'Pilih',
@@ -93,59 +64,30 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangGrid', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        select: function (cmb, rec, opt) {
-//                            var myVal = cmb.getValue(),
-//                                ruanganStore = this.up('grid').down('#db_ruang').getStore(), 
-//                                filterCollections = [];
-//
-//                            this.up('grid').down('#db_ruang').setReadOnly(false);
-//                            
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'cabang_id',
-//                                value: userCabang
-//                            });
-//                            filterCollections.push(statusFilter);
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'divisi_code',
-//                                value: myVal
-//                            });
-//                            filterCollections.push(statusFilter);
-//                    
-//                            ruanganStore.clearFilter(true);
-//                            ruanganStore.filter(filterCollections);
-//                            ///DATA SLELCR
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#db_cabang').getValue(),
-//                                combo2 = this.up('grid').down('#db_ruang').getValue();
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'db_cabang',
-//                                value: combo === null ? userCabang : combo
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//
-//                            var filter2 = new Ext.util.Filter({
-//                                property: 'db_divisi',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(filter2);
-//
-//                            if(combo2 !== null) {
-//                                var statusFilter = new Ext.util.Filter({
-//                                    property: 'db_ruang',
-//                                    value: combo2
-//                                });
-//                                filterCollection.push(statusFilter);
-//                            }
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                    listeners: {
+                        select: function (cmb, rec, opt) {
+                            var myVal = cmb.getValue(),
+                                ruanganStore = this.up('grid').down('#db_ruang').getStore(), 
+                                filterCollections = [];
+
+                            this.up('grid').down('#db_ruang').setReadOnly(false);
+                            
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'cabang_id',
+                                value: CABANG_ID
+                            });
+                            filterCollections.push(statusFilter);
+
+                            var statusFilter = new Ext.util.Filter({
+                                property: 'divisi_id',
+                                value: myVal
+                            });
+                            filterCollections.push(statusFilter);
+                    
+                            ruanganStore.clearFilter(true);
+                            ruanganStore.filter(filterCollections);
+                        }
+                    }
                 },
                 {
                     xtype: 'combobox',
@@ -156,7 +98,7 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangGrid', {
                     queryMode: 'remote',
                     minChars: 2,
                     hidden: false,
-//                    store: 'DivisiRuanganStore',
+                    store: 'ivmsbarang.RuangStore',
                     displayField: 'ruangName',
                     valueField: 'id',
                     width: 200,
@@ -169,48 +111,24 @@ Ext.define('GlApp.view.ivmsbarang.IvMsBarangGrid', {
                     listConfig: {
                         minWidth: 185
                     },
-//                    listeners: {
-//                        select: function () {
-//                            var store = this.up('grid').getStore(),
-//                                filterCollection = [],
-//                                combo = this.up('grid').down('#db_cabang').getValue(),
-//                                combo2 = this.up('grid').down('#db_divisi').getValue();
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'db_cabang',
-//                                value: combo === null ? userCabang : combo
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//
-//                            if(combo2 !== null) {
-//                                var filter2 = new Ext.util.Filter({
-//                                    property: 'db_divisi',
-//                                    value: combo2
-//                                });
-//                                filterCollection.push(filter2);
-//                            }
-//
-//                            var statusFilter = new Ext.util.Filter({
-//                                property: 'db_ruang',
-//                                value: this.getValue()
-//                            });
-//                            filterCollection.push(statusFilter);
-//
-//                            store.clearFilter(true);
-//                            store.filter(filterCollection);
-//                        }
-//                    }
+                },
+                {
+                    xtype: 'button',
+                    ui: 'blue-button',
+                    text: 'Search',
+                    iconCls: 'icon-btn-refresh',
+                    itemId: 'IvMbSearch'
                 },
                 '->',
                 {
                     xtype: 'button',
                     ui: 'blue-button',
+                    text: 'Refresh',
                     iconCls: 'icon-btn-refresh',
-//                    handler: function() {
-//                        this.up('grid').getSelectionModel().clearSelections();
-//                        this.up('grid').getStore().load();
-//                    }
+                    handler: function() {
+                        this.up('grid').getSelectionModel().clearSelections();
+                        this.up('grid').getStore().load();
+                    }
                 }
             ],
 //            features: [

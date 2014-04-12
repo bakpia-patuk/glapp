@@ -113,7 +113,7 @@ Ext.define('GlApp.controller.GetBkMasuk', {
                         if(date2 !== null){
                             var statusFilter = new Ext.util.Filter({
                                 property: 'kas_tgltrx',
-                                value: Ext.Date.format(date2, 'Y-m-d 00:00:00') + 'LT'
+                                value: Ext.Date.format(date2, 'Y-m-d 23:59:59') + 'LT'
                             });
                             filterCollection.push(statusFilter);                            
                         }
